@@ -90,7 +90,14 @@ public final class Entorno {
 - En realidad deberíamos dejar que puedan elegir el código de área que quieran, pero por simplicidad vamos a asumir siempre teléfono argentino
 
 ## Configuracion crontab
-*/5 * * * *   cd /home/donatrack_azure/donatrack && (date; docker compose run --rm -T donaciones java -jar reintento-envio-notificaciones-jar-with-dependencies.jar) >> /home/donatrack_azure/logs/reintento-notificaciones.log 2>&1
-0 8 * * 1-6 cd /home/donatrack_azure/donatrack && (date; docker compose run --rm -T donaciones java -jar publicar-inactividad-de-donante-jar-with-dependencies.jar) >> /home/donatrack_azure/logs/publicar-inactividad.log 2>&1
-0 23 * * *  cd /home/donatrack_azure/donatrack && (date; docker compose run --rm -T donaciones java -jar crear-solicitudes-de-asignacion-jar-with-dependencies.jar) >> /home/donatrack_azure/logs/solicitudes-asignacion.log 2>&1
-0 2 * * *   cd /home/donatrack_azure/donatrack && (date; docker compose run --rm -T logistica java -jar planificacion-nocturna-jar-with-dependencies.jar) >> /home/donatrack_azure/logs/planificacion-nocturna.log 2>&1
+# 1. Reintento de envío de notificaciones (cada 5 minutos)
+*/5 * * * * cd /home/donatrack_azure/DonatrackDespliegue && (date; docker compose run --rm -T donaciones java -jar reintento-envio-notificaciones-jar-with-dependencies.jar) >> /home/donatrack_azure/logs/reintento-notificaciones.log 2>&1
+
+# 2. Publicar inactividad de donante (a las 08:00 de lunes a sábado / 1-6)
+0 8 * * 1-6 cd /home/donatrack_azure/DonatrackDespliegue && (date; docker compose run --rm -T donaciones java -jar publicar-inactividad-de-donante-jar-with-dependencies.jar) >> /home/donatrack_azure/logs/publicar-inactividad.log 2>&1
+
+# 3. Crear solicitudes de asignación (a las 23:00 todos los días)
+0 23 * * * cd /home/donatrack_azure/DonatrackDespliegue && (date; docker compose run --rm -T donaciones java -jar crear-solicitudes-de-asignacion-jar-with-dependencies.jar) >> /home/donatrack_azure/logs/solicitudes-asignacion.log 2>&1
+
+# 4. Planificación nocturna de logística (a las 02:00 todos los días)
+0 2 * * * cd /home/donatrack_azure/DonatrackDespliegue && (date; docker compose run --rm -T logistica java -jar planificacion-nocturna-jar-with-dependencies.jar) >> /home/donatrack_azure/logs/planificacion-nocturna.log 2>&1
