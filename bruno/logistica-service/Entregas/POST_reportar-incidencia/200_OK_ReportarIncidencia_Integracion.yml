@@ -1,0 +1,31 @@
+info:
+  name: 200 OK - Reportar Incidencia (Trigger Integración)
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/entregas/ENT-003/reportar-incidencia"
+
+  body:
+    type: json
+    data: |-
+      {
+        "motivo": "La entidad beneficiaria se encontraba cerrada"
+      }
+
+  auth: inherit
+
+  runtime:
+    scripts:
+      - type: tests
+        code: |-
+          test("should return 200 OK", function() {
+              expect(res.status).to.equal(200);
+          });
+          test("should return success message", function() {
+              expect(res.body.mensaje).to.contain("Incidencia reportada");
+          });
+
+  settings:
+    encodeUrl: true

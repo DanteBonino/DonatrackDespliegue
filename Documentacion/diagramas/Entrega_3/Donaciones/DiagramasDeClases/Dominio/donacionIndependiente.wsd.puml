@@ -1,0 +1,165 @@
+@startuml
+
+interface Actualizable<D> {
+  + default void refrescarParcial(D datos)
+
+  + void actualizarDesde(D datos, boolean pacial);
+
+}
+
+abstract class EntidadBase <<MappedSuperclass>> {
+  + String getIdDominio()
+
+  + boolean esLaMismaEntidad(String id)
+
+  + Long getId()
+
+}
+
+interface Eliminable {
+  + boolean estaEliminado();
+  + void marcarComoEliminado();
+}
+
+class DonacionIndependiente <<Entity>> extends EntidadBase implements Actualizable<DonacionIndependiente> {
+  - estaEliminado
+  - justificacion
+  + int getCantidad()
+  + Bien getBienDonado()
+  + Boolean seAgrupaPor(SubCategoria unaSubCategoria)
+  +  Optional<LocalDateTime> fechaDeUltimaTransicionA(EstadoDonacion estadoDonacion)
+  + boolean estaEn(EstadoDonacion unEstado)
+  + boolean estaEliminado()
+  + void marcarComoEliminado()
+  + void actualizarDesde(DatosDonacion datos, boolean parcial)
+  + LocalDateTime getFechaDeDonacion()
+  + void asignarA(EntidadBeneficiaria asignado)
+  + void almacenarEnDeposito()
+  + void enSolicitudDeAsignacion()
+  + void iniciarTraslado(String idEntrega)
+  + void alistarParaEntregar()
+  + void marcarComoEntregada(ComprobanteDeEntrega comprobanteDeEntrega)
+  + void marcarComoFallida(String justificacion)
+  + void vencer()
+}
+
+DonacionIndependiente ..|> Eliminable
+
+enum EstadoDonacion {
+ PENDIENTE_DE_CONFIRMACION_DE_ASIGNACION
+ ASIGNACION_REALIZADA
+ EN_DEPOSITO
+ ENTREGADA
+ ENTREGA_FALLIDA
+ LISTA_PARA_ENTREGAR
+ VENCIDA
+ EN_TRASLADO
+ + Boolean esDeTipo()
+ + List<EstadoDonacion> getDestinosValidosParaTransicionar()
+ + void validarTransicion(EstadoDonacion destino)
+}
+
+DonacionIndependiente --> Bien
+DonacionIndependiente --> PublicadorDeCambiosEstados
+DonacionIndependiente --> EstadoDonacion: "estadoActual"
+
+class Bien <<Embeddable>> {
+ - descripcion
+ - foto
+ - cantidad
+ + Boolean esDe(SubCategoria unaSubCategoria)
+ + Boolean seAgrupaPor(SubCategoria unaSubCategoria)
+ + Integer getCantidad()
+ + Boolean esIgualA(Bien otroBien
+}
+
+class SubCategoria  <<Embeddable>> {
+ - String tipoCategoria}
+ - LocalDate vencimiento
+ - String tipoCategoria
+ + Categoria getCategoria()
+}
+
+enum NombreSubCategoria {
+ FIDEOSSECOS, PANTALON, REMERA, PELOTA
+}
+
+enum EstadoDeUso {
+    USADO, NUEVO
+}
+
+interface Categoria {
+  + Object valorDeAgrupamiento();
+
+  + default Boolean esLaMisma(Categoria otraCategoria)
+}
+
+class NoPerecedero implements Categoria {
+
+  + Object valorDeAgrupamiento()
+
+  + EstadoDeUso getEstado()
+}
+
+NoPerecedero --> EstadoDeUso
+
+class Perecedero implements Categoria {
+  - LocalDate fechaDeVencimiento
+  + Object valorDeAgrupamiento()
+
+  + LocalDate getVencimiento()
+}
+
+Bien --> SubCategoria
+SubCategoria --> NombreSubCategoria
+SubCategoria --> EstadoDeUso
+SubCategoria ..> Categoria
+
+class PublicadorDeCambiosEstados {
+
+  + int cantidadDeInteresados()
+
+ + void suscribir(InteresadoEnCambiosDeEstado interesadoEnCambioDeEstado)
+
+  + void desuscribir(InteresadoEnCambiosDeEstado interesadoEnCambioDeEstado)
+  + void publicarAsignacion(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+
+  + void publicarInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega)
+  + void publicarEntregaConExito(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, ComprobanteDeEntrega comprobanteDeEntrega)
+
+  + void publicarEntregaFallida(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String justificacion)
+
+
+  + void desuscribirTodos()
+}
+
+interface InteresadoEnCambiosDeEstado extends Interesado {
+  + default void anteAsignacion(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+  + default void anteEntregaConExito(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, ComprobanteDeEntrega comprobante)
+  + default void anteEntregaFallida(String justificacion, EntidadBeneficiaria entidadBeneficiaria, DonacionIndependiente donacionIndependiente)
+  + default void anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega)
+}
+
+PublicadorDeCambiosEstados --> "*" InteresadoEnCambiosDeEstado
+
+class CambioDeEstado <<Embeddable>> {
+ - LocalDateTime fecha
+
+}
+
+class EntidadBeneficiaria <<Entity>> {
+ + void reicibirDonacionParaDeterminadaNecesidad (DonacionIndependiente unaDonacion)
+}
+
+note top of EntidadBeneficiaria: "Simplificada tiene los métodos que se usan en este apartado"
+
+class Donante <<Entity>> {
+
+}
+
+note bottom of Donante: "No tiene métodos porque DonacionIndependiente no hace uso de ninguno de sus métodos"
+
+CambioDeEstado --> EstadoDonacion
+CambioDeEstado --> EntidadBeneficiaria
+DonacionIndependiente --> Donante: "fue donada por"
+@enduml

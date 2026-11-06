@@ -1,0 +1,20 @@
+info:
+  name: 200 OK - Iniciar Ruta Planificada
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/camiones/BBB222/iniciar-ruta"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200 OK", function() {
+          expect(res.status).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true

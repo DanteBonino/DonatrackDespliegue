@@ -1,0 +1,62 @@
+@startuml
+
+interface Eliminable {
+  + estaEliminado(): boolean
+  + marcarComoEliminado(): void
+}
+
+interface Actualizable<D> {
+  + actualizarDesde(datos: D, parcial: boolean): void
+}
+
+interface Notificable {
+  + getMailsParaNotificar(): List<String>
+  + getMedioDeNotificacionPreferencial(): TipoDeMedio
+}
+
+abstract class Donante {
+  - estaEliminado: boolean
+  + {abstract} refrescarAtributosParticulares(datos: DatosDonante, parcial: boolean): void
+  + {abstract} getCaracteristicaDeDiferenciacion(): String
+  + {abstract} getTipoPersona(): TipoPersona
+  + crear(tipoPersona: TipoPersona, ...): Donante {static}
+}
+
+class PersonaHumana {
+  - nombreCompleto: NombreCompleto
+  - documento: String
+  # refrescarAtributosParticulares(datos: DatosDonante, parcial: boolean): void
+}
+
+class PersonaJuridica {
+  - razonSocial: String
+  - cuit: String
+  # refrescarAtributosParticulares(datos: DatosDonante, parcial: boolean): void
+}
+
+class DonanteJuridicoBuilder {
+  + conRazonSocial(razonSocial: String): DonanteJuridicoBuilder
+  + conCuit(cuit: String): DonanteJuridicoBuilder
+  + build(): PersonaJuridica
+}
+
+class DonanteHumanoBuilder {
+
+}
+
+' Herencia e Implementaciones
+Donante <|-- PersonaHumana
+Donante <|-- PersonaJuridica
+Donante ..|> Eliminable
+Donante ..|> Actualizable
+Donante ..|> Notificable
+
+' Relaciones de construcción
+DonanteJuridicoBuilder ..> PersonaJuridica : "crea"
+DonanteHumanoBuilder   ..> PersonaHumana   : "crea"
+
+' Dependencia (Factory Method)
+Donante ..> DonanteJuridicoBuilder : "usa"
+Donante ..> DonanteHumanoBuilder   : "usa"
+
+@enduml

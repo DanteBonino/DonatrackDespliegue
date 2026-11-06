@@ -1,0 +1,83 @@
+{{#partial "contenido"}}
+    <div class="container py-5" style="max-width: 640px;">
+        <h1 class="h3 mb-4 text-center">Crear cuenta</h1>
+
+        {{#if error}}
+            <div class="alert alert-danger">{{error}}</div>
+        {{/if}}
+
+        <form method="POST" action="/registro">
+            <div class="mb-3">
+                <label class="form-label" for="tipo">Tipo de cuenta</label>
+                <select class="form-select" id="tipo" name="tipo" required>
+                    <option value="DONANTE">Persona donante</option>
+                    <option value="ENTIDAD">Entidad beneficiaria</option>
+                </select>
+                <small class="text-muted">Si elegís "Entidad", usá el campo Nombre como Razón Social.</small>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="nombre">Nombre / Razón social *</label>
+                    <input class="form-control" id="nombre" name="nombre" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="apellido">Apellido (solo donantes)</label>
+                    <input class="form-control" id="apellido" name="apellido">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="documento">Documento (solo donantes)</label>
+                    <input class="form-control" id="documento" name="documento">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="fechaNacimiento">Fecha de nacimiento (solo donantes)</label>
+                    <input class="form-control" type="date" id="fechaNacimiento" name="fechaNacimiento">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="genero">Género (solo donantes)</label>
+                <select class="form-select" id="genero" name="genero">
+                    <option value="X" selected>Prefiero no decirlo</option>
+                    <option value="FEMENINO">Femenino</option>
+                    <option value="MASCULINO">Masculino</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8 mb-3">
+                    <label class="form-label" for="calleNombre">Calle *</label>
+                    <input class="form-control" id="calleNombre" name="calleNombre"
+                           placeholder="Ej: Avenida Rivadavia" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label" for="calleAltura">Número / Altura *</label>
+                    <input class="form-control" type="number" id="calleAltura" name="calleAltura"
+                           placeholder="Ej: 1234" min="0" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="email">Email *</label>
+                    <input class="form-control" type="email" id="email" name="email" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="telefono">Teléfono *</label>
+                    <input class="form-control" id="telefono" name="telefono" required>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label" for="password">Contraseña *</label>
+                <input class="form-control" type="password" id="password" name="password" required>
+            </div>
+
+            <button class="btn btn-primary w-100" type="submit">Registrarme</button>
+        </form>
+    </div>
+{{/partial}}
+{{>layout}}

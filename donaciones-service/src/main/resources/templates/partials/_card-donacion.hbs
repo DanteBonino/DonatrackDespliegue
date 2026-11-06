@@ -1,0 +1,15 @@
+{{!-- Card para mostrar una donación --}}
+<div class="card shadow-sm h-100">
+    {{#if this.foto}}
+    <img src="{{this.foto}}" class="card-img-top" alt="{{this.descripcion}}" style="height:200px;object-fit:cover;">
+    {{/if}}
+    <div class="card-body">
+        <span class="badge bg-{{this.colorEstado}}">{{this.estado}}</span>
+        <h6 class="card-title mt-2">{{this.descripcion}}</h6>
+        <p class="card-text small text-muted">
+            Cantidad: {{this.cantidad}}<br>
+            Donante: {{this.donante}}<br>
+            {{#if this.entidad}}Entidad: {{this.entidad}}{{/if}}
+        </p>
+    </div>
+</div>

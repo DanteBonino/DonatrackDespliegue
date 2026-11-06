@@ -1,0 +1,69 @@
+@startuml
+enum TipoEstadoDonacion {
+  EN_DEPOSITO
+  PENDIENTE_DE_CONFIRMACION_DE_ASIGNACION
+  ASIGNACION_REALIZADA
+  LISTA_PARA_ENTREGAR
+  EN_TRANSLADO
+  ENTREGADA
+  ENTREGA_FALLIDA
+  VENCIDA
+}
+
+abstract class EstadoDonacion {
+  + validarTransicion(destino: EstadoDonacion): void
+  + esDeTipo(unTipo: TipoEstadoDonacion): Boolean
+  {abstract} + getDestinosValidosParaTransicionar(): List<TipoEstadoDonacion>
+}
+
+class AsignacionRealizada {
+ + getDestinosValidosParaTransicionar()
+}
+class EnDeposito {
+ + getDestinosValidosParaTransicionar()
+}
+class EnTraslado {
+ + getDestinosValidosParaTransicionar()
+}
+
+class Entregada {
+ + getDestinosValidosParaTransicionar()
+}
+class EntregaFallida {
+  - justificacion: String
+  + getDestinosValidosParaTransicionar()
+}
+class ListaParaEntregar {
+ + getDestinosValidosParaTransicionar()
+}
+class PendienteDeConfirmacionDeAsignacion {
+ + getDestinosValidosParaTransicionar()
+}
+class Vencida {
+ + getDestinosValidosParaTransicionar()
+}
+
+' Relaciones
+EstadoDonacion <|-- AsignacionRealizada
+EstadoDonacion <|-- EnDeposito
+EstadoDonacion <|-- EnTraslado
+EstadoDonacion <|-- Entregada
+EstadoDonacion <|-- EntregaFallida
+EstadoDonacion <|-- ListaParaEntregar
+EstadoDonacion <|-- PendienteDeConfirmacionDeAsignacion
+EstadoDonacion <|-- Vencida
+
+AsignacionRealizada ..> ListaParaEntregar: destinoValido
+EnDeposito ..> AsignacionRealizada : destinoValido
+EnDeposito ..> Vencida: destinoValido
+EnDeposito ..> PendienteDeConfirmacionDeAsignacion: destinoValido
+EnTraslado ..> Entregada : destinoValido
+EnTraslado ..> EntregaFallida : destinoValido
+EntregaFallida ..> EnDeposito : destinoValido
+EntregaFallida ..> Vencida: destinoValido
+ListaParaEntregar..> EnTraslado : destinoValido
+PendienteDeConfirmacionDeAsignacion..> EnDeposito : destinoValido
+PendienteDeConfirmacionDeAsignacion..> AsignacionRealizada : destinoValido
+
+EstadoDonacion --> TipoEstadoDonacion : tipo
+@enduml

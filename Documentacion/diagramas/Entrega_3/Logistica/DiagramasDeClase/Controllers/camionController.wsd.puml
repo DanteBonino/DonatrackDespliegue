@@ -1,0 +1,22 @@
+@startuml
+class CamionController {
+  + actualizarPosicion(Context ctx): void
+  + obtenerEstadoCamion(Context ctx): void
+  + iniciarRuta(Context ctx): void
+  + obtenerTodosLosCamiones(Context ctx): void
+}
+
+class FlotaRepositoryConPersistencia <<Singleton>> {
+  + buscarPorPatente(String patente): Camion
+  + obtenerTodos(): List<Camion>
+}
+
+
+CamionController ..> FlotaRepositoryConPersistencia
+
+note top of FlotaRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el controller.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+
+@enduml

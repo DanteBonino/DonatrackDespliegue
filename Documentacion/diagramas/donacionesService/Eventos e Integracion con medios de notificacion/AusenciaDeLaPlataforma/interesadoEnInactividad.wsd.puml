@@ -1,0 +1,24 @@
+@startuml
+
+interface InteresadoEnInactividad extends Interesado {
+  + void anteInactividad(Donante unDonante);
+}
+
+class NotificadorDeInactividad implements InteresadoEnInactividad {
+
+  + void anteInactividad(Donante unDonante)
+}
+
+NotificadorDeInactividad --> "1" BusNotificaciones
+
+class BusNotificaciones {
+    + void procesar(Notificacion notificacion)
+}
+
+class MedioNotificacionFactory {
+    + MedioDeNotificacion construirMedio(TipoDeMedio tipo)
+}
+
+BusNotificaciones --> "1" MedioNotificacionFactory
+
+@enduml

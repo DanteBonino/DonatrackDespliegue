@@ -1,0 +1,114 @@
+@startuml
+interface Actualizable<D> {
+  + default void refrescarParcial(D datos)
+
+  + void actualizarDesde(D datos, boolean pacial);
+
+}
+
+abstract class EntidadBase <<MappedSuperclass>> {
+  + String getIdDominio()
+
+  + boolean esLaMismaEntidad(String id)
+
+  + Long getId()
+
+}
+
+interface Eliminable {
+  + boolean estaEliminado();
+  + void marcarComoEliminado();
+}
+
+class Donante <<Entity>> extends EntidadBase implements Actualizable<Donante> {
+  - fechaDeUltimoAcceso
+  + boolean estaEliminado()
+  + void marcarComoEliminado()
+  + void actualizarDesde(DatosDonante datos, boolean parcial)
+  + void refrescar(DatosDonante datos)
+  # {abstract}void refrescarAtributosParticulares(DatosDonante datos, boolean parcial)
+  + Boolean esIgualA(Donante otroDonante)
+  + {abstract} String getCaracteristicaDeDiferenciacion()
+  + void registrarIngreso()
+}
+
+class DatosDeContacto <<Entity>> {
+ + List<String> getMailsParaNotificar()
+ + TipoDeMedio getMedioDeNotificacionPreferencial()
+ + String getTelefono()
+}
+
+interface ConMedioPreferencial extends ConContacto {
+ + default void setMedioPreferido(TipoDeMedio nuevoMedio)
+
+ + default TipoDeMedio getMedioDeNotificacionPreferencial()
+}
+
+interface ConContacto {
+ + DatosDeContacto getDatosDeContacto()
+}
+
+
+interface ConTelefono extends ConContacto {
+  + default String getTelefono()
+  + default void setTelefono(String nuevoTelefono)
+}
+
+interface ConMailIndividual extends ConContacto {
+  + default void setEmail(String email)
+
+  + default String getEmail()
+}
+
+interface ConSesion {
+  <<static>> int DIAS_PARA_INACTIVIDAD
+  LocalDate fechaDeUltimoIngreso();
+
+  + default Boolean esInactivo()
+
+  + default int getCantidadDeDiasInactivo()
+
+  + void registrarIngreso()
+}
+
+class PersonaHumana <<Entity>> extends Donante {
+ - nombre
+ - apellido
+ - fechaDeNacimiento
+ - direccion
+ - documento
+ + TipoPersona getTipoPersona()
+ # void refrescarAtributosParticulares(DatosDonante datos, boolean parcial)
+ + String getCaracteristicaDeDiferenciacion()
+}
+
+enum Genero {
+ MASCULINO
+ FEMENINO
+ X
+}
+
+PersonaHumana --> Genero
+
+class PersonaJuridica <<Entity>> extends Donante {
+ - razonSocial
+ - rubro
+ - cuit
+ + TipoPersona getTipoPersona()
+ # void refrescarAtributosParticulares(DatosDonante datos, boolean parcial)
+ + String getCaracteristicaDeDiferenciacion()
+}
+
+enum TipoJuridica{
+  GOUBERNAMENTAL, ONG, EMPRESA, INSTITUCIÓN
+}
+
+PersonaJuridica --> TipoJuridica
+
+Donante ..|> ConMailIndividual
+Donante ..|> ConTelefono
+Donante ..|> ConMedioPreferencial
+Donante --> DatosDeContacto
+Donante ..|> Eliminable
+Donante ..|> ConSesion
+@enduml

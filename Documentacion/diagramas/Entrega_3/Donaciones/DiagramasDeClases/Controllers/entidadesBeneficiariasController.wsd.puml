@@ -1,0 +1,54 @@
+@startuml
+interface CrudHandler {
+    fun getAll(ctx: Context)
+    fun getOne(ctx: Context, resourceId: String)
+    fun create(ctx: Context)
+    fun update(ctx: Context, resourceId: String)
+    fun delete(ctx: Context, resourceId: String)
+}
+
+class EntidadesBeneficiariasController implements CrudHandler {
+  + void getAll(@NotNull Context contexto)
+ + void getOne(@NotNull Context contexto, @NotNull String idEntidadBeneficiaria)
+ + void create(@NotNull Context contexto)
+ + void update(Context contexto, @NotNull String idEntidadBeneficiaria)
+ + void delete(@NotNull Context contexto, @NotNull String idEntidadBeneficiaria)
+}
+
+class BeneficiariosRepositoryConPersistencia <<Singleton>> {
+  + List<EntidadBeneficiaria> getInstancias()
+  + EntidadBeneficiaria findById(String id)
+  + void eliminarInstancia (String idEntidadBeneficiaria)
+  + void actualizarInstancia(String idEntidadBeneficiaria, @NotNull   DatosEntidadesBeneficiarias datos)
+  + void agregarNecesidad(EnitdadBeneficiaria unaEntidad)
+  + void registrar(EntidadBeneficiaria nuevaEntidad)
+}
+
+EntidadesBeneficiariasController ..> BeneficiariosRepositoryConPersistencia
+
+class EntidadBeneficiariaResponseDto {
+  + <<static>> EntidadBeneficiariaResponseDto desde(EntidadBeneficiaria unaEntidadBeneficiaria)
+  + List<NecesidadResponseDto> getNecesidades()
+
+  + String getRazonSocial()
+
+  + String getDireccion()
+
+  + List<String> getMails()
+
+  + String getTelefono()
+
+  + String getId()
+
+  + TipoDeMedio getTipoDeMedio()
+}
+
+EntidadesBeneficiariasController ..> EntidadBeneficiariaResponseDto
+
+
+note top of BeneficiariosRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el controller.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+
+@enduml

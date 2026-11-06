@@ -1,0 +1,37 @@
+<div class="container py-5" style="max-width: 720px;">
+    <div class="card shadow-sm border-0 rounded-4 p-4 p-md-5">
+        <h1 class="h3 mb-4 text-center fw-bold text-dark">{{tituloForm}}</h1>
+
+        {{#if error}}
+            <div class="alert alert-danger rounded-3" role="alert">{{error}}</div>
+        {{/if}}
+
+        <form method="POST" action="{{actionUrl}}" class="needs-validation">
+
+            {{#> partials/registro/seccionDeFormulario titulo="Datos de la cuenta"}}
+                <div class="col-md-12">
+                    {{> partials/registro/inputField name="username" required=true label="Nombre de usuario (Username) *" placeholder="Ej: sancorSeguros" valor=valores.username error=errores.username}}
+                </div>
+                <div class="col-md-12">
+                    {{> partials/registro/inputField name="password" type="password" required=true label="Contraseña *" valor=valores.password error=errores.password}}
+                </div>
+            {{/partials/registro/seccionDeFormulario}}
+
+            {{#> partials/registro/seccionDeFormulario titulo="Datos de contacto"}}
+                <div class="col-md-6 mb-3">
+                    {{> partials/registro/inputField name="email" type="email" required=true label="Email *" placeholder="correo@ejemplo.com" valor=valores.email error=errores.email}}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    {{> partials/registro/inputField name="telefono" type="tel" required=true label="Telefono *" placeholder="Ej: 1122334455" valor=valores.telefono error=errores.telefono}}
+                </div>
+            {{/partials/registro/seccionDeFormulario}}
+
+            {{> camposEspecificos}}
+
+            <div class="d-grid mt-4">
+                <button class="btn btn-primary btn-lg rounded-pill fw-semibold shadow-sm" type="submit">Registrarse</button>
+            </div>
+        </form>
+    </div>
+</div>

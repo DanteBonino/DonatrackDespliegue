@@ -1,0 +1,17 @@
+info:
+  name: 400 BadRequest - Ruta Sin Entregas
+  type: http
+  seq: 5
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/camiones/DDD444/iniciar-ruta"
+  auth: inherit
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 400 Bad Request", function() {
+          expect(res.status).to.equal(400);
+        });
+settings:
+  encodeUrl: true

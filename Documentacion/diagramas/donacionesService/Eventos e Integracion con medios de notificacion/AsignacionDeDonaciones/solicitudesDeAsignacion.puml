@@ -1,0 +1,50 @@
+@startuml
+
+interface AlgoritmoDeAsignacion {
+ List <EntidadBeneficiaria> crearRanking(DonacionIndependiente donacionIndependiente, List <EntidadBeneficiaria> entidadesBeneficiarias)
+}
+
+class CrearSolicitudesDeAsignacion {
+ + ejecutar()
+}
+
+class Persistible {
+}
+
+class SolicitudDeAsignacion {
+
+  + aceptar(entidadElegida: EntidadBeneficiaria): void
+  + esCandidataValida(entidadElegida: EntidadBeneficiaria): boolean
+  + estaAceptada(): boolean
+}
+
+class BeneficiariosRepository {
+ + getInstancias()
+}
+
+class DonacionesRepository {
+ + getDonacionesEnDeposito()
+}
+
+class SolicitudesDeAsignacionRepository {
+ + registrar(SolicitudDeAsignacion unaSolicitud)
+}
+
+class DonacionIndependiente {
+    + asignarA(EntidadBeneficiaria unaEntidad)
+}
+
+' Herencia
+Persistible <|-- SolicitudDeAsignacion
+
+' Relaciones
+SolicitudDeAsignacion --> "1" DonacionIndependiente : donacion
+SolicitudDeAsignacion --> "*" EntidadBeneficiaria : candidatas
+SolicitudDeAsignacion --> "0..1" EntidadBeneficiaria : entidadAsignada
+CrearSolicitudesDeAsignacion --> "1" DonacionesRepository
+CrearSolicitudesDeAsignacion --> "1" BeneficiariosRepository
+CrearSolicitudesDeAsignacion --> "1" AlgoritmoDeAsignacion
+CrearSolicitudesDeAsignacion --> "1" SolicitudesDeAsignacionRepository
+CrearSolicitudesDeAsignacion ..>"*" SolicitudDeAsignacion
+
+@enduml

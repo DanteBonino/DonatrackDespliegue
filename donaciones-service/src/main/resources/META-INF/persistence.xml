@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+             http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+
+    <persistence-unit name="simple-persistence-unit" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- Clases que se persisten de alguna manera -->
+        <class>Necesidades.Necesidad</class>
+        <class>Necesidades.NecesidadRecurrente</class>
+        <class>Necesidades.NecesidadExtraordinaria</class>
+        <class>Bienes.Bien</class>
+        <class>EntidadesBeneficiarias.ReciboDeDonacion</class>
+        <class>Donaciones.DonacionIndependiente</class>
+        <class>Donaciones.CambioDeEstado</class>
+        <class>EntidadesBeneficiarias.EntidadBeneficiaria</class>
+        <class>AsignacionDeDonaciones.SolicitudDeAsignacion.SolicitudDeAsignacion</class>
+        <class>Usuario.Administrador</class>
+        <class>Notificaciones.Notificacion</class>
+        <class>Notificaciones.NotificacionPreferencial</class>
+        <class>Notificaciones.NotificacionFija</class>
+        <class>Contacto.DatosDeContacto</class>
+        <class>Donantes.Donante</class>
+        <class>Donantes.DonanteHumana.PersonaHumana</class>
+        <class>Donantes.DonanteJuridico.PersonaJuridica</class>
+        <class>Donaciones.Lote.Lote</class>
+        <class>Bienes.Categoria.Categoria</class>
+        <class>Bienes.SubCategoria.SubCategoria</class>
+        <class>Bienes.Perecedero</class>
+        <class>Bienes.NoPerecedero</class>
+        <class>Necesidades.CondicionesDeAceptacion.CondicionDeAceptacion</class>
+        <class>Necesidades.CondicionesDeAceptacion.Basica</class>
+        <class>Necesidades.CondicionesDeAceptacion.EnEstado</class>
+        <class>Donaciones.Item</class>
+        <class>UsuarioFinal.Usuario</class>
+        <class>UsuarioFinal.UsuarioAdministrador</class>
+        <class>UsuarioFinal.UsuarioBeneficiario</class>
+        <class>UsuarioFinal.UsuarioDonante</class>
+        <class>Telefono.Telefono</class>
+        <!-- Clases que se persisten de alguna manera -->
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
+
+            <property name="hibernate.default_schema" value="donaciones"/>
+            <property name="hibernate.archive.autodetection" value="class"/>
+
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="use_sql_comments" value="true"/>
+        </properties>
+
+    </persistence-unit>
+</persistence>

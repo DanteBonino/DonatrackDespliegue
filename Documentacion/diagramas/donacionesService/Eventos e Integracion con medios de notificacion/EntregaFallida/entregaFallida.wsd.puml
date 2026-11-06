@@ -1,0 +1,55 @@
+@startuml
+
+interface InteresadoEntregaFallida extends Interesado {
+  + void anteEntregaFallida(String justificacion, EntidadBeneficiaria entidadBeneficiaria, DonacionIndependiente donacionIndependiente);
+}
+
+abstract class NotificadorEntregaFallida implements InteresadoEntregaFallida {
+  - BusNotificaciones busNotificaciones;
+
+
+  + void anteEntregaFallida(String justificacion, EntidadBeneficiaria entidadBeneficiaria, DonacionIndependiente donacionIndependiente)
+
+  {abstract} + String inicioDelMensaje();
+
+}
+
+class NotificadorEntregaFallidaDonante extends NotificadorEntregaFallida{
+
+  + String inicioDelMensaje()
+
+}
+
+class NotificadorEntregaFallidaEntidad extends NotificadorEntregaFallida {
+
+  + String inicioDelMensaje()
+
+}
+
+
+class NotificadorEntregaFallidaAdministrador implements InteresadoEntregaFallida {
+  - AdministradoresRepository administradoresRepository;
+  - BusNotificaciones busNotificaciones;
+
+  + void anteEntregaFallida(String justificacion, EntidadBeneficiaria entidadBeneficiaria, DonacionIndependiente donacionIndependiente)
+}
+
+class AdministradoresRepository {
+  + List <Administrador> getAll()
+
+}
+
+class MedioNotificacionFactory {
+    + MedioDeNotificacion construirMedio(TipoDeMedio tipo)
+}
+
+BusNotificaciones --> "1" MedioNotificacionFactory
+
+NotificadorEntregaFallidaAdministrador --> "1" AdministradoresRepository
+
+NotificadorEntregaFallidaAdministrador --> "1" BusNotificaciones
+
+NotificadorEntregaFallida --> "1" BusNotificaciones
+
+
+@enduml

@@ -1,0 +1,17 @@
+<!-- views/partials/card-registro.hbs -->
+<div class="col">
+    <div class="card h-100 shadow-sm border-0 hover-shadow transition">
+        <div class="card-body d-flex flex-column text-center p-4">
+            <div class="mb-3 text-{{color}}">
+                <i class="bi {{icon}} display-4"></i>
+            </div>
+            <h3 class="card-title h4 fw-bold">{{title}}</h3>
+            <p class="card-text text-muted flex-grow-1">
+                {{description}}
+            </p>
+            <a href="{{url}}" class="btn btn-outline-{{color}} mt-3 stretched-link">
+                {{btnText}}
+            </a>
+        </div>
+    </div>
+</div>

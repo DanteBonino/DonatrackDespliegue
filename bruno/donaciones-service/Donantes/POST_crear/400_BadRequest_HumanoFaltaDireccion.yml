@@ -1,0 +1,26 @@
+info:
+  name: crearDonanteHumanoConCampoFaltante
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/donantes"
+  body:
+    type: json
+    data: |-
+      {
+          "tipoPersona": "HUMANA",
+          "documento":"1123",
+          "apellido": "Pérez",
+          "email": "juan@example.com",
+          "telefono": "1122334455",
+          "fechaDeNacimiento": "1990-05-20"
+        }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,22 @@
+@startuml
+
+class Persistible {
+    + getId();
+}
+
+interface NotificableConPreferencia extends NotificableTelefono, NotificableMail {
+  + MedioDeNotificacion getMedioDeNotificacionPreferencial();
+
+  + void setMedioDeNotificacionPreferencial(MedioDeNotificacion unMedio);
+}
+
+interface NotificableTelefono {
+
+}
+
+interface NotificableMail {
+
+}
+
+
+@enduml

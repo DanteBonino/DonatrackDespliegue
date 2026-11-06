@@ -1,0 +1,19 @@
+info:
+  name: listaParaEntrega
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/donaciones/:id/lista-para-entregar"
+  params:
+    - name: id
+      value: f0d402bf-0028-4e10-a842-79e32497df8f
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

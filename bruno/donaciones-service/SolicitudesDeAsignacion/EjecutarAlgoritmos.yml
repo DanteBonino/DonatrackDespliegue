@@ -1,0 +1,22 @@
+info:
+  name: EjecutarAlgoritmos
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/solicitudes-de-asignacion/ejecutar-algoritmo"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        let respuesta = res.getBody();
+        bru.setEnvVar("solicitudDeAsignacion", respuesta.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

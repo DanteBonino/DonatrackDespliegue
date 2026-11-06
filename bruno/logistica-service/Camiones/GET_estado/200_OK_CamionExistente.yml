@@ -1,0 +1,24 @@
+info:
+  name: 200 OK - Camion Existente
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrlLogistica}}/camiones/CCC333"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200 OK", function() {
+          expect(res.status).to.equal(200);
+        });
+        test("should return camion data", function() {
+          const body = res.body;
+          expect(body.patente).to.equal("CCC333");
+        });
+
+settings:
+  encodeUrl: true

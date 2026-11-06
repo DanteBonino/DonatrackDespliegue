@@ -1,0 +1,23 @@
+info:
+  name: 200 OK - Rutas En Curso
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{baseUrlLogistica}}/rutas/activas"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200 OK", function() {
+          expect(res.status).to.equal(200);
+        });
+        test("should return an array", function() {
+          expect(res.body).to.be.an('array');
+        });
+
+settings:
+  encodeUrl: true

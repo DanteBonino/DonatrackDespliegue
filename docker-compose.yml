@@ -1,0 +1,50 @@
+services:                    # cada entrada es un contenedor
+  db:
+    image: postgres:16       # imagen oficial ya hecha; versión fija para que no cambie sola
+    environment:             # la imagen lee estas variables solo la primera vez, para crear base y usuario
+      POSTGRES_DB: donatrack
+      POSTGRES_USER: donatrack
+      POSTGRES_PASSWORD: ${DONATRACK_DB_PASSWORD}   # ${...}: Compose lo reemplaza leyendo tu .env
+    volumes:
+      - dbdata:/var/lib/postgresql/data             # los datos viven en un almacenamiento que sobrevive
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # tu archivo, en la carpeta donde Postgres busca scripts de inicio
+    healthcheck:             # "arrancó" no es "está listo": pregunta cada 5 s si ya acepta conexiones
+      test: ["CMD-SHELL", "pg_isready -U donatrack -d donatrack"]
+      interval: 5s
+      retries: 10
+    restart: unless-stopped  # si se cae o reinicia la VM, vuelve solo
+
+  donaciones:
+    build: { context: ., target: donaciones }   # context: carpeta que se manda al build; target: etapa final del Dockerfile
+    depends_on:
+      db: { condition: service_healthy }        # esperá a que la base esté LISTA (tu main falla si no puede conectarse)
+    env_file: .env                              # mete las variables del .env adentro del contenedor
+    environment:                                # variables propias del servicio (pisan las del env_file)
+      DONATRACK_DB_URL: jdbc:postgresql://db:5432/donatrack?currentSchema=donaciones  # "db" = nombre del servicio, puerto interno
+      DONATRACK_DB_USER: donatrack
+      LOGISTICA_SERVICE_URL: ${URL_PUBLICA_LOGISTICA}
+      JAVA_TOOL_OPTIONS: -Xmx384m               # la JVM lo lee sola: tope de 384 MB de heap para que todo entre en la RAM
+      TZ: America/Argentina/Buenos_Aires        # hora local dentro del contenedor
+    ports: ["80:7070"]                          # puerto_de_la_máquina:puerto_del_contenedor
+    restart: unless-stopped
+
+  logistica:
+    build: { context: ., target: logistica }
+    depends_on:
+      db: { condition: service_healthy }
+    env_file: .env
+    environment:
+      DONATRACK_DB_URL: jdbc:postgresql://db:5432/donatrack?currentSchema=logistica
+      DONATRACK_DB_USER: donatrack
+      DONACIONES_SERVICE_URL: http://donaciones:7070
+      PLANIFICADOR_EXTERNO_URL: http://planificador-externo-de-rutas.com/planificar
+      DEPOSITO_DIRECCION: "Av. Medrano 951, CABA, Argentina"
+      DEPOSITO_LATITUD: "-34.59855526311623"
+      DEPOSITO_LONGITUD: "-58.42013582713193"
+      JAVA_TOOL_OPTIONS: -Xmx384m
+      TZ: America/Argentina/Buenos_Aires
+    ports: ["8080:8080"]
+    restart: unless-stopped
+
+volumes:
+  dbdata:

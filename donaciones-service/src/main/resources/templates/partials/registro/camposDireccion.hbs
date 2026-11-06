@@ -1,0 +1,17 @@
+<h5 class="text-primary mb-3 fw-semibold border-bottom pb-2 mt-4">Dirección</h5>
+{{#if errores.direccion}}
+    <div class="col-12">
+        <div class="alert alert-danger py-2 small mb-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{errores.direccion}}
+        </div>
+    </div>
+{{/if}}
+<div class="row">
+    <div class="col-md-8">
+        {{> partials/registro/inputField required=true name="calleNombre" label="Calle *" valor=valores.calleNombre error=errores.calleNombre}}
+    </div>
+    <div class="col-md-4">
+        {{> partials/registro/inputField required=true name="calleAltura" type="number" label="Altura *" valor=valores.calleAltura error=errores.calleAltura}}
+    </div>
+</div>

@@ -1,0 +1,34 @@
+{{#partial "contenido"}}
+    {{#*inline "camposEspecificos"}}
+        {{#> partials/registro/seccionDeFormulario titulo="Datos Personales"}}
+            <div class="col-md-6">
+                {{> partials/registro/inputField name="nombre" required=true label="Nombre *" placeholder="Ej: Dante" valor=valores.nombre error=errores.nombre}}
+            </div>
+            <div class="col-md-6">
+                {{> partials/registro/inputField name="apellido" required=true label="Apellido *" placeholder="Ej: Bonino" valor=valores.apellido error=errores.apellido}}
+            </div>
+
+            <div class="col-md-6">
+                {{> partials/registro/inputField name="documento" required=true label="Documento *" placeholder="Ej: 44344299" valor=valores.documento error=errores.documento}}
+            </div>
+            <div class="col-md-6">
+                {{> partials/registro/inputField name="fechaNacimiento" type="date" required=true label="Fecha de Nacimiento *" valor=valores.fechaDeNacimiento error=errores.fechaDeNacimiento}}
+            </div>
+
+            <div class="col-12 mb-3">
+                <label class="form-label text-secondary small fw-bold" for="genero">Género</label>
+                <select class="form-select rounded-3 py-2" id="genero" name="genero">
+                    <option value="X" selected>Prefiero no decirlo</option>
+                    <option value="FEMENINO">Femenino</option>
+                    <option value="MASCULINO">Masculino</option>
+                </select>
+            </div>
+        {{/partials/registro/seccionDeFormulario}}
+        {{#> partials/registro/seccionFormulario titulo="Dirección"}}
+            {{> partials/registro/camposDireccion}}
+        {{/partials/registro/seccionFormulario}}
+    {{/inline}}
+
+    {{> partials/registro/formwrapper tituloForm="Registro de Donante Humano" actionUrl="/registro/donante-humano"}}
+{{/partial}}
+{{>layout}}

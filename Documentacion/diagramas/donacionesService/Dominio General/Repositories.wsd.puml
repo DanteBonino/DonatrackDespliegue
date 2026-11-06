@@ -1,0 +1,68 @@
+@startuml
+
+abstract class Repository<TipoAlmacenado, DatosDeActualizacion> {
+  - almacenados: List<TipoAlmacenado>
+
+  + registrar(instancia: TipoAlmacenado): void
+  # validarUnicidadDeNegocio(instancia: TipoAlmacenado): void
+  + getInstancias(): List<TipoAlmacenado>
+  # estaVisible(instancia: TipoAlmacenado): boolean
+  + findById(id: String): TipoAlmacenado
+  + eliminarInstancia(id: String): void
+  # eliminar(instancia: TipoAlmacenado): void
+  + actualizarInstancia(id: String, datos: DatosDeActualizacion): void
+  {abstract} # validarActualizacion(almacenado: TipoAlmacenado, datos: DatosDeActualizacion): void
+  {abstract} # nombreDeEntidad(): String
+}
+
+class BeneficiariosRepository {
+  # validarUnicidadDeNegocio(unaEntidad: EntidadBeneficiaria): void
+  + existeAlgunaEntidadBeneficiariaConEstaRazonSocial(razonSocial: String): boolean
+  # validarActualizacion(entidad: EntidadBeneficiaria, datos: DatosEntidadesBeneficiarias): void
+  # nombreDeEntidad(): String
+  # estaVisible(entidadBeneficiaria: EntidadBeneficiaria): boolean
+  # eliminar(entidadBeneficiaria: EntidadBeneficiaria): void
+}
+
+class DonacionesRepository {
+  # validarActualizacion(donacion: DonacionIndependiente, datos: DatosDonacion): void
+  + recibirDonacion(donacion: Donacion): List<DonacionIndependiente>
+  + donacionesSegun(unaSubCategoria: SubCategoria): List<DonacionIndependiente>
+  + nombreDeEntidad(): String
+  + getDonacionesEnDeposito(): List<DonacionIndependiente>
+  + getListasParaEntregar(): List<DonacionIndependiente>
+  + getAsignadas(): List<DonacionIndependiente>
+  + getPendientesDeRevision(): List<DonacionIndependiente>
+  - getEnEstado(estadoDonacion: TipoEstadoDonacion): List<DonacionIndependiente>
+  # estaVisible(donacion: DonacionIndependiente): boolean
+  # eliminar(donacion: DonacionIndependiente): void
+}
+
+class DonantesRepository {
+  # validarUnicidadDeNegocio(unDonante: Donante): void
+  + existeAlgunDonanteConEsteDocumento(documentoUnico: String): boolean
+  + cantidadDeDonantes(): Integer
+  + getInactivos(): List<Donante>
+  # validarActualizacion(donante: Donante, datos: DatosDonante): void
+  # nombreDeEntidad(): String
+  # estaVisible(donante: Donante): boolean
+  # eliminar(donante: Donante): void
+}
+
+' Relaciones de Herencia con la declaración del tipo genérico
+Repository <|-- BeneficiariosRepository : "  <EntidadBeneficiaria, DatosEntidadesBeneficiarias>"
+Repository <|-- DonacionesRepository : "  <DonacionIndependiente, DatosDonacion>"
+Repository <|-- DonantesRepository : "  <Donante, DatosDonante>"
+
+
+
+class Donacion {
+  +getDonante()
+  +getBienes()
+}
+
+
+DonacionesRepository --> "*" DonacionIndependiente
+DonacionesRepository ..> Donacion: recibir
+
+@enduml

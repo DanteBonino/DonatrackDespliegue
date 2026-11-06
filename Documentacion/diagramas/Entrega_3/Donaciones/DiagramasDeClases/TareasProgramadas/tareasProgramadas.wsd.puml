@@ -1,0 +1,66 @@
+@startuml
+abstract class TareaProgramada implements WithSimplePersistenceUnit {
+  + final void arrancar()
+
+  + void ejecutar()
+
+  # abstract void ejecutarTarea();
+}
+
+class TareaCrearSolicitudesDeAsignacion extends TareaProgramada {
+
+  # void ejecutarTarea()
+}
+
+class CrearSolicitudesDeAsignacion {
+ + List<SolicitudDeAsignacion> ejecutar()
+}
+
+interface AlgoritmoDeAsignacion {
+ List <EntidadBeneficiaria> crearRanking(DonacionIndependiente donacionIndependiente, List <EntidadBeneficiaria> entidadesBeneficiarias)
+}
+
+CrearSolicitudesDeAsignacion --> AlgoritmoDeAsignacion
+TareaCrearSolicitudesDeAsignacion --> CrearSolicitudesDeAsignacion
+
+class NotificarDonantesInactivos extends TareaProgramada {
+  + void ejecutarTarea()
+}
+
+class PublicadorDeInactividad extends PublicadorObservable<InteresadoEnInactividad> {
+ void publicarInactividad(Donante unDonante)
+}
+
+class PublicadorObservable <I extends Interesado>{
+
+  + void suscribir(I ... consumidor)
+
+  + void desuscribir(I consumidor)
+
+  # void publicarA(Consumer<I> accion)
+}
+
+interface InteresadoEnInactividad extends Interesado {
+  void anteInactividad(Donante unDonante);
+}
+
+PublicadorDeInactividad --> "*" InteresadoEnInactividad
+NotificarDonantesInactivos --> PublicadorDeInactividad
+
+class ReintentoDeEnvioDeNotificacionesPendientes extends TareaProgramada {
+
+  # void ejecutarTarea()
+}
+
+class BusNotificaciones {
+    + void procesar(Notificacion notificacion)
+}
+
+class MedioNotificacionFactory {
+    + MedioDeNotificacion construirMedio(TipoDeMedio tipo)
+}
+
+BusNotificaciones --> "1" MedioNotificacionFactory
+
+ReintentoDeEnvioDeNotificacionesPendientes  --> BusNotificaciones
+@enduml

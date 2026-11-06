@@ -1,0 +1,15 @@
+info:
+  name: pendientesDeRevision
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{baseUrlDonaciones}}/donaciones/asignadas"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

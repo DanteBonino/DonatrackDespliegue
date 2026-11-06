@@ -1,0 +1,15 @@
+info:
+  name: listasParaEntregar
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{baseUrlDonaciones}}/donaciones/listas-para-entregar"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

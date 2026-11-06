@@ -1,0 +1,86 @@
+@startuml
+
+abstract class Notificacion {
+  - int vecesRebotada;
+  - boolean fueEntregada;
+
+  + void serRebotada()
+
+  + Boolean esEnviable()
+
+  + void pasarAEntregada()
+
+  + Notificable getReceptor()
+
+
+  + {abstract} TipoDeMedio getMedioDeNotificacion();
+
+  + {abstract} boolean esEnviablePorElMedio(TipoDeMedio unMedioDeNotificacion);
+}
+
+class NotificacionFija extends Notificacion {
+
+  + TipoDeMedio getMedioDeNotificacion()
+
+  + boolean esEnviablePorElMedio(TipoDeMedio unMedioDeNotificacion)
+}
+
+class NotificacionPreferencial extends Notificacion {
+
+  + TipoDeMedio getMedioDeNotificacion()
+
+  + boolean esEnviablePorElMedio(TipoDeMedio _unMedioDeNotificacion)
+}
+
+interface Notificable extends NotificableTelefono, NotificableMail {
+  + TipoDeMedio getMedioDeNotificacionPreferencial();
+
+  + void  actualizar(TipoDeMedio nuevoMedio, boolean parcial)
+
+}
+
+interface NotificableMail {
+  List<String> getMailsParaNotificar();
+}
+
+interface NotificableTelefono {
+  String getTelefono();
+  void setTelefono(String telefono);
+}
+
+Notificacion --> "1" Notificable
+
+class Donante implements Notificable {
+- String mail
+    + String getTelefono()
+    + void setTelefono(String otroTelefono)
+    + TipoDeMedio getMedioNotificacionPreferencial()
+    + void setMedioPreferido(TipoDeMedio nuevoMedio)
+    + List<String> getMailsParaNotificar()
+}
+
+class EntidadBeneficiaria implements Notificable {
+- List <String>  mails
+    + String getTelefono()
+    + void setTelefono(String otroTelefono)
+    + TipoDeMedio getMedioNotificacionPreferencial()
+    + void setMedioPreferido(TipoDeMedio nuevoMedio)
+    + List<String> getMailsParaNotificar()
+}
+
+class Administrador implements Notificable {
+- String mail
+    + String getTelefono()
+    + void setTelefono(String otroTelefono)
+    + TipoDeMedio getMedioNotificacionPreferencial()
+    + void setMedioPreferido(TipoDeMedio nuevoMedio)
+    + List<String> getMailsParaNotificar()
+}
+
+enum TipoDeMedio {
+  MAIL, WPP, SMS
+}
+
+NotificacionFija --> TipoDeMedio
+
+@enduml

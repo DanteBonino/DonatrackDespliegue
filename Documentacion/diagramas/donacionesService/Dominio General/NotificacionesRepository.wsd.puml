@@ -1,0 +1,12 @@
+@startuml
+class NotificacionesRepository {
+  - notificaciones: List<Notificacion>
+
+  + NotificacionesRepository(notificacionesIniciales: List<Notificacion>)
+  + agregarNotificacion(notificacion: Notificacion): void
+  + notificacionesEnviables(): List<Notificacion>
+}
+
+NotificacionesRepository --> "*" Notificacion : notificaciones
+
+@enduml

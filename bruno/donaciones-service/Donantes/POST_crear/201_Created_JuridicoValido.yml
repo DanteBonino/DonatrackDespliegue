@@ -1,0 +1,27 @@
+info:
+  name: crearDonanteJuridico
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/donantes"
+  body:
+    type: json
+    data: |-
+      {
+          "tipoPersona": "JURIDICA",
+          "documento": "30-12345678-9",
+          "nombreRazonSocial": "Empresa SA",
+          "email": "contacto@empresa.com",
+          "telefono": "1122334455",
+          "rubro": "Alimentos",
+          "tipoJuridico": "GOUBERNAMENTAL"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,48 @@
+@startuml
+
+class ComprobanteDeEntrega {
+ LocalDateTime getFecha()
+ String getPatenteCamion()
+
+}
+
+interface InteresadoEnEntregaConExito extends Interesado {
+  void anteEntregaConExito(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, ComprobanteDeEntrega comprobanteDeEntrega);
+}
+
+InteresadoEnEntregaConExito ..> "1" ComprobanteDeEntrega
+
+abstract class NotificadorEntregaConExito implements InteresadoEnEntregaConExito {
+  - BusNotificaciones busNotificaciones;
+
+  + void anteEntregaConExito(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, ComprobanteDeEntrega comprobanteDeEntrega)
+
+  {abstract} + String inicioMensaje(String idDonacion);
+
+  {abstract} + Notificable receptor(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria);
+
+}
+
+class NotificadorEntregaConExitoDonante extends NotificadorEntregaConExito{
+
+  + String inicioMensaje(String idDonacion)
+
+  + Notificable receptor(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+}
+
+class NotificadorEntregaConExitoEntidad extends NotificadorEntregaConExito{
+
+  + String inicioMensaje(String idDonacion)
+
+  + Notificable receptor(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+}
+
+class MedioNotificacionFactory {
+    + MedioDeNotificacion construirMedio(TipoDeMedio tipo)
+}
+
+BusNotificaciones --> "1" MedioNotificacionFactory
+
+NotificadorEntregaConExito --> "1" BusNotificaciones
+
+@enduml

@@ -1,0 +1,29 @@
+info:
+  name: 404 NotFound - Patente Inexistente en Callback
+  type: http
+  seq: 6
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/externo/callback-planificacion"
+  body:
+    type: json
+    data: |-
+      {
+        "rutas": [
+          {
+            "patenteCamion": "PATENTE-INEXISTENTE",
+            "entregas": [{"idDonacion": "DON-1", "direccion": "Calle 1"}]
+          }
+        ],
+        "donacionesSinAsignar": []
+      }
+  auth: inherit
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 404 Not Found", function() {
+          expect(res.status).to.equal(404);
+        });
+settings:
+  encodeUrl: true

@@ -1,0 +1,34 @@
+@startuml
+
+class NotificarDonantesInactivos {
+  public void ejecutar()
+}
+
+class DonantesRepository {
+  + getInactivos()
+}
+
+class Donante extends Usuario {
+
+}
+
+abstract class Usuario extends Persistible {
+  - LocalDate fechaDeUltimoIngreso;
+
+  + void registrarIngreso()
+
+  + boolean esInactivo()
+
+  + int getCantidadDeDiasInactivo()
+
+}
+
+class PublicadorDeInactividad {
+ + publicarInactividad()
+}
+
+NotificarDonantesInactivos --> "1" DonantesRepository
+NotificarDonantesInactivos --> "1" PublicadorDeInactividad
+DonantesRepository --> "*" Donante
+
+@enduml

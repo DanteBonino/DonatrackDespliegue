@@ -1,0 +1,674 @@
+@startuml
+title Diagrama de Clases - logistica-service (v1.5 formateada como v1.4)
+
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam nodesep 60
+skinparam ranksep 90
+
+' =========================================================
+' 0. TIPOS BASE DE JAVA
+' =========================================================
+class RuntimeException <<java.lang>>
+
+interface Runnable <<java.lang>> {
++ run(): void
+}
+
+' =========================================================
+' 1. CONFIGURACIÓN
+' =========================================================
+package "logistica-service :: Config" {
+class Configuracion {
+- propiedades: Properties
++ Configuracion()
++ getUrlDonacionesService(): String
++ getUrlPlanificadorExterno(): String
++ getDireccionDeposito(): String
++ getDepositoLatitud(): double
++ getDepositoLongitud(): double
+}
+}
+
+' =========================================================
+' 2. DOMINIO PURO
+' =========================================================
+package "logistica-service :: Dominio" {
+class Camion {
+- patente: String
+- volumen: double
+- altura: double
+- capacidad: double
+- posicionActual: Posicion
+- rutaActual: Ruta
++ Camion(String, double, double, double, Posicion)
++ estaDisponible(): boolean
++ asignarRuta(Ruta): void
++ finalizarRuta(): void
++ actualizarPosicion(Posicion): void
++ getPatente(): String
++ getVolumen(): double
++ getAltura(): double
++ getCapacidad(): double
++ getPosicionActual(): Posicion
++ getRutaActual(): Ruta
+}
+
+class Ruta {
+- id: String
+- fechaDeReparto: LocalDate
+- camionAsignado: Camion
+- entregas: List<Entrega>
+- estado: EstadoRuta
++ Ruta(String, LocalDate)
++ asignarCamion(Camion): void
++ agregarEntrega(Entrega): void
++ darInicio(): void
++ verificarFinalizacion(): void
++ getSiguienteEntrega(): Entrega
++ getId(): String
++ getFechaDeReparto(): LocalDate
++ getCamionAsignado(): Camion
++ getEntregas(): List<Entrega>
++ getEstado(): EstadoRuta
++ estaFinalizada(): boolean
+}
+
+class Entrega {
+- idEntrega: String
+- idDonacion: String
+- idEntidadBeneficiaria: String
+- estado: EstadoEntrega
+- comprobanteFoto: String
+- motivoNoRecepcion: String
+- historialDeEstados: List<EstadoHistorico>
+- entregaPublicador: EntregaPublicador
++ Entrega(String, String)
++ Entrega(String, String, String)
++ setPublicador(EntregaPublicador): void
++ iniciarViaje(): void
++ confirmarRecepcion(String, String): void
++ reportarIncidencia(String): void
++ reprogramar(): void
+- validarEstadoEsperado(EstadoEntrega, String): void
+- cambiarEstadoA(EstadoEntrega): void
++ getIdEntrega(): String
++ getIdDonacion(): String
++ getIdDestinatario(): String
++ getEstado(): EstadoEntrega
++ getComprobanteFoto(): String
++ getMotivoNoRecepcion(): String
+}
+
+class EstadoHistorico {
+- estado: EstadoEntrega
+- fechaDeTransicion: LocalDate
++ EstadoHistorico(EstadoEntrega)
+}
+
+class Posicion {
+- latitud: double
+- longitud: double
+- velocidad: double
++ Posicion(double, double, double)
++ getLatitud(): double
++ getLongitud(): double
++ getVelocidad(): double
++ calcularDistancia(Posicion): double
+}
+
+enum EstadoRuta {
+PLANIFICADA
+EN_CURSO
+FINALIZADA
+}
+
+enum EstadoEntrega {
+PLANIFICADA
+EN_CAMINO
+COMPLETADA
+INCIDENCIA
+}
+}
+
+' =========================================================
+' 3. EVENTOS (Patrón Observer)
+' =========================================================
+package "logistica-service :: Eventos (Observer)" {
+class EntregaPublicador {
+- observers: List<EntregaObserver>
++ suscribir(EntregaObserver): void
++ desuscribir(EntregaObserver): void
++ publicarEntregaIniciada(EntregaIniciadaEvent): void
++ publicarEntregaCompletada(EntregaCompletadaEvent): void
++ publicarIncidenciaLogistica(IncidenciaLogisticaEvent): void
++ publicarEntregaReprogramada(EntregaReprogramadaEvent): void
+}
+
+interface EntregaObserver {
++ anteEntregaIniciada(EntregaIniciadaEvent): void
++ anteEntregaCompletada(EntregaCompletadaEvent): void
++ anteIncidenciaLogistica(IncidenciaLogisticaEvent): void
++ anteEntregaReprogramada(EntregaReprogramadaEvent): void
+}
+
+record EntregaIniciadaEvent {
+idEntrega: String
+idDonacion: String
+idEntidadBeneficiaria: String
+}
+
+record EntregaCompletadaEvent {
+idEntrega: String
+idDonacion: String
+idEntidadBeneficiaria: String
+comprobanteFoto: String
+patenteCamion: String
+}
+
+record IncidenciaLogisticaEvent {
+idEntrega: String
+idDonacion: String
+idEntidadBeneficiaria: String
+motivoNoRecepcion: String
+}
+
+record EntregaReprogramadaEvent {
+idEntrega: String
+idDonacion: String
+}
+}
+
+' =========================================================
+' 4. REPOSITORIOS
+' =========================================================
+package "logistica-service :: Repositorios" {
+class FlotaRepository {
+- camiones: Map<String, Camion>
++ registrarCamion(Camion): void
++ buscarPorPatente(String): Camion
++ obtenerTodos(): List<Camion>
++ obtenerDisponibles(): List<Camion>
++ existeCamion(String): boolean
+}
+
+class RutasRepository {
+- rutas: Map<String, Ruta>
++ guardar(Ruta): void
++ buscarPorId(String): Ruta
++ obtenerTodas(): List<Ruta>
++ obtenerRutasDelDia(LocalDate): List<Ruta>
++ obtenerRutasEnCurso(): List<Ruta>
++ buscarEntregaPorId(String): Entrega
++ buscarEntregaPorIdDonacion(String): Entrega
++ buscarRutaPorEntregaId(String): Ruta
++ buscarRutaPorEntrega(Entrega): Ruta
+}
+}
+
+' =========================================================
+' 5. INTEGRACIÓN EXTERNA
+' =========================================================
+package "logistica-service :: Integración Externa" {
+
+package "externo :: donaciones" {
+interface DonacionesServiceAdapter {
++ notificarInicioDeEntrega(String, String, String): void
++ notificarEntregaCompletada(String, String, String, String): void
++ notificarIncidencia(String, String, String): void
++ notificarReprogramacion(String): void
++ obtenerDonacionesListasParaEntregar(): List<DonacionDto>
++ notificarDonacionesNoPlanificadas(List<String>): void
+}
+
+class DonacionesHttpAdapter {
+- baseUrl: String
+- httpClient: HttpClient
+- objectMapper: ObjectMapper
++ DonacionesHttpAdapter(String)
++ DonacionesHttpAdapter(String, HttpClient)
++ notificarInicioDeEntrega(String, String, String): void
++ notificarEntregaCompletada(String, String, String, String): void
++ notificarIncidencia(String, String, String): void
++ notificarReprogramacion(String): void
++ obtenerDonacionesListasParaEntregar(): List<DonacionDto>
++ notificarDonacionesNoPlanificadas(List<String>): void
+- postEstado(String, String, Object): void
+}
+
+class SincronizadorDeEstadosObserver {
+- adapter: DonacionesServiceAdapter
++ SincronizadorDeEstadosObserver(DonacionesServiceAdapter)
++ anteEntregaIniciada(EntregaIniciadaEvent): void
++ anteEntregaCompletada(EntregaCompletadaEvent): void
++ anteIncidenciaLogistica(IncidenciaLogisticaEvent): void
++ anteEntregaReprogramada(EntregaReprogramadaEvent): void
+}
+}
+
+package "externo :: planificador" {
+class PlanificadorRutasAdapter {
+- {static} MAX_DONACIONES_POR_LOTE: int = 100
+- urlPlanificador: String
+- objectMapper: ObjectMapper
++ PlanificadorRutasAdapter(String)
++ solicitarPlanificacion(List<DonacionDto>, List<CamionDto>): void
++ dividirEnLotes(List<DonacionDto>, int): List<List<DonacionDto>>
++ simularEnvioHttp(String): void
+- serializarAJson(Object): String
+}
+
+class SolicitanteDelPlanificadorExternoDeRutas {
+- donacionesAdapter: DonacionesServiceAdapter
+- flotaRepository: FlotaRepository
+- planificadorAdapter: PlanificadorRutasAdapter
++ SolicitanteDelPlanificadorExternoDeRutas(DonacionesServiceAdapter, FlotaRepository, PlanificadorRutasAdapter)
++ solicitarPlanificacionNocturna(): void
+}
+}
+
+package "externo :: callback" {
+class CallbackPlanificadorReceiver {
+- objectMapper: ObjectMapper
++ CallbackPlanificadorReceiver()
++ procesarCallback(String): PlanificacionResponse
+}
+}
+}
+
+' =========================================================
+' 6. INYECCIÓN DE DEPENDENCIAS
+' =========================================================
+package "logistica-service :: Injector" {
+class ConfigLoader {
+- {static} properties: Properties
++ {static} get(String): String
+}
+
+class LogisticaInjector {
+- flotaRepository: FlotaRepository
+- rutasRepository: RutasRepository
+- donacionesServiceAdapter: DonacionesServiceAdapter
+- sincronizadorDeEstadosObserver: SincronizadorDeEstadosObserver
+- callbackReceiver: CallbackPlanificadorReceiver
+- planificadorAdapter: PlanificadorRutasAdapter
+- entregaPublicador: EntregaPublicador
++ LogisticaInjector()
++ getFlotaRepository(): FlotaRepository
++ getRutasRepository(): RutasRepository
++ getCallbackReceiver(): CallbackPlanificadorReceiver
++ getPlanificadorAdapter(): PlanificadorRutasAdapter
++ getEntregaPublicador(): EntregaPublicador
++ getDonacionesServiceAdapter(): DonacionesServiceAdapter
++ getPlanificadorRutasAdapter(): PlanificadorRutasAdapter
+}
+}
+
+' =========================================================
+' 7. CONTROLADORES (API REST - Javalin)
+' =========================================================
+package "logistica-service :: Controladores (API REST)" {
+class CamionController {
+- flotaRepository: FlotaRepository
++ CamionController(FlotaRepository)
++ actualizarPosicion(Context): void
++ obtenerEstadoCamion(Context): void
++ iniciarRuta(Context): void
++ obtenerTodosLosCamiones(Context): void
+- mapearADashboardDto(Camion): CamionDashboardDto
+}
+
+class EntregaController {
+- rutasRepository: RutasRepository
+- direccionDeposito: String
+- config: Configuracion
++ EntregaController(RutasRepository, String)
++ confirmarRecepcion(Context): void
++ reportarIncidencia(Context): void
++ reprogramar(Context): void
++ redirigirATracking(Context): void
+}
+
+class MonitoreoController {
+- rutasRepository: RutasRepository
++ MonitoreoController(RutasRepository)
++ obtenerRutasActivas(Context): void
++ obtenerPosicionCamion(Context): void
+}
+
+class CallbackController {
+- receiver: CallbackPlanificadorReceiver
+- flotaRepository: FlotaRepository
+- rutasRepository: RutasRepository
+- entregaPublicador: EntregaPublicador
+- donacionesServiceAdapter: DonacionesServiceAdapter
++ CallbackController(CallbackPlanificadorReceiver, FlotaRepository, RutasRepository, EntregaPublicador, DonacionesServiceAdapter)
++ recibirPlanificacion(Context): void
+}
+
+class PlanificacionController {
+- accionPlanificacion: Runnable
++ PlanificacionController(Runnable)
++ ejecutarPlanificacion(Context): void
+}
+
+class HealthController {
+- inicioServidor: Instant
+- nombreServicio: String
++ HealthController(String)
++ check(Context): void
+}
+}
+
+' =========================================================
+' 8. DTOs
+' =========================================================
+package "logistica-service :: DTOs" {
+record CamionDashboardDto {
+patente: String
+latitud: double
+longitud: double
+velocidad: double
+estadoRuta: String
+idRutaActual: String
+totalEntregas: int
+entregasCompletadas: int
+}
+
+record CamionResponseDto {
+patente: String
+latitud: double
+longitud: double
+estadoRuta: String
+idRutaActual: String
+}
+
+record CamionFlotaDto {
+patente: String
+volumen: double
+altura: double
+capacidad: double
+estado: String
+}
+
+record CamionRequest {
+patente: String
+volumen: double
+altura: double
+capacidad: double
+}
+
+record PosicionRequest {
+latitud: double
+longitud: double
+velocidad: double
+}
+
+record MonitoreoRutaDto {
+idRuta: String
+patenteCamion: String
+latitud: double
+longitud: double
+velocidad: double
+estadoRuta: String
+totalEntregas: int
+entregasCompletadas: int
+}
+
+record TrackingEntregaResponseDto {
+idDonacion: String
+estadoEntrega: String
+patenteCamion: String
+latitud: Double
+longitud: Double
+velocidad: Double
+urlGoogleMaps: String
+}
+
+record MensajeResponse {
+mensaje: String
+}
+
+record HealthResponse {
+status: String
+timestamp: String
+uptime: String
+serviceName: String
+}
+
+record ReportarIncidenciaRequest {
+motivo: String
+}
+
+record ConfirmarEntregaRequest {
+comprobante: String
+}
+
+record EntregaDetalleDto {
+idEntrega: String
+idDonacion: String
+estado: String
+}
+
+record RutaDetalleDto {
+idRuta: String
+fechaDeReparto: LocalDate
+estado: String
+patenteCamion: String
+entregas: List<EntregaDetalleDto>
+}
+
+class EntregaDto {
+- idDonacion: String
+- idEntidadBeneficiaria: String
+- direccion: String
++ EntregaDto()
++ EntregaDto(String, String, String)
++ getIdDonacion(): String
++ getIdEntidadBeneficiaria(): String
++ getDireccion(): String
+}
+
+class RutaPlanificadaDto {
+- patenteCamion: String
+- entregas: List<EntregaDto>
++ RutaPlanificadaDto()
++ RutaPlanificadaDto(String, List<EntregaDto>)
++ getPatenteCamion(): String
++ getEntregas(): List<EntregaDto>
+}
+
+class PlanificacionResponse {
+- rutas: List<RutaPlanificadaDto>
+- donacionesSinAsignar: List<String>
++ PlanificacionResponse()
++ PlanificacionResponse(List<RutaPlanificadaDto>, List<String>)
++ getRutas(): List<RutaPlanificadaDto>
++ getDonacionesSinAsignar(): List<String>
+}
+
+class DonacionDto {
+- idDonacion: String
+- direccionDestino: String
++ DonacionDto(String, String)
++ getId(): String
++ getDireccionDestino(): String
+}
+
+class CamionDto {
+- patente: String
+- volumen: double
+- altura: double
+- capacidad: double
++ CamionDto(String, double, double, double)
++ getPatente(): String
++ getVolumen(): double
++ getAltura(): double
++ getCapacidad(): double
+}
+
+class SolicitudPlanificacionRequest {
+- donaciones: List<DonacionDto>
+- camiones: List<CamionDto>
++ SolicitudPlanificacionRequest(List<DonacionDto>, List<CamionDto>)
++ getDonaciones(): List<DonacionDto>
++ getCamiones(): List<CamionDto>
+}
+}
+
+' =========================================================
+' 9. EXCEPCIONES
+' =========================================================
+package "logistica-service :: Exceptions" {
+class CamionNoDisponibleException {
++ CamionNoDisponibleException(String)
+}
+
+class CamionSinRutaActivaException {
++ CamionSinRutaActivaException(String)
+}
+
+class EstadoEntregaInvalidoException {
++ EstadoEntregaInvalidoException(String, EstadoEntrega)
+}
+
+class EstadoRutaInvalidoException {
++ EstadoRutaInvalidoException(String, EstadoRuta)
+}
+
+class RutaSinCamionAsignadoException {
++ RutaSinCamionAsignadoException(String)
+}
+
+class RutaSinEntregasException {
++ RutaSinEntregasException(String)
+}
+}
+
+' =========================================================
+' 10. DATOS MOCK Y TAREAS PROGRAMADAS
+' =========================================================
+package "logistica-service :: Datos Mock" {
+class MockDataLoader {
++ {static} cargar(FlotaRepository, RutasRepository, Configuracion): void
+}
+}
+
+package "logistica-service :: Tareas Programadas" {
+class PlanificacionFueraDePicoMain {
++ {static} main(String[]): void
+}
+}
+
+' =========================================================
+' 11. SERVIDOR (Main)
+' =========================================================
+class ServidorLogistica {
++ {static} main(String[]): void
+}
+
+' =========================================================
+' RELACIONES
+' =========================================================
+
+' --- Dominio ---
+Camion "0..1" -- "0..1" Ruta : rutaActual / camionAsignado
+Ruta "1" o-- "0..*" Entrega : entregas
+Entrega "1" *-- "1..*" EstadoHistorico : historialDeEstados
+Camion *-- "1" Posicion : posicionActual
+Ruta --> EstadoRuta
+Entrega --> EstadoEntrega
+
+' --- Eventos / Observer ---
+Entrega "0..*" --> "0..1" EntregaPublicador : publicador opcional
+
+Entrega ..> EntregaIniciadaEvent : crea
+Entrega ..> EntregaCompletadaEvent : crea
+Entrega ..> IncidenciaLogisticaEvent : crea
+Entrega ..> EntregaReprogramadaEvent : crea
+
+EntregaPublicador o-- "*" EntregaObserver : observers
+
+EntregaPublicador ..> EntregaIniciadaEvent : publica
+EntregaPublicador ..> EntregaCompletadaEvent : publica
+EntregaPublicador ..> IncidenciaLogisticaEvent : publica
+EntregaPublicador ..> EntregaReprogramadaEvent : publica
+
+' --- Repositorios ---
+FlotaRepository o-- "*" Camion : gestiona
+RutasRepository o-- "*" Ruta : gestiona
+
+' --- Integración externa ---
+DonacionesHttpAdapter ..|> DonacionesServiceAdapter
+SincronizadorDeEstadosObserver ..|> EntregaObserver
+SincronizadorDeEstadosObserver --> DonacionesServiceAdapter : delega
+
+SolicitanteDelPlanificadorExternoDeRutas --> DonacionesServiceAdapter : obtiene donaciones
+SolicitanteDelPlanificadorExternoDeRutas --> FlotaRepository : obtiene camiones
+SolicitanteDelPlanificadorExternoDeRutas --> PlanificadorRutasAdapter : envía lotes
+
+PlanificadorRutasAdapter ..> SolicitudPlanificacionRequest : construye
+CallbackPlanificadorReceiver ..> PlanificacionResponse : deserializa
+
+' --- Injector ---
+LogisticaInjector --> FlotaRepository : crea
+LogisticaInjector --> RutasRepository : crea
+LogisticaInjector --> DonacionesHttpAdapter : crea
+LogisticaInjector --> SincronizadorDeEstadosObserver : crea
+LogisticaInjector --> CallbackPlanificadorReceiver : crea
+LogisticaInjector --> PlanificadorRutasAdapter : crea
+LogisticaInjector --> EntregaPublicador : crea y suscribe
+LogisticaInjector ..> ConfigLoader : usa
+
+' --- Controladores ---
+CamionController --> FlotaRepository
+EntregaController --> RutasRepository
+EntregaController --> Configuracion : usa
+MonitoreoController --> RutasRepository
+
+CallbackController --> CallbackPlanificadorReceiver
+CallbackController --> FlotaRepository
+CallbackController --> RutasRepository
+CallbackController --> EntregaPublicador
+CallbackController --> DonacionesServiceAdapter : notifica no planificadas
+
+PlanificacionController --> Runnable : accionPlanificacion
+
+' --- Servidor principal ---
+ServidorLogistica --> LogisticaInjector : usa
+ServidorLogistica --> Configuracion : usa
+ServidorLogistica ..> MockDataLoader : invoca cargar()
+
+ServidorLogistica --> CamionController : crea
+ServidorLogistica --> EntregaController : crea
+ServidorLogistica --> MonitoreoController : crea
+ServidorLogistica --> CallbackController : crea
+ServidorLogistica --> PlanificacionController : crea
+ServidorLogistica --> HealthController : crea
+ServidorLogistica --> SolicitanteDelPlanificadorExternoDeRutas : crea
+
+' --- Tarea programada ---
+PlanificacionFueraDePicoMain --> LogisticaInjector : usa
+PlanificacionFueraDePicoMain --> SolicitanteDelPlanificadorExternoDeRutas : ejecuta
+
+' --- MockDataLoader ---
+MockDataLoader --> FlotaRepository : carga
+MockDataLoader --> RutasRepository : carga
+MockDataLoader --> Configuracion : usa
+
+' --- Excepciones ---
+CamionNoDisponibleException --|> RuntimeException
+CamionSinRutaActivaException --|> RuntimeException
+EstadoEntregaInvalidoException --|> RuntimeException
+EstadoRutaInvalidoException --|> RuntimeException
+RutaSinCamionAsignadoException --|> RuntimeException
+RutaSinEntregasException --|> RuntimeException
+
+' --- DTOs ---
+PlanificacionResponse "1" o-- "0..*" RutaPlanificadaDto
+RutaPlanificadaDto "1" o-- "0..*" EntregaDto
+SolicitudPlanificacionRequest "1" o-- "0..*" DonacionDto
+SolicitudPlanificacionRequest "1" o-- "0..*" CamionDto
+
+@enduml

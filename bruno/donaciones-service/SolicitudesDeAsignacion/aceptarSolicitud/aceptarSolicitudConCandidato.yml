@@ -1,0 +1,25 @@
+info:
+  name: aceptarSolicitudConCandidato
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/solicitudes-de-asignacion/:id/aceptar"
+  params:
+    - name: id
+      value: 6d87ac1e-725e-4811-ab32-2e15b244da4d
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "idBeneficiario": "{{beneficiarioCandidato}}"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,19 @@
+info:
+  name: eliminar
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: "{{baseUrlDonaciones}}/donantes/:id"
+  params:
+    - name: id
+      value: 51028ad1-e950-4084-9ca8-765373f6d60f
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

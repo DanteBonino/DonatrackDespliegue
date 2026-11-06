@@ -1,0 +1,66 @@
+@startuml
+interface RepositorioBasico<T extends EntidadBase> extends WithSimplePersistenceUnit {
+  + registrar(T entidad): void
+  + clase(): Class<T>
+  + nombre(): String
+  + obtenerTodas(): List<T>
+  + obtenerTodosSegun(String nombrePropiedad, Object valor):List<T>
+  + obtenerPorId(Long idJpa): T
+  + obtenerUnoSegun(String nombre, Object valor): T
+}
+
+interface FlotaRepository {
+  + registrar(Camion camion): void
+  + buscarPorPatente(String patente): Camion
+  + obtenerTodos(): List<Camion>
+  + obtenerDisponibles(): List<Camion>
+  + obtenerEnCurso(): List<Camion>
+  + buscarPorRuta(Ruta unaRuta): Camion
+  + obtenerPorId(Long id):  Camion
+}
+
+class FlotaRepositoryConPersistencia <<Singleton>> implements FlotaRepository{
+  + registrar(Camion nuevoCamion):void
+  + obtenerTodos(): List<Camion>
+  + buscarPorRuta(Ruta unaRuta): Camion
+  + buscarPorPatente(String patente): String
+  + obtenerDisponibles(): List<Camion>
+  + obtenerPorId(Long id): Camion
+  + obtenerEnCurso(): List<Camion>
+  + clase(): Class<Camion>
+}
+
+interface RutasRepository {
+  + registrar(Ruta ruta): void;
+  + otenerTodas(): List<Ruta>;
+  + obtenerRutasDelDia(LocalDate fecha): List<Ruta>;
+  + obtenerRutasEnCurso(): List<Ruta>;
+  + buscarRutaPorEntregaId(Long idEntrega): Ruta;
+}
+
+class RutasRepositoryConPersistencia <<Singleton>> implements RutasRepository {
+  + clase(): Class<Ruta>
+  + registrar(Ruta ruta): void;
+  + otenerTodas(): List<Ruta>;
+  + obtenerRutasDelDia(LocalDate fecha): List<Ruta>;
+  + obtenerRutasEnCurso(): List<Ruta>;
+  + buscarRutaPorEntregaId(Long idEntrega): Ruta;
+}
+
+interface EntregasRepository {
+  + obtenerPorId(Long entregaId): Entrega
+  + obtenerPorDonacionId(String donacionId): Entrega
+  + obtenerPorNombre(String nombre): Entrega
+}
+
+class EntregasRepositoryConPersistencia <<Singleton>> implements EntregasRepository {
+  + obtenerPorId(Long entregaId): Entrega
+  + obtenerPorDonacionId(String donacionId): Entrega
+  + obtenerPorNombre(String nombre): Entrega
+  + clase(): Class <Entrega>
+}
+
+RepositorioBasico <|.. FlotaRepositoryConPersistencia : <Camion>
+RepositorioBasico <|.. RutasRepositoryConPersistencia: <Ruta>
+RepositorioBasico <|.. EntregasRepositoryConPersistencia: <Entrega>
+@enduml

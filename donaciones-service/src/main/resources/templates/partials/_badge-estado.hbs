@@ -1,0 +1,14 @@
+{{!-- Uso: {{>partials/_badge-estado estado="ENTREGADA"}} --}}
+<span class="badge
+    {{#if (eq estado "ENTREGADA")}}bg-success
+    {{else if (eq estado "EN_TRASLADO")}}bg-info
+    {{else if (eq estado "ASIGNACION_REALIZADA")}}bg-primary
+    {{else if (eq estado "LISTA_PARA_ENTREGAR")}}bg-warning text-dark
+    {{else if (eq estado "PENDIENTE_DE_CONFIRMACION_DE_ASIGNACION")}}bg-secondary
+    {{else if (eq estado "EN_DEPOSITO")}}bg-dark
+    {{else if (eq estado "ENTREGA_FALLIDA")}}bg-danger
+    {{else if (eq estado "VENCIDA")}}bg-dark
+    {{else}}bg-secondary
+    {{/if}}">
+    {{estado}}
+</span>

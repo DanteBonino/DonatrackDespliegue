@@ -1,0 +1,86 @@
+@startuml
+abstract class Donante {
+ + recibirNotificacion()
+ + refrescar(DonanteDto donanteCopia)
+ + esIgualA(Donante otroDonante)
+ getCaracteristicaDeDiferenciacion()
+ refrescarAtributosParticulares()
+}
+
+class Notificacion {
+ marcarComoCompletada()
+}
+
+Donante ..> Notificacion
+Donante --> Notificador
+
+enum EstadoNotificacion{
+ COMPLETADA
+}
+
+Notificacion --> EstadoNotificacion
+
+enum Notificador {
+  SMS
+  EMAIL
+  WHATSAPP
+  + notificarA(destinatario: Object, notificacion: Notificacion)
+}
+
+class PersonaHumana {
+ genero
+ direccion
+ fechaDeNacimiento
+ getCaracteristicaDeDiferenciacion()
+ refrescarAtributosParticulares()
+}
+
+class PersonaJuridica {
+ razonSocial
+ rubro
+ tipoJuridico
+ cuit
+ getCaracteristicaDeDiferenciacion()
+ refrescarAtributosParticulares()
+}
+
+Donante <|-- PersonaHumana
+Donante <|-- PersonaJuridica
+
+class DonantesRepository {
+  + registrarDonante(unDonante: Donante)
+  + actualizarDonantesSegunArchivo(ruta: String)
+}
+
+
+DonantesRepository "1" --> "*" Donante
+DonantesRepository  -->  ImportadorCsv
+DonantesRepository ..> DonanteDto
+DonantesRepository ..> Notificacion
+
+class DonanteDto {
+ crearInstancia()
+}
+
+class ImportadorCsv {
+    + importarDesde(String unaRuta, Class<T> claseDestino)
+}
+
+ImportadorCsv ..> "*" DonanteDto
+
+class ContactoDonante {
+  email
+  telefono
+}
+
+class NombreCompleto {
+ nombre
+ apellido
+
+ getNombreCompleto()
+}
+
+PersonaHumana --> "1" NombreCompleto
+
+Donante --> "1" ContactoDonante
+@enduml

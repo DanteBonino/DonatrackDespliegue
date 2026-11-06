@@ -1,0 +1,36 @@
+@startuml
+class EntregasController {
+ + confirmarRecepcion(Context ctx): void
+ + reportarIncidencia(Context ctx): void
+ + reprogramar(Context ctx): void
+ + redirigirTracking(Context ctx): void
+}
+
+class EntregasRepositoryConPersistencia <<Singleton>> {
+  + obtenerPorNombre(String nombre): Entrega
+}
+
+class GeneradorDeUrlTracking {
+  + urlTracking(Posicion posicion): String
+}
+
+class AlmacenamientoDeComprobantes {
+ + almacenarComprobante(UploadedFile archivo, Long idEntrega, String idDonacion, String patenteCamion): String
+}
+
+EntregasController ..> FlotaRepositoryConPersistencia
+EntregasController ..> RutasRepositoryConPersistencia
+EntregasController  ..> EntregasRepositoryConPersistencia
+EntregasController --> GeneradorDeUrlTracking
+EntregasController --> AlmacenamientoDeComprobantes
+
+class FlotaRepositoryConPersistencia <<Singleto>> {
+  + buscarPorRuta(Ruta unaRuta): Camion
+}
+
+class RutasRepositoryConPersistencia <<Singleton>> {
+  + buscarRutaPorEntregaId(Long idEntrega): Ruta;
+}
+
+note "Se documentan únicamente los métodos de los repositorios que usa el controller. Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos" as N1
+@enduml

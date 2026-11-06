@@ -1,0 +1,56 @@
+@startuml
+
+abstract class EntidadBase <<MappedSuperclass>> {
+  + String getIdDominio()
+
+  + boolean esLaMismaEntidad(String id)
+
+  + Long getId()
+
+}
+
+abstract class Notificacion <<Entity>> extends EntidadBase {
+  - vecesRebotada;
+  - fueEntregada;
+  - mensaje
+
+  + void serRebotada()
+
+  + Boolean esEnviable()
+
+  + void pasarAEntregada()
+
+  + DatosDeContacto getReceptor()
+
+
+  + {abstract} TipoDeMedio getMedioDeNotificacion();
+
+  + {abstract} boolean esEnviablePorElMedio(TipoDeMedio unMedioDeNotificacion);
+}
+
+class NotificacionFija <<Entity>> extends Notificacion {
+  + boolean esEnviablePorElMedio(TipoDeMedio unMedioDeNotificacion)
+  + TipoDeMedio getMedioDeNotificacion()
+}
+
+class NotificacionPreferencial <<Entity>> extends Notificacion {
+  + TipoDeMedio getMedioDeNotificacion()
+  + boolean esEnviablePorElMedio(TipoDeMedio _unMedioDeNotificacion)
+}
+
+
+enum TipoDeMedio {
+  MAIL, WPP, SMS
+}
+
+class DatosDeContacto <<Entity>> {
+ + List<String> getMailsParaNotificar()
+ + TipoDeMedio getMedioDeNotificacionPreferencial()
+ + String getTelefono()
+}
+
+NotificacionFija --> TipoDeMedio
+Notificacion --> DatosDeContacto
+
+
+@enduml

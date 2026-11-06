@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+
+<div id="{{mapId}}" style="height: {{mapHeight}};" class="rounded border"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+    (function() {
+        var mapa = L.map('{{mapId}}').setView([{{centerLat}}, {{centerLng}}], {{zoom}});
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+        }).addTo(mapa);
+
+        var grupo = L.markerClusterGroup();
+
+        {{#each marcadores}}
+            grupo.addLayer(
+                    L.marker([{{this.lat}}, {{this.lng}}])
+                            .bindPopup(
+                                    '<b>{{this.titulo}}</b><br>' +
+                                    '{{this.descripcion}}'
+                            )
+            );
+        {{/each}}
+
+        mapa.addLayer(grupo);
+    })();
+</script>

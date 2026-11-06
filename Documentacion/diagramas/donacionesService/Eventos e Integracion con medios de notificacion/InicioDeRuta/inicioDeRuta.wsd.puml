@@ -1,0 +1,13 @@
+@startuml
+interface GeneradorLinkDeTrackeoEntrega {
+  String generarLink(String idDonacion);
+}
+
+class GeneradorLinkApi implements GeneradorLinkDeTrackeoEntrega {
+  - String urlLogisitica;
+
+  + String generarLink(String idEntrega)
+}
+
+
+@enduml

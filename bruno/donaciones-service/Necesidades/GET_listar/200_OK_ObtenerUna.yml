@@ -1,0 +1,19 @@
+info:
+  name: getOne
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias/{{beneficiarioConAmbosTiposDeNecesidades}}/necesidades/:idNecesidad"
+  params:
+    - name: idNecesidad
+      value: b0af3786-cd9a-4c96-be83-23698d7aaff1
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

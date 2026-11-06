@@ -1,0 +1,237 @@
+@startuml
+title Diagrama de Clases - logistica-service (Arquitectura Completa)
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+' =========================================================
+' 1. DOMINIO PURO (El core operativo de la logística)
+' =========================================================
+package "logistica-service :: Dominio" {
+    class Camion {
+        - patente: String
+        - volumen: double
+        - altura: double
+        - capacidad: double
+        - posicionActual: Posicion
+        - rutaActual: Ruta
+        + estaDisponible(): boolean
+        + asignarRuta(Ruta): void
+        + finalizarRuta(): void
+        + actualizarPosicion(Posicion): void
+    }
+
+    class Ruta {
+        - id: String
+        - fechaDeReparto: LocalDate
+        - camionAsignado: Camion
+        - entregas: List<Entrega>
+        - estado: EstadoRuta
+        + asignarCamion(Camion): void
+        + agregarEntrega(Entrega): void
+        + darInicio(): void
+        + verificarFinalizacion(): void
+    }
+
+    class Entrega {
+        - idEntrega: String
+        - idDonacion: String
+        - idEntidadBeneficiaria: String
+        - estado: EstadoEntrega
+        - comprobanteFoto: String
+        - motivoNoRecepcion: String
+        - historialDeEstados: List<EstadoHistorico>
+        - entregaPublicador: EntregaPublicador
+        + iniciarViaje(): void
+        + confirmarRecepcion(String, String): void
+        + reportarIncidencia(String): void
+        + reprogramar(): void
+    }
+
+    class EstadoHistorico {
+        - estado: EstadoEntrega
+        - fechaDeTransicion: LocalDate
+    }
+
+    class Posicion {
+        - latitud: double
+        - longitud: double
+        - velocidad: double
+        + calcularDistancia(Posicion): double
+    }
+
+    enum EstadoRuta {
+        PLANIFICADA
+        EN_CURSO
+        FINALIZADA
+    }
+
+    enum EstadoEntrega {
+        PLANIFICADA
+        EN_CAMINO
+        COMPLETADA
+        INCIDENCIA
+    }
+}
+
+' =========================================================
+' 2. EVENTOS (Patrón Observer interno)
+' =========================================================
+package "logistica-service :: Eventos (Observer)" {
+    class EntregaPublicador {
+        - observers: List<EntregaObserver>
+        + suscribir(EntregaObserver): void
+        + desuscribir(EntregaObserver): void
+        + publicarEntregaIniciada(EntregaIniciadaEvent): void
+        + publicarEntregaCompletada(EntregaCompletadaEvent): void
+        + publicarIncidenciaLogistica(IncidenciaLogisticaEvent): void
+        + publicarEntregaReprogramada(EntregaReprogramadaEvent): void
+    }
+
+    interface EntregaObserver {
+        + anteEntregaIniciada(EntregaIniciadaEvent): void
+        + anteEntregaCompletada(EntregaCompletadaEvent): void
+        + anteIncidenciaLogistica(IncidenciaLogisticaEvent): void
+        + anteEntregaReprogramada(EntregaReprogramadaEvent): void
+    }
+
+    record EntregaIniciadaEvent {
+        idEntrega: String
+        idDonacion: String
+        idEntidadBeneficiaria: String
+    }
+    record EntregaCompletadaEvent {
+        idEntrega: String
+        idDonacion: String
+        idEntidadBeneficiaria: String
+        comprobanteFoto: String
+        patenteCamion: String
+    }
+    record IncidenciaLogisticaEvent {
+        idEntrega: String
+        idDonacion: String
+        idEntidadBeneficiaria: String
+        motivoNoRecepcion: String
+    }
+    record EntregaReprogramadaEvent {
+        idEntrega: String
+        idDonacion: String
+    }
+}
+
+' =========================================================
+' 3. REPOSITORIOS (Agregados DDD / Memoria)
+' =========================================================
+package "logistica-service :: Repositorios" {
+    class FlotaRepository {
+        - camiones: Map<String, Camion>
+        + registrarCamion(Camion): void
+        + buscarPorPatente(String): Camion
+        + obtenerDisponibles(): List<Camion>
+    }
+
+    class RutasRepository {
+        - rutas: Map<String, Ruta>
+        + guardar(Ruta): void
+        + buscarPorId(String): Ruta
+        + obtenerRutasEnCurso(): List<Ruta>
+        + buscarEntregaPorId(String): Entrega
+    }
+}
+
+' =========================================================
+' 4. INTEGRACIÓN EXTERNA (Adapters y Sincronización)
+' =========================================================
+package "logistica-service :: Integración Externa" {
+    interface DonacionesServiceAdapter {
+        + notificarInicioDeEntrega(String, String, String): void
+        + notificarEntregaCompletada(String, String, String, String): void
+        + notificarIncidencia(String, String, String): void
+        + notificarReprogramacion(String): void
+        + obtenerDonacionesListasParaEntregar(): List<DonacionDto>
+        + notificarDonacionesNoPlanificadas(List<String>): void
+    }
+
+    class DonacionesHttpAdapter {
+        - baseUrl: String
+        - httpClient: HttpClient
+    }
+
+    class SincronizadorDeEstadosObserver {
+        - adapter: DonacionesServiceAdapter
+    }
+
+    class PlanificadorRutasAdapter {
+        - urlPlanificador: String
+        + solicitarPlanificacion(List<DonacionDto>, List<CamionDto>): void
+        + dividirEnLotes(List<DonacionDto>, int): List<List<DonacionDto>>
+    }
+
+    class GestorDePlanificacion {
+        - donacionesAdapter: DonacionesServiceAdapter
+        - flotaRepository: FlotaRepository
+        - planificadorAdapter: PlanificadorRutasAdapter
+        + ejecutarPlanificacionNocturna(): void
+    }
+
+    class CallbackPlanificadorReceiver {
+        + procesarCallback(String json): PlanificacionResponse
+    }
+}
+
+' =========================================================
+' 5. CAPA DE APLICACIÓN (API REST - Javalin)
+' =========================================================
+package "logistica-service :: Controladores (API REST)" {
+    class CamionController
+    class EntregaController
+    class MonitoreoController
+    class CallbackController
+    class PlanificacionController
+}
+
+' =========================================================
+' RELACIONES
+' =========================================================
+
+' --- Dominio ---
+' Asociación bidireccional entre Camion y Ruta
+Camion "1" -- "0..1" Ruta : rutaActual / camionAsignado
+Ruta "1" *-- "0..*" Entrega : entregas
+Entrega "1" *-- "0..*" EstadoHistorico : historial
+Camion --> "1" Posicion : posicionActual
+Ruta --> EstadoRuta
+Entrega --> EstadoEntrega
+
+' --- Eventos (Observer) ---
+Entrega --> EntregaPublicador : publica eventos (inyectado)
+EntregaPublicador o-- "*" EntregaObserver : mantiene lista (Agregación)
+
+EntregaPublicador --> EntregaIniciadaEvent : crea
+EntregaPublicador --> EntregaCompletadaEvent : crea
+EntregaPublicador --> IncidenciaLogisticaEvent : crea
+EntregaPublicador --> EntregaReprogramadaEvent : crea
+
+' --- Repositorios ---
+FlotaRepository o-- "*" Camion : gestiona
+RutasRepository o-- "*" Ruta : gestiona
+
+' --- Integración (Implementaciones de Interfaces) ---
+DonacionesHttpAdapter ..|> DonacionesServiceAdapter : implementa
+SincronizadorDeEstadosObserver ..|> EntregaObserver : implementa
+SincronizadorDeEstadosObserver --> DonacionesServiceAdapter : delega llamadas HTTP
+
+GestorDePlanificacion --> DonacionesServiceAdapter : obtiene donaciones
+GestorDePlanificacion --> FlotaRepository : obtiene camiones
+GestorDePlanificacion --> PlanificadorRutasAdapter : envía lotes
+
+CallbackController --> CallbackPlanificadorReceiver : usa
+CallbackController --> DonacionesServiceAdapter : notifica no planificadas
+
+' --- Controladores hacia Repositorios/Dominio ---
+CamionController --> FlotaRepository
+EntregaController --> RutasRepository
+MonitoreoController --> RutasRepository
+CallbackController --> FlotaRepository
+CallbackController --> RutasRepository
+
+@enduml

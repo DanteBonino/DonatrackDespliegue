@@ -1,0 +1,14 @@
+@startuml
+
+class AdministradoresRepository {
+  - administradores: List<Administrador>
+
+  + AdministradoresRepository()
+  + registrarAdministrador(administrador: Administrador): void
+  + getAll(): List<Administrador>
+  + buscarPorId(id: String): Optional<Administrador>
+}
+
+AdministradoresRepository --> "*" Administrador : administradores
+
+@enduml

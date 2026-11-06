@@ -1,0 +1,61 @@
+@startuml
+interface InteresadoEnAsignacion extends Interesado {
+  void anteAsignacion(DonacionIndependiente donacion, EntidadBeneficiaria entidad);
+}
+
+class PublicadorDeAsignacion extends PublicadorObservable <InteresadoEnAsignacion> {
+  + void publicarAsignacion(DonacionIndependiente donacion, EntidadBeneficiaria entidad)
+}
+ interface Interesado {
+}
+
+
+PublicadorDeAsignacion --> "*" InteresadoEnAsignacion
+
+
+interface InteresadoEnInactividad extends Interesado {
+  void anteInactividad(Donante unDonante);
+}
+
+class PublicadorDeInactividad extends PublicadorObservable<InteresadoEnInactividad> {
+  + void publicarInactividad(Donante unDonante)
+}
+
+PublicadorDeInactividad --> "*" InteresadoEnInactividad
+
+
+
+class PublicadorDeInicioDeRuta extends PublicadorObservable<InteresadoEnInicioDeRuta> {
+
+  void publicarInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega)
+}
+
+interface InteresadoEnInicioDeRuta extends Interesado {
+  void anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega);
+}
+
+PublicadorDeInicioDeRuta --> "*" InteresadoEnInicioDeRuta
+
+
+class PublicadorEntregaConExito extends PublicadorObservable <InteresadoEnEntregaConExito> {
+
+  + void publicarEntregaConExito(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, ComprobanteDeEntrega comprobanteDeEntrega)
+}
+
+interface InteresadoEnEntregaConExito extends Interesado {
+  void anteEntregaConExito(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, ComprobanteDeEntrega comprobanteDeEntrega);
+}
+
+PublicadorEntregaConExito --> "*" InteresadoEnEntregaConExito
+
+interface InteresadoEntregaFallida extends Interesado {
+  void anteEntregaFallida(String justificacion, EntidadBeneficiaria entidadBeneficiaria, DonacionIndependiente donacionIndependiente);
+}
+
+class PublicadorEntregaFallida extends PublicadorObservable<InteresadoEntregaFallida> {
+  public void publicarEntregaFallida(DonacionIndependiente donacion, EntidadBeneficiaria entidadBeneficiaria, String justificacion)
+}
+
+PublicadorEntregaFallida --> "*" InteresadoEntregaFallida
+
+@enduml

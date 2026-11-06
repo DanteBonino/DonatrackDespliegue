@@ -1,0 +1,11 @@
+info:
+  name: Staging
+  type: environment
+
+variables:
+  - name: baseUrlLogistica
+    value: https://staging.donatrack.com/api/logistica
+    enabled: true
+  - name: baseUrlDonaciones
+    value: https://staging.donatrack.com/api/donaciones
+    enabled: true

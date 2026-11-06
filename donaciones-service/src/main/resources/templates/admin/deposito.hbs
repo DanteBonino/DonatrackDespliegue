@@ -1,0 +1,61 @@
+{{#partial "contenido"}}
+    <div class="container py-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+            <h1 class="h2 mb-0"><i class="bi bi-archive me-2"></i>Gestión de Depósito</h1>
+            {{>partials/volverAlPanel}}
+        </div>
+
+        <p class="text-muted">
+            Donaciones disponibles en depósito. Si el bien donado ya no está vigente,
+            podés marcar la donación como <strong>VENCIDA</strong>.
+        </p>
+
+        {{#if hayDonaciones}}
+            <div class="table-responsive shadow-sm rounded">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Bien</th>
+                        <th>Cantidad</th>
+                        <th>Donante</th>
+                        <th>Fecha de donación</th>
+                        <th>Vigencia del bien</th>
+                        <th>Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each donaciones}}
+                        <tr>
+                            <td><code>{{this.id}}</code></td>
+                            <td class="text-capitalize">{{this.bien}}</td>
+                            <td>{{this.cantidad}}</td>
+                            <td>{{this.donante}}</td>
+                            <td>{{this.fecha}}</td>
+                            <td>
+                                {{#if this.bienVencido}}
+                                    <span class="badge bg-danger">Bien vencido</span>
+                                {{else}}
+                                    <span class="badge bg-success">Vigente</span>
+                                {{/if}}
+                            </td>
+                            <td>
+                                <form method="POST" action="/donaciones/{{this.id}}/vencer">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                            onclick="return confirm('¿Marcar esta donación como vencida?');">
+                                        <i class="bi bi-calendar-x me-1"></i>Marcar vencida
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-muted small mt-2">Mostrando {{donaciones.length}} donación(es) en depósito.</p>
+        {{else}}
+            {{>partials/_alerta-vacia mensaje="No hay donaciones en depósito."}}
+        {{/if}}
+    </div>
+{{/partial}}
+{{>layout}}

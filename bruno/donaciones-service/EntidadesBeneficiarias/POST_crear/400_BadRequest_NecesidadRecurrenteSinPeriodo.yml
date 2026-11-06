@@ -1,0 +1,38 @@
+info:
+  name: crearEntidadBeneficiariaConNecesidadRecurrenteSinPeriodo
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias"
+  body:
+    type: json
+    data: |-
+      {
+        "razonSocial": "Test sin periodo",
+        "direccion": "Test",
+        "mails": ["test@test.com"],
+        "telefono": "111",
+        "necesidades": [
+          {
+            "tipo": "RECURRENTE",
+            "bienRequerido": {
+              "descripcion": "Test",
+              "foto": "",
+              "cantidad": 1,
+              "subCategoria": {
+                "nombre": "REMERA",
+                "categoria": { "tipo": "NOPERECEDERO", "estadoDeUso": "NUEVO" }
+              }
+            }
+          }
+        ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

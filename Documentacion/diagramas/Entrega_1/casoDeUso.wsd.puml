@@ -1,0 +1,41 @@
+@startuml "Diagrama Casos de Uso"
+left to right direction
+
+actor "Persona Humana" as PersonaHumana
+actor "Persona Juridica" as Juridico
+actor Donante
+actor "Entidad Beneficiaria" as EntidadBeneficiaria
+actor "Administrador Del Sistema" as AdministradorDelSistema
+actor Notificador
+
+rectangle "Sistema DonaTrack"{
+    usecase (Consultar Estado de Una Donacion) as CEDUD
+    usecase (Registrar Donante En El Sistema) as RDES
+    usecase (Generar Donacion) as GD
+    usecase (Registrar Entidad) as RE
+    usecase (Registrar Necesidad Recurrente) as RNR
+    usecase (Registrar Necesidad Extraordinara) as RNE
+    usecase (Realizar Importacion Masiva de Datos CSV) as RIMD
+    usecase (Administrar Estado de Una Donacion) as AEUD
+    usecase (Realizar Notificacion) as RN
+}
+
+PersonaHumana --|> Donante
+Juridico --|> Donante
+
+Donante -- RDES
+Donante -- CEDUD
+
+EntidadBeneficiaria -- RE
+EntidadBeneficiaria -- RNR
+EntidadBeneficiaria -- RNE
+
+AdministradorDelSistema -- GD
+AdministradorDelSistema -- RDES
+AdministradorDelSistema -- RIMD
+AdministradorDelSistema -- AEUD
+AdministradorDelSistema -- CEDUD
+
+Notificador -- RN
+
+@enduml

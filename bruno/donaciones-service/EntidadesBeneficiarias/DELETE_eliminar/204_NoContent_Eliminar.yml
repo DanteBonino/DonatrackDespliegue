@@ -1,0 +1,19 @@
+info:
+  name: eliminar
+  type: http
+  seq: 1
+
+http:
+  method: DELETE
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias/:id"
+  params:
+    - name: id
+      value: 8dc8476e-f5a3-4336-81bb-00374ee106af
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

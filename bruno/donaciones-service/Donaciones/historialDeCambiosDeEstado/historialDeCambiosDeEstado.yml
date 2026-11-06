@@ -1,0 +1,19 @@
+info:
+  name: historialDeCambiosDeEstado
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{baseUrlDonaciones}}/donaciones/:id/historial-cambios-de-estado"
+  params:
+    - name: id
+      value: 3ff498da-7ce2-449f-8265-6a76a67e1e45
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

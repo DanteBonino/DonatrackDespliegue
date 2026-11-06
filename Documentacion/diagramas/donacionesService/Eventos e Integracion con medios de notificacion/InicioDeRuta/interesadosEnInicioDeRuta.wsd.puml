@@ -1,0 +1,40 @@
+@startuml
+interface InteresadoEnInicioDeRuta extends Interesado {
+  void anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega);
+}
+
+class NotificadorDonanteInicioDeRuta extends NotificadorInicioDeRuta {
+    + String mensaje(String idDonacion)
+}
+
+abstract class NotificadorInicioDeRuta implements  InteresadoEnInicioDeRuta {
+  GeneradorLinkDeTrackeoEntrega generadorLinkDeTrackeoEntrega;
+  BusNotificaciones busNotificaciones;
+
+
+  void anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega)
+
+  {abstract} String mensaje(String idDonacion);
+}
+class NotificadorEntidadInicioDeRuta extends NotificadorInicioDeRuta {
+  + String mensaje(String idDonacion)
+}
+
+interface GeneradorLinkDeTrackeoEntrega {
+  String generarLink(String idDonacion);
+}
+
+NotificadorInicioDeRuta --> "1" GeneradorLinkDeTrackeoEntrega
+NotificadorInicioDeRuta --> "1" BusNotificaciones
+
+class BusNotificaciones {
+    + void procesar(Notificacion notificacion)
+}
+
+class MedioNotificacionFactory {
+    + MedioDeNotificacion construirMedio(TipoDeMedio tipo)
+}
+
+BusNotificaciones --> "1" MedioNotificacionFactory
+
+@enduml

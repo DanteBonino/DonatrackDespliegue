@@ -1,0 +1,73 @@
+@startuml
+' === ESTILOS ===
+skinparam linetype ortho
+skinparam backgroundColor #FFFFFF
+
+title Diagrama de Despliegue - DonaTrack (Entrega 2)
+
+' === ACTORES ===
+actor "Administrador" as Admin
+actor "Donante" as Donante
+actor "Entidad Beneficiaria" as Entidad
+actor "Chofer / Camión" as Camion
+
+' === RED ===
+cloud "Internet" as Internet
+
+' === MICROSERVICIOS DONATRACK ===
+node "Microservicio Donaciones" {
+  component "API Donaciones" as APIDonaciones
+  component "Tareas Programadas (Cron)" as CronDonaciones
+}
+
+node "Microservicio Logística" {
+  component "API Logística" as APILogistica
+  component "Tareas Programadas (Cron)" as CronLogistica
+}
+
+' === SERVICIOS EXTERNOS (Integraciones Reales) ===
+node "Proveedor Correo (SendGrid)" {
+    component "API Correo" as MailAPI
+}
+
+node "Proveedor Mensajería (Twilio)" {
+    component "API SMS" as SMSAPI
+    component "API WhatsApp" as WA_API
+}
+
+node "Servicio Planificador Externo" {
+    component "API Planificación de Rutas" as RouteAPI
+}
+
+node "App móvil (Chofer)" {
+    component "App de Geolocalización" as Am_API
+}
+
+' === CONEXIONES DE ACTORES ===
+Admin --> Internet
+Donante --> Internet
+Entidad --> Internet
+Camion --> Am_API
+
+' === INTERNET A SERVIDORES ===
+Internet --> APIDonaciones
+Internet --> APILogistica
+
+' === INTEGRACIONES EXTERNAS DONACIONES ===
+APIDonaciones --> MailAPI
+APIDonaciones --> SMSAPI
+APIDonaciones --> WA_API
+
+' === INTEGRACIONES EXTERNAS LOGÍSTICA ===
+Am_API --> APILogistica : Reporta posición
+APILogistica --> RouteAPI : Envío de lotes (HTTP)
+RouteAPI --> APILogistica : Callback (HTTP)
+
+' === INTEGRACIÓN ENTRE MICROSERVICIOS (REST) ===
+APILogistica --> APIDonaciones : HTTP/REST (Estados, Listas)
+
+' === DISPARO DE TAREAS PROGRAMADAS ===
+CronDonaciones --> APIDonaciones : Ejecuta Lógica (Inactividad, Reintentos)
+CronLogistica --> APILogistica : Ejecuta Planificación Nocturna
+
+@enduml

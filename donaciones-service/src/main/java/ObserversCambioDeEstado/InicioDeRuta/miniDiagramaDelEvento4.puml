@@ -1,0 +1,40 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+Interface InteresadoEnInicioDeRuta {
+  +anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+}
+
+Interface GeneradorLinkDeTrackeoEntrega {
+  +generarLink(String idDonacion)
+}
+
+GeneradorLinkDeTrackeoEntrega --> NotificadorBeneficiarioInicioDeRuta
+GeneradorLinkDeTrackeoEntrega --> NotificadorDonanteInicioDeRuta
+
+class NotificadorDonanteInicioDeRuta implements InteresadoEnInicioDeRuta {
+  +anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+}
+
+class NotificadorBeneficiarioInicioDeRuta implements InteresadoEnInicioDeRuta {
+  +anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+}
+
+class PublicadorDeInicioDeRuta {
+  -InteresadoEnInicioDeRuta: List
+
+  +suscribir(InteresadoEnInicioDeRuta ... interesado)
+  +desuscribir(InteresadoEnInicioDeRuta interesado)
+  +publicar()
+}
+
+Class ProcesarInicioDeRuta {
+  +enviarAviso(List<DonacionEntidad> listaDonacionEntidad)
+}
+
+ProcesarInicioDeRuta --> PublicadorDeInicioDeRuta
+
+PublicadorDeInicioDeRuta -->"*" InteresadoEnInicioDeRuta
+
+
+@enduml

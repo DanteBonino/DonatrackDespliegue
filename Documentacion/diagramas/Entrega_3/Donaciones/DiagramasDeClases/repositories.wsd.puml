@@ -1,0 +1,233 @@
+@startuml
+interface  RepositorioBasico<T extends Persistible> extends WithSimplePersistenceUnit {
+
+  default void validarUnicidadDeNegocio(T nuevaEntidad)
+
+  default void registrar(T nuevaEntidad)
+  default List<T> getInstancias()
+
+  default T obtenerUnoSegun(String nombre, Object valor)
+
+  default List<T> obtenerTodosSegun(String nombre, Object valor)
+  default T findById(String id)
+
+  default String condicionDeEliminacion()
+
+  default boolean existeSegun(String nombre, Object valor)
+
+  Class<T> clase();
+
+  default String nombre()
+
+  default List<T> obtenerSegun(FiltroDeBusqueda filtro)
+
+  default void registrarInstancias(List<T> nuevasInstancias)
+
+  default int cantidadInstancias()
+}
+
+interface RepositorioDeActualizable extends RepositorioBasico<T> {
+  default void actualizarInstancia(String id, DatosDeActualizacion datos)
+  void validarActualizacion(T instancia, DatosDeActualizacion datos);
+}
+
+interface RepositorioConSoftDelete<T extends Persistible & Eliminable> extends RepositorioBasico<T> {
+  default String condicionDeEliminacion()
+  default void eliminarInstancia(String id)
+}
+
+interface ISolicitudesDeAsignacionRepository {
+  + void registrar(SolicitudDeAsignacion nuevaSolicitud);
+  + SolicitudDeAsignacion findById(String id);
+  + List<SolicitudDeAsignacion> getInstancias();
+}
+
+class SolicitudesDeAsignacionRepositoryConPersistencia <<Singleton>> implements ISolicitudesDeAsignacionRepository, RepositorioBasico<SolicitudDeAsignacion> {
+  + void registrar(SolicitudDeAsignacion nuevaSolicitud)
+
+  + SolicitudDeAsignacion findById(String id)
+
+  + List<SolicitudDeAsignacion> getInstancias()
+
+  + Class<SolicitudDeAsignacion> clase()
+}
+
+interface IDonantesRepository {
+  + List<Donante> getInstancias();
+
+  + List<Donante> getInactivos();
+
+  + void registrar(Donante instancia);
+
+  + Donante findById(String id);
+
+  + void eliminarInstancia(String id);
+
+  + void actualizarInstancia(String id, DatosDonante datos);
+
+  + default void validarActualizacion(Donante donante, DatosDonante datos)
+}
+
+class DonantesRepositoryConPersistencia <<Singleton>> implements IDonantesRepository, RepositorioConSoftDelete<Donante> {
+  + List<Donante> getInstancias()
+
+  + List<Donante> getInactivos()
+
+  + Donante findById(String id)
+
+  + void registrar(Donante nuevaEntidad)
+
+  + void actualizarInstancia(String id, DatosDonante nuevosDatos)
+
+  + void eliminarInstancia(String id)
+
+  + Class<Donante> clase()
+
+  + void validarActualizacion(Donante unaEntidad, DatosDonante nuevosDatos)
+
+}
+
+DonantesRepositoryConPersistencia ..|> RepositorioDeActualizable
+
+interface IDonacionesRepository {
+  + List<DonacionIndependiente> getInstancias();
+
+  + void registrar(DonacionIndependiente unaDonacion);
+
+  + DonacionIndependiente findById(String id);
+
+  + void eliminarInstancia(String id);
+
+  + void actualizarInstancia(String id, DatosDonacion nuevosDatos);
+
+  + default void validarActualizacion(DonacionIndependiente donacion, DatosDonacion datos)
+
+
+  + default List<DonacionIndependiente> getListasParaEntregar()
+
+  + default List<DonacionIndependiente> getAsignadas()
+
+  + default  List<DonacionIndependiente> getPendientesDeRevision()
+
+  + default  List<DonacionIndependiente> recibirDonacion(Donacion donacion)
+
+  + default List<DonacionIndependiente> getDonacionesEnDeposito()
+
+  + List<DonacionIndependiente> getEnEstado(EstadoDonacion unEstado);
+
+  + PublicadorDeCambiosEstados getPublicador();
+
+}
+
+class DonacionesRepositoryConPersistencia implements IDonacionesRepository, RepositorioConSoftDelete<DonacionIndependiente> {
+  + List<DonacionIndependiente> getInstancias()
+  + DonacionIndependiente findById(String id)
+
+  + void registrar(DonacionIndependiente nuevaEntidad)
+
+  + void actualizarInstancia(String id, DatosDonacion nuevosDatos)
+
+  + void eliminarInstancia(String id)
+
+  + Class<DonacionIndependiente> clase()
+
+  + void validarActualizacion(DonacionIndependiente unaEntidad, DatosDonacion nuevosDatos)
+
+  + List<DonacionIndependiente> getEnEstado(EstadoDonacion unEstado)
+  + PublicadorDeCambiosEstados getPublicador();
+}
+
+DonacionesRepositoryConPersistencia ..|> RepositorioDeActualizable
+DonacionesRepositoryConPersistencia  --> PublicadorDeCambiosEstados
+
+interface IBeneficiariosRepository {
+  + List<EntidadBeneficiaria> getInstancias();
+
+  + EntidadBeneficiaria findById(String id);
+
+  + void registrar(EntidadBeneficiaria nuevaEntidad);
+
+  + void actualizarInstancia(String id, DatosEntidadesBeneficiarias nuevosDatos);
+
+  + void eliminarInstancia(String id);
+
+}
+
+class BeneficiariosRepositoryConPersistencia <<Singleton>> implements IBeneficiariosRepository, RepositorioConSoftDelete<EntidadBeneficiaria> {
+
+  + List<EntidadBeneficiaria> getInstancias()
+
+  + EntidadBeneficiaria findById(String id)
+
+  + void registrar(EntidadBeneficiaria nuevaEntidad)
+
+  + void actualizarInstancia(String id, DatosEntidadesBeneficiarias nuevosDatos)
+
+  + void eliminarInstancia(String id)
+
+  + Class<EntidadBeneficiaria> clase()
+
+  + void validarActualizacion(EntidadBeneficiaria unaEntidad, DatosEntidadesBeneficiarias nuevosDatos)
+
+  + void validarUnicidadDeNegocio(EntidadBeneficiaria nuevaEntidad)
+
+}
+BeneficiariosRepositoryConPersistencia ..|> RepositorioDeActualizable
+
+interface IAdministradoresRepository {
+  List<Administrador> getInstancias();
+}
+
+class AdministradoresRepositoryConPersistencia <<Singleton>> implements IAdministradoresRepository, RepositorioBasico<Administrador> {
+
+ + List<Administrador> getInstancias()
+
+  + Class<Administrador> clase()
+}
+
+interface INotificacionesRepository {
+  + void registrar(Notificacion notificacion);
+
+  + List<Notificacion> notificacionesEnviables();
+
+  + List<Notificacion> getInstancias();
+}
+
+class NotificacionesRepositoryConPersistencia <<Singleton>> implements INotificacionesRepository, RepositorioBasico<Notificacion> {
+
+  + void registrar(Notificacion notificacion)
+
+ + List<Notificacion> notificacionesEnviables()
+
+  + List<Notificacion> getInstancias()
+
+   + Class<Notificacion> clase()
+}
+
+class PublicadorDeCambiosEstados {
+
+  + int cantidadDeInteresados()
+
+ + void suscribir(InteresadoEnCambiosDeEstado interesadoEnCambioDeEstado)
+
+  + void desuscribir(InteresadoEnCambiosDeEstado interesadoEnCambioDeEstado)
+  + void publicarAsignacion(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+
+  + void publicarInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega)
+  + void publicarEntregaConExito(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, ComprobanteDeEntrega comprobanteDeEntrega)
+
+  + void publicarEntregaFallida(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String justificacion)
+
+
+  + void desuscribirTodos()
+}
+
+interface InteresadoEnCambiosDeEstado extends Interesado {
+  + default void anteAsignacion(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+  + default void anteEntregaConExito(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, ComprobanteDeEntrega comprobante)
+  + default void anteEntregaFallida(String justificacion, EntidadBeneficiaria entidadBeneficiaria, DonacionIndependiente donacionIndependiente)
+  + default void anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega)
+}
+
+PublicadorDeCambiosEstados --> "*" InteresadoEnCambiosDeEstado
+@enduml

@@ -1,0 +1,71 @@
+@startuml
+interface Eliminable {
+  + estaEliminado(): boolean
+  + marcarComoEliminado(): void
+}
+
+interface Actualizable<D> {
+  + refrescarParcial(datos: D): void
+  + actualizarDesde(datos: D, parcial: boolean): void
+}
+
+class DonacionIndependiente {
+  + seAgrupaPor(unaSubCategoria: SubCategoria): Boolean
+  + fechaDeUltimaTransicionA(tipo: TipoEstadoDonacion): Optional<LocalDateTime>
+  + estaEnDeposito(): Boolean
+  + asignarA(asignado: EntidadBeneficiaria): void
+  + almacenarEnDeposito(): void
+  + enSolicitudDeAsignacion(): void
+  + iniciarTraslado(): void
+  + alistarParaEntregar(): void
+  + marcarComoEntregada(): void
+  + marcarComoFallida(justificacion: String): void
+  + vencer(): void
+  + estaEn(unEstado: TipoEstadoDonacion): boolean
+}
+
+class CambioDeEstado <<record>> {
+  LocalDate fecha
+}
+
+abstract class EstadoDonacion {
+  + validarTransicion(destino: EstadoDonacion): void
+}
+
+class EntidadBeneficiaria {
+  + reicibirDonacionParaDeterminadaNecesidad(unaDonacion: DonacionIndependiente): void
+  + cantidadDeNecesidadesQueSatisfaceCon(donacion: DonacionIndependiente): int
+  + buscarNecesidadPara(donacion: DonacionIndependiente): Necesidad
+  + tieneNecesidadPara(donacion: DonacionIndependiente): boolean
+}
+
+class Bien {
+  + getCantidad()
+  + seAgrupaPor(Subcategoria unaSubCategoria)
+}
+
+class Donante {
+
+}
+
+note left of Donante
+ Esta clase tiene comportamiento,
+ pero Donacion independiente
+ todavía no hace uso de él
+end note
+
+' Jerarquía / Interfaces
+DonacionIndependiente ..|> Eliminable
+DonacionIndependiente ..|> Actualizable
+
+' Relaciones principales del dominio
+DonacionIndependiente --> "1" EstadoDonacion : estado
+DonacionIndependiente --> "*" CambioDeEstado : historialEstado
+DonacionIndependiente --> "0..1" EntidadBeneficiaria : entidadAsignada
+DonacionIndependiente --> "1" Bien: bienDonado
+DonacionIndependiente --> "1" Donante
+
+' Dependencias del registro de cambio de estado
+CambioDeEstado --> "1" EstadoDonacion : estadoDonacion
+CambioDeEstado --> "0..1" EntidadBeneficiaria : asignado
+@enduml

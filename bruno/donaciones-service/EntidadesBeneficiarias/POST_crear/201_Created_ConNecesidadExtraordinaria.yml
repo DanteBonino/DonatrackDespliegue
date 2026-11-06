@@ -1,0 +1,48 @@
+info:
+  name: crearEntidadBeneficiariaConNecesidadExtraordinaria
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias"
+  body:
+    type: json
+    data: |-
+      {
+        "razonSocial": "Fundación Manos Abiertas",
+        "direccion": "Calle Falsa 123",
+        "mails": ["contacto@manosabiertas.org", "voluntarios@manosabiertas.org"],
+        "telefono": "1156789012",
+        "necesidades": [
+          {
+            "tipo": "EXTRAORDINARIA",
+            "bienRequerido": {
+              "descripcion": "Remera talle M",
+              "foto": "https://example.com/remera.jpg",
+              "cantidad": 50,
+              "subCategoria": {
+                "nombre": "REMERA",
+                "categoria": {
+                  "tipo": "NOPERECEDERO",
+                  "estadoDeUso": "NUEVO"
+                }
+              }
+            }
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        let respuesta = res.getBody();
+        bru.setEnvVar("beneficiarioConNecesidadExtraordinaria", respuesta.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

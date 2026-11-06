@@ -1,0 +1,36 @@
+info:
+  name: actualizarPeriodo
+  type: http
+  seq: 1
+
+http:
+  method: PATCH
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias/{{beneficiarioConAmbosTiposDeNecesidades}}/necesidades/:idNecesidad"
+  params:
+    - name: idNecesidad
+      value: 049bf382-d41e-46ea-84b7-f3dce809ebac
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "bienRequerido": {
+          "descripcion": "Remera talle L",
+          "foto": "https://example.com/remera-l.jpg",
+          "cantidad": 80,
+          "subCategoria": {
+            "nombre": "REMERA",
+            "categoria": {
+              "tipo": "NOPERECEDERO",
+              "estadoDeUso": "NUEVO"
+            }
+          }
+        }
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

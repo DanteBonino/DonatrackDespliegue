@@ -1,0 +1,34 @@
+info:
+  name: crearNecesidadRecurrente
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias/{{beneficiarioConAmbosTiposDeNecesidades}}/necesidades"
+  body:
+    type: json
+    data: |-
+      {
+        "tipo": "RECURRENTE",
+        "bienRequerido": {
+          "descripcion": "Paquete de fideos secos 500g",
+          "foto": "https://example.com/fideos.jpg",
+          "cantidad": 100,
+          "subCategoria": {
+            "nombre": "FIDEOSSECOS",
+            "categoria": {
+              "tipo": "PERECEDERO",
+              "fechaDeVencimiento": "2027-03-15"
+            }
+          }
+        },
+        "periodo": "P1M"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

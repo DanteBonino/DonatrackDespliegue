@@ -1,0 +1,27 @@
+info:
+  name: actualizarVariosCamposALaVez
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias/:id"
+  params:
+    - name: id
+      value: ce525bc8-711d-491c-9e2a-ab13cd2150f5
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "telefono": "1100000000",
+        "direccion": "Otra Calle 789",
+        "mails": ["solo-un-mail@lospibes.org"]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

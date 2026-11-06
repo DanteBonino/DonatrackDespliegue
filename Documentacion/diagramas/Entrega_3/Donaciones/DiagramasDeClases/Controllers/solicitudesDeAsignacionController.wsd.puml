@@ -1,0 +1,64 @@
+@startuml
+class SolicitudesDeAsignacionController {
+    + void ejecutarADemanda(Context contexto)
+    + void aceptar(Context contexto)
+    + void getAll(Context contexto)
+}
+
+class CrearSolicitudesDeAsignacion {
+  private final AlgoritmoDeAsignacion algoritmoDeAsignacion;
+
+  + List<SolicitudDeAsignacion> ejecutar()
+}
+
+interface AlgoritmoDeAsignacion {
+  + List<EntidadBeneficiaria> crearRanking(DonacionIndependiente donacionIndependiente, List<EntidadBeneficiaria> entidadesBeneficiarias);
+}
+
+CrearSolicitudesDeAsignacion --> AlgoritmoDeAsignacion
+SolicitudesDeAsignacionController --> CrearSolicitudesDeAsignacion
+
+Class SolicitudesDeAsignacionRepositoryConPersistencia <<Singleton>> {
+ + SolicitudDeAsignacion findById(String id)
+  + List<SolicitudDeAsignacion> getInstancias()
+}
+
+SolicitudesDeAsignacionController ..> SolicitudesDeAsignacionRepositoryConPersistencia
+
+note top of SolicitudesDeAsignacionRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el controller.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+
+class SolicitudDeAsignacionResponseDto {
+
+  + <<static>> SolicitudDeAsignacionResponseDto desde(SolicitudDeAsignacion solicitud)
+
+  + String getId()
+  + DonacionResponseDto getDonacion()
+  + List<EntidadCandidataResponseDto> getCandidatas()
+  + String getIdEntidadAsignada()
+}
+
+class SolicitudDeAsignacion {
+ + aceptar(EntidadBeneficiaria entidadElegida)
+}
+
+SolicitudesDeAsignacionController ..> SolicitudDeAsignacionResponseDto
+SolicitudesDeAsignacionRepositoryConPersistencia ..> SolicitudDeAsignacion
+
+note top of SolicitudDeAsignacion
+  Esta es una simplificación porque hay cosas que no tiene sentido mostrar en este diagrama.
+  Para mayor detalle ver el diagrama de dominio
+end note
+
+class BeneficiariosRepositoryConPersistencia <<Singleton>> {
+  + EntidadBeneficiaria findById(String id)
+}
+
+SolicitudesDeAsignacionController ..> BeneficiariosRepositoryConPersistencia
+note top of BeneficiariosRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el controller.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+@enduml

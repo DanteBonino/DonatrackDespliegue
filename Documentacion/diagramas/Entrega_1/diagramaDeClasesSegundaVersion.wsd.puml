@@ -1,0 +1,113 @@
+@startuml
+abstract class Donante2 {
+  # email: String
+  # telefono: String
+  # medioPreferente: Notificador
+  + recibirNotificacion(notificacion: Notificacion)
+  + getDocumentoIdentificatorio(): String
+}
+
+interface Documentado {
+  + getDocumentoIdentificatorio(): String
+  + esIgualA(unDocumentado: Documentado): Boolean
+}
+
+Donante2 .up.|> Documentado
+
+class PersonaHumana2 {
+  - genero: Genero
+  - direccion: String
+  - fecha: LocalDate
+  - nombre: String
+  - documento: String
+  + getDocumentoIdentificatorio(): String
+}
+
+class PersonaJuridica2 {
+  - razonSocial: String
+  - tipoJuridica: TipoJuridica
+  - rubro: String
+  - cuit: String
+  + getDocumentoIdentificatorio(): String
+}
+
+Donante2 <|-- PersonaHumana2
+Donante2 <|-- PersonaJuridica2
+
+interface Notificador {
+  + notificarA(destinatario: Object, notificacion: Notificacion)
+}
+
+class Notificacion {
+  + marcarComoCompletada()
+}
+
+enum EstadoNotificacion {
+  COMPLETADA
+}
+
+Notificacion --> EstadoNotificacion
+Donante2 --> Notificador
+
+abstract class DonanteBuilder {
+  # email: String
+  # telefono: String
+  # medioPreferente: Notificador
+  + especificarMail(unMail: String)
+  + especificarTelefono(telefono: String)
+  + especificarMedioPreferente(unNotificador: Notificador)
+  # validarCamposMinimosNotNull()
+}
+
+class HumanoBuilder {
+  + especificarGenero(unGenero: Genero)
+  + especificarDireccion(direccion: String)
+  + especificarNombre(nombre: String)
+  + especificarNacimiento(fecha: LocalDate)
+  + especificarDocumento(documento: String)
+  # validarCamposMinimosNotNull()
+  + crearDonante(): PersonaHumana2
+}
+
+class JuridicaBuilder {
+  + especificarRazonSocial(unaRazon: String)
+  + especificarTipoJuridico(unTipo: TipoJuridica)
+  + especificarRubro(rubro: String)
+  + especificarCuit(unCuit: String)
+  + crearDonante(): PersonaJuridica2
+}
+
+DonanteBuilder <|-- HumanoBuilder
+DonanteBuilder <|-- JuridicaBuilder
+
+HumanoBuilder ..> PersonaHumana2
+JuridicaBuilder ..> PersonaJuridica2
+
+class DonanteBasicoReal {
+  + esIgualA(otroDonante: Donante2): Boolean
+  + refrescar(otroDonante: Donante2)
+  + crearBuilder(): DonanteBuilder
+}
+
+DonanteBasicoReal ..> DonanteBuilder
+DonanteBasicoReal ..> HumanoBuilder
+DonanteBasicoReal ..> JuridicaBuilder
+
+class DonantesRepository {
+  + registrarDonante(unDonante: DonanteBuilder)
+  - notificarCreacionDeCuenta(unDonante: Donante2)
+  + importarDonante(ruta: String)
+}
+
+DonantesRepository "1" --> "*" Donante2
+DonantesRepository --> ImportadorCsv
+DonantesRepository ..> DonanteBasicoReal
+DonantesRepository ..> Notificacion
+
+class ImportadorCsv {
+  + importarDonantesDesde(unaRuta: String): List<DonanteBasicoReal>
+}
+
+ImportadorCsv ..> "*" DonanteBasicoReal
+
+@enduml

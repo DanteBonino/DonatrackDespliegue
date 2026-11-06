@@ -1,0 +1,23 @@
+info:
+  name: 200 OK - Reportar Incidencia
+  type: http
+  seq: 9
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/entregas/ENT-001/reportar-incidencia"
+  body:
+    type: json
+    data: |-
+      {
+        "motivo": "Entidad beneficiaria cerrada"
+      }
+  auth: inherit
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200 OK", function() {
+          expect(res.status).to.equal(200);
+        });
+settings:
+  encodeUrl: true

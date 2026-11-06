@@ -1,0 +1,85 @@
+@startuml
+
+interface Actualizable<D> {
+  + default void refrescarParcial(D datos)
+
+  + void actualizarDesde(D datos, boolean pacial);
+
+}
+
+abstract class EntidadBase <<MappedSuperclass>> {
+  + String getIdDominio()
+
+  + boolean esLaMismaEntidad(String id)
+
+  + Long getId()
+
+}
+
+interface Eliminable {
+  + boolean estaEliminado();
+  + void marcarComoEliminado();
+}
+
+class EntidadBeneficiaria <<Entity>> extends EntidadBase implements Actualizable<EntidadBeneficiaria> {
+  - razonSocial
+  - direccion
+
+  + boolean estaEliminado()
+  + void marcarComoEliminado()
+  + void actualizarDesde(DatosEntidadBeneficiaria datos, boolean parcial)
+  + List<String> getMails()
+  + int cantidadDeDonacionesEnElUltimoTrimestre()
+  + void reicibirDonacionParaDeterminadaNecesidad (DonacionIndependiente unaDonacion)
+  + int cantidadDeNecesidadesQueSatisfaceCon(DonacionIndependiente donacion)
+  + Necesidad buscarNecesidadPara(DonacionIndependiente donacion)
+  + boolean tieneNecesidadPara(DonacionIndependiente donacionIndependiente)
+  + void actualizarDesde(DatosEntidadesBeneficiarias datos, boolean parcial)
+  + void agregarNecesidad(Necesidad unaNecesidad)
+  + Necesidad buscarNecesidadPorId(String idNecesidad)
+  + void eliminarNecesidad(String idNecesidad)
+  + void refrescarNecesidadParcial(String idNecesidad, DatosNecesidad datos)
+}
+
+abstract class Necesidad <<Entity>> {
+  + int cantidadDeDonacionesRecibidasDespuesDe(LocalDate unaFecha)
+  + void recibirBien(DonacionIndependiente unaDonacion)
+  + Boolean estaActiva()
+}
+
+class DonacionIndependiente <<Entity>> {
+ + Boolean seAgrupaPor(SubCategoria unaSubCategoria)
+}
+
+class DatosDeContacto <<Entity>> {
+ + List<String> getMailsParaNotificar()
+ + TipoDeMedio getMedioDeNotificacionPreferencial()
+ + String getTelefono()
+}
+
+interface ConMedioPreferencial extends ConContacto {
+ + default void setMedioPreferido(TipoDeMedio nuevoMedio)
+
+ + default TipoDeMedio getMedioDeNotificacionPreferencial()
+}
+
+interface ConContacto {
+ + DatosDeContacto getDatosDeContacto()
+}
+
+
+interface ConTelefono extends ConContacto {
+  + default String getTelefono()
+  + default void setTelefono(String nuevoTelefono)
+}
+EntidadBeneficiaria --> DatosDeContacto
+EntidadBeneficiaria --> "*" Necesidad
+EntidadBeneficiaria ..|> Eliminable
+EntidadBeneficiaria ..|> ConMedioPreferencial
+EntidadBeneficiaria ..|> ConTelefono
+EntidadBeneficiaria ..> DonacionIndependiente
+
+note bottom of DonacionIndependiente: Sólo se documentaron los métodos relevantes para esta sección
+note bottom of Necesidad: Sólo se documentaron los métodos relevantes para esta sección
+
+@enduml

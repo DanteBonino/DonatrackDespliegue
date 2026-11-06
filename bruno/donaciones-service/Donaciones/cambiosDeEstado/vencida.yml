@@ -1,0 +1,22 @@
+info:
+  name: vencida
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/donaciones/:id/vencida"
+  params:
+    - name: id
+      value: 3ff498da-7ce2-449f-8265-6a76a67e1e45
+      type: path
+  body:
+    type: json
+    data: ""
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

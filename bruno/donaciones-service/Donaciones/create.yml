@@ -1,0 +1,39 @@
+info:
+  name: create
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/donaciones"
+  body:
+    type: json
+    data: |-
+      {
+        "idDonante": "{{donanteJuridico}}",
+        "bienes": [
+          {
+            "descripcion": "Paquete de fideos secos 500g",
+            "foto": "https://example.com/fideos.jpg",
+            "cantidad": 10,
+            "subCategoria": {
+              "nombre": "FIDEOSSECOS",
+              "categoria": { "tipo": "PERECEDERO", "fechaDeVencimiento": "2027-03-15" }
+            }
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        let respuesta = res.getBody();
+        bru.setEnvVar("donacion", respuesta.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

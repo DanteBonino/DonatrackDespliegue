@@ -1,0 +1,24 @@
+info:
+  name: 404 Not Found - Entrega inexistente
+  type: http
+  seq: 3
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/entregas/ENT-INEXISTENTE/reprogramar"
+  body:
+    type: json
+    data: |-
+      {}
+  auth: inherit
+  runtime:
+    scripts:
+      - type: tests
+        code: |-
+          test("should return 404 Not Found", function() {
+              expect(res.status).to.equal(404);
+          });
+          test("should return not found message", function() {
+              expect(res.body.mensaje).to.contain("no encontrada");
+          });
+settings:
+  encodeUrl: true

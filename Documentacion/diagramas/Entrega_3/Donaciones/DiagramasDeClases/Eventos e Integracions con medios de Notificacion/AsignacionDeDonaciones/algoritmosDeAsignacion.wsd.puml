@@ -1,0 +1,39 @@
+@startuml
+
+interface AlgoritmoDeAsignacion {
+ List <EntidadBeneficiaria> crearRanking(DonacionIndependiente donacionIndependiente, List <EntidadBeneficiaria> entidadesBeneficiarias)
+}
+
+abstract class AlgortimoDeAsignacionSimple implements AlgoritmoDeAsignacion {
+  + List <EntidadBeneficiaria> crearRanking(DonacionIndependiente donacionIndependiente, List <EntidadBeneficiaria> entidadesBeneficiarias)
+  {abstract} # comparadorPara(DonacionIndependiente donacion)
+}
+
+class CompatibilidadSemantica extends AlgortimoDeAsignacionSimple {
+  + comparadorPara(DonacionIndependiente donacion)
+}
+
+
+class PrioridadSubAtendidos extends AlgortimoDeAsignacionSimple {
+  + comparadorPara(DonacionIndependiente donacion)
+}
+
+class AlgoritmoMixtoPorInterseccion implements AlgoritmoDeAsignacion{
+  + List<EntidadBeneficiaria> crearRanking(DonacionIndependiente donacionIndependiente, List<EntidadBeneficiaria> entidadesBeneficiarias)
+  + <<static>> AlgoritmoMixtoPorInterseccion algoritmoEstandar()
+}
+
+class EntidadBeneficiaria {
+ + boolean tieneNecesidadPara(DonacionIndependiente unaDonacion)
+}
+
+class DonacionIndependiente {
+ + boolean seAgrupaPor(SubCategoria unaSubCategoria)
+}
+
+AlgoritmoMixtoPorInterseccion -->"*" AlgoritmoDeAsignacion
+
+AlgoritmoDeAsignacion ..>"*" EntidadBeneficiaria
+AlgoritmoDeAsignacion ..>"1" DonacionIndependiente
+
+@enduml

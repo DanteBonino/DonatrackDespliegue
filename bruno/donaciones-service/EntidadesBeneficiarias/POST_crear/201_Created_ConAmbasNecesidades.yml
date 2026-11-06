@@ -1,0 +1,65 @@
+info:
+  name: crearEntidadBeneficiariaConNecesidadExtraordinariayRecurrente
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias"
+  body:
+    type: json
+    data: |-
+      {
+        "razonSocial": "Hogar San José",
+        "direccion": "Mitre 456",
+        "mails": ["hogar.sanjose@gmail.com"],
+        "telefono": "1167891234",
+        
+        "necesidades": [
+          {
+            "tipo": "RECURRENTE",
+            "bienRequerido": {
+              "descripcion": "Paquete de fideos secos 500g",
+              "foto": "https://example.com/fideos.jpg",
+              "cantidad": 80,
+              "subCategoria": {
+                "nombre": "FIDEOSSECOS",
+                "categoria": {
+                  "tipo": "PERECEDERO",
+                  "fechaDeVencimiento": "2027-01-10"
+                }
+              }
+            },
+            "periodo": "P2M"
+          },
+          {
+            "tipo": "EXTRAORDINARIA",
+            "bienRequerido": {
+              "descripcion": "Pantalón talle 42",
+              "foto": "https://example.com/pantalon.jpg",
+              "cantidad": 30,
+              "subCategoria": {
+                "nombre": "PANTALON",
+                "categoria": {
+                  "tipo": "NOPERECEDERO",
+                  "estadoDeUso": "USADO"
+                }
+              }
+            }
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        let respuesta = res.getBody();
+        bru.setEnvVar("beneficiarioConAmbosTiposDeNecesidades", respuesta.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

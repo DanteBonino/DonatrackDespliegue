@@ -1,0 +1,25 @@
+info:
+  name: fallaSiLeMandasUnIDNoCandidato
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/solicitudes-de-asignacion/:id/aceptar"
+  params:
+    - name: id
+      value: e7b51a04-5e23-482b-a4ba-6976419e5c67
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "idBeneficiario": "a30c627f-bde6-4a84-b020-82c70d3e66b7"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

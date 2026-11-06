@@ -1,0 +1,808 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty members
+left to right direction
+
+interface Actualizable {
+}
+class ActualizadorDeInstanciasSegunArchivo {
+  -archivo : Archivo
+  -donantesRepository : DonantesRepository
+}
+class Administrador {
+  -contacto : Contacto
+  -medioPreferido : TipoDeMedio
+}
+class AdministradoresRepository {
+  -administradores : List<Administrador>
+}
+interface AlgoritmoDeAsignacion {
+}
+abstract class AlgoritmoDeAsignacionSimple {
+}
+class AlgoritmoMixtoPorInterseccion {
+  -algoritmos : List<AlgoritmoDeAsignacion>
+}
+abstract class Archivo {
+  -path : String
+}
+class ArchivoCsv {
+}
+class AsignacionDeDonacionesModule {
+  -algoritmoDeAsignacion : AlgoritmoDeAsignacion
+  -crearSolicitudesDeAsignacion : CrearSolicitudesDeAsignacion
+}
+class AsignacionRealizada {
+}
+class BeneficiariosRepository {
+}
+class Bien {
+  -descripcion : String
+  -foto : String
+  -cantidad : Integer
+  -subCategoria : SubCategoria
+}
+class BienRequestDto {
+  -descripcion : String
+  -foto : String
+  -cantidad : Integer
+  -subCategoria : SubCategoriaRequestDto
+}
+class BienResponseDto {
+  -descripcion : String
+  -foto : String
+  -cantidad : Integer
+  -subCategoria : SubCategoriaResponseDto
+}
+class BusNotificaciones {
+  -factory : MedioNotificacionFactory
+}
+class CambioDeEstado {
+  -fecha : LocalDateTime
+  -estadoDonacion : EstadoDonacion
+  -asignado : EntidadBeneficiaria
+}
+class CambioDeEstadoResponseDto {
+  -fecha : LocalDateTime
+  -tipo : TipoEstadoDonacion
+  -idEntidadAsignada : String
+}
+interface Categoria {
+}
+class CategoriaRequestDto {
+  -tipo : TipoCategoria
+  -estadoDeUso : EstadoDeUso
+  -fechaDeVencimiento : LocalDate
+}
+class CategoriaResponseDto {
+  -tipo : TipoCategoria
+  -estadoDeUso : EstadoDeUso
+  -fechaDeVencimiento : LocalDate
+}
+interface ClienteCorreo {
+}
+class ClienteCorreoSendGrid {
+  -sendGrid : SendGrid
+  -emisor : String
+}
+interface ClienteMensajeria {
+}
+class ClienteMensajeriaTwilio {
+  -emisor : String
+}
+class CompatibilidadSemantica {
+}
+class ComprobanteDeEntrega {
+  -timestamp : LocalDateTime
+  -patenteCamion : String
+}
+class Configuracion {
+  -propiedades : Properties
+}
+class ConfirmarAsignacion {
+  -solicitudesDeAsignacionRepository : SolicitudesDeAsignacionRepository
+  -publicadorDeAsignacion : PublicadorDeAsignacion
+}
+class Contacto {
+  -email : String
+  -telefono : String
+}
+class CrearSolicitudesDeAsignacion {
+  -donacionesRepository : DonacionesRepository
+  -beneficiariosRepository : BeneficiariosRepository
+  -algoritmoDeAsignacion : AlgoritmoDeAsignacion
+  -solicitudesDeAsignacionRepository : SolicitudesDeAsignacionRepository
+}
+interface DatosDonacion {
+}
+class DatosDonacionUpdateRequest {
+  -bien : BienRequestDto
+}
+interface DatosDonante {
+}
+interface DatosEntidadesBeneficiarias {
+}
+interface DatosNecesidad {
+}
+class Donacion {
+  -bienes : List<Bien>
+  -donante : Donante
+}
+class DonacionCreateRequestDto {
+  -bienes : List<BienRequestDto>
+  -idDonante : String
+}
+class DonacionIndependiente {
+  -bienDonado : Bien
+  -estado : EstadoDonacion
+  -donante : Donante
+  -entidadAsignada : EntidadBeneficiaria
+  -estaEliminado : boolean
+}
+class DonacionResponseDto {
+  -bien : BienResponseDto
+  -fecha : LocalDate
+  -donante : DonanteResponseDto
+  -id : String
+  -estadoActual : TipoEstadoDonacion
+  -asignado : EntidadBeneficiaria
+}
+class DonacionesController {
+  -donacionesRepository : DonacionesRepository
+  -donantesRepository : DonantesRepository
+  -beneficiariosRepository : BeneficiariosRepository
+  -publicadorInicioDeRuta : PublicadorDeInicioDeRuta
+  -publicadorEntregaConExito : PublicadorEntregaConExito
+  -publicadorEntregaFallida : PublicadorEntregaFallida
+}
+class DonacionesRepository {
+}
+abstract class Donante {
+  -contacto : Contacto
+  -medioPreferido : TipoDeMedio
+  -estaEliminado : boolean
+}
+class DonanteDto {
+  -tipoDeMedio : TipoDeMedio
+}
+class DonanteHumanoBuilder {
+  -nombreCompleto : NombreCompleto
+  -fechaDeNacimiento : LocalDate
+  -genero : Genero
+  -direccion : String
+  -documento : String
+  -contacto : Contacto
+  -medio : TipoDeMedio
+}
+class DonanteJuridicoBuilder {
+  -razonSocial : String
+  -tipoJuridica : TipoJuridica
+  -rubro : String
+  -cuit : String
+  -contacto : Contacto
+  -medio : TipoDeMedio
+}
+class DonanteRequestBuilder {
+  -tipoPersona : TipoPersona
+  -documento : String
+  -nombreRazonSocial : String
+  -apellido : String
+  -email : String
+  -telefono : String
+  -fechaDeNacimiento : LocalDate
+  -direccion : String
+  -genero : Genero
+  -rubro : String
+  -tipoJuridico : TipoJuridica
+  -tipoDeMedio : TipoDeMedio
+}
+class DonanteRequestDto {
+  -tipoPersona : TipoPersona
+  -documento : String
+  -nombreRazonSocial : String
+  -apellido : String
+  -email : String
+  -telefono : String
+  -fechaDeNacimiento : LocalDate
+  -direccion : String
+  -genero : Genero
+  -rubro : String
+  -tipoJuridico : TipoJuridica
+  -tipoDeMedio : TipoDeMedio
+}
+class DonanteResponseDto {
+  -id : String
+  -tipoPersona : TipoPersona
+  -documento : String
+  -nombreRazonSocial : String
+  -apellido : String
+  -email : String
+  -telefono : String
+  -fechaDeNacimiento : LocalDate
+  -direccion : String
+  -genero : Genero
+  -rubro : String
+  -tipoJuridico : TipoJuridica
+  -tipoDeMedio : TipoDeMedio
+}
+class DonantesController {
+  -donantesRepository : DonantesRepository
+}
+class DonantesRepository {
+}
+interface Eliminable {
+}
+class EnDeposito {
+}
+class EnTraslado {
+}
+class EntidadBeneficiaria {
+  -razonSocial : String
+  -direccion : String
+  -mails : List<String>
+  -estaEliminado : boolean
+  -telefono : String
+  -medioPreferido : TipoDeMedio
+}
+class EntidadBeneficiariaBuilder {
+  -razonSocial : String
+  -direccion : String
+  -telefono : String
+  -mails : List<String>
+  -medioPreferencial : TipoDeMedio
+}
+class EntidadBeneficiariaRequestDto {
+  -razonSocial : String
+  -direccion : String
+  -mails : List<String>
+  -necesidades : List<NecesidadRequestDto>
+  -telefono : String
+  -tipoDeMedio : TipoDeMedio
+}
+class EntidadBeneficiariaResponseDto {
+  -id : String
+  -razonSocial : String
+  -direccion : String
+  -mails : List<String>
+  -telefono : String
+  -necesidades : List<NecesidadResponseDto>
+  -tipoDeMedio : TipoDeMedio
+}
+class EntidadCandidataResponseDto {
+  -id : String
+  -razonSocial : String
+  -direccion : String
+}
+class EntidadesBeneficiariasController {
+  -repository : BeneficiariosRepository
+}
+class EntregaExitosaRequestDto {
+  -idBeneficiario : String
+  -comprobanteDeEntrega : ComprobanteDeEntrega
+}
+class EntregaFallida {
+  -justificacion : String
+}
+class Entregada {
+}
+enum EstadoDeUso {
+  USADO
+  NUEVO
+}
+abstract class EstadoDonacion {
+  -tipo : TipoEstadoDonacion
+}
+class EventosModule {
+  -publicadorDeInactividad : PublicadorDeInactividad
+  -publicadorDeInicioDeRuta : PublicadorDeInicioDeRuta
+  -publicadorEntregaConExito : PublicadorEntregaConExito
+  -publicadorEntregaFallida : PublicadorEntregaFallida
+  -publicadorDeAsignacion : PublicadorDeAsignacion
+  -generadorLinkDeTrackeoEntrega : GeneradorLinkDeTrackeoEntrega
+}
+class GeneradorLinkApi {
+  -urlLogisitica : String
+}
+interface GeneradorLinkDeTrackeoEntrega {
+}
+enum Genero {
+  MASCULINO
+  FEMENINO
+  X
+}
+class Injector {
+  -repositoriesModule : RepositoriesModule
+  -notificationsModule : NotificacionesModule
+  -eventsModule : EventosModule
+  -donationAssignmentModule : AsignacionDeDonacionesModule
+  -configuracion : Configuracion
+}
+interface Interesado {
+}
+interface InteresadoEnAsignacion {
+}
+interface InteresadoEnEntregaConExito {
+}
+interface InteresadoEnInactividad {
+}
+interface InteresadoEnInicioDeRuta {
+}
+interface InteresadoEntregaFallida {
+}
+class ListaParaEntregar {
+}
+
+class MedioCorreo {
+  -ASUNTO : String
+  -clienteCorreo : ClienteCorreo
+}
+abstract class MedioDeNotificacion {
+  -notificacionesRepository : NotificacionesRepository
+  -tipoDeMedio : TipoDeMedio
+}
+class MedioNotificacionFactory {
+  -medioMail : MedioCorreo
+  -medioWhatsApp : MedioWhatsApp
+  -medioSMS : MedioSMS
+}
+class MedioSMS {
+  -clienteMensajeria : ClienteMensajeria
+}
+
+class MedioWhatsApp {
+  -clienteMensajeria : ClienteMensajeria
+}
+abstract class Necesidad {
+  -bienRequerido : Bien
+}
+class NecesidadExtraordinaria {
+}
+class NecesidadExtraordinariaBuilder {
+  -bienRequerido : Bien
+}
+class NecesidadRecurrente {
+  -periodo : Period
+}
+class NecesidadRecurrenteBuilder {
+  -bienRequerido : Bien
+  -periodo : Period
+}
+class NecesidadRequestDto {
+  -tipo : TipoNecesidad
+  -bienRequerido : BienRequestDto
+  -periodo : Period
+}
+class NecesidadResponseDto {
+  -id : String
+  -tipo : TipoNecesidad
+  -bienRequerido : BienResponseDto
+  -cantidadRecibida : Integer
+  -estaSatisfecha : Boolean
+  -periodo : Period
+}
+class NecesidadesController {
+  -repository : BeneficiariosRepository
+}
+class NecesidadesDeLaEntidad {
+}
+class NoPerecedero {
+  -estado : EstadoDeUso
+}
+class NombreCompleto {
+  -nombre : String
+  -apellido : String
+}
+enum NombreSubCategoria {
+  FIDEOSSECOS
+  PANTALON
+  REMERA
+}
+interface Notificable {
+}
+interface NotificableBuilder {
+}
+interface NotificableDatos {
+}
+interface NotificableMail {
+}
+interface NotificableTelefono {
+}
+abstract class Notificacion {
+  -MAXIMO_REINTENTOS : int
+  -mensaje : String
+  -receptor : Notificable
+  -vecesRebotada : int
+  -fueEntregada : boolean
+}
+class NotificacionFija {
+  -medio : TipoDeMedio
+}
+class NotificacionPreferencial {
+}
+class NotificacionesModule {
+  -busNotificaciones : BusNotificaciones
+}
+class NotificacionesRepository {
+  -notificaciones : List<Notificacion>
+}
+abstract class NotificadorAnteAsignacion {
+  -busNotificaciones : BusNotificaciones
+}
+class NotificadorDeDonanteAnteAsignacion {
+}
+class NotificadorDeEntidadBeneficiariaAnteAsignacion {
+}
+class NotificadorDeInactividad {
+  -busNotificaciones : BusNotificaciones
+}
+class NotificadorDonanteInicioDeRuta {
+}
+class NotificadorEntidadInicioDeRuta {
+}
+abstract class NotificadorEntregaConExito {
+  -busNotificaciones : BusNotificaciones
+}
+class NotificadorEntregaConExitoDonante {
+}
+class NotificadorEntregaConExitoEntidad {
+}
+abstract class NotificadorEntregaFallida {
+  -busNotificaciones : BusNotificaciones
+}
+class NotificadorEntregaFallidaAdministrador {
+  -administradoresRepository : AdministradoresRepository
+  -busNotificaciones : BusNotificaciones
+}
+class NotificadorEntregaFallidaDonante {
+}
+class NotificadorEntregaFallidaEntidad {
+}
+abstract class NotificadorInicioDeRuta {
+  -generadorLinkDeTrackeoEntrega : GeneradorLinkDeTrackeoEntrega
+  -busNotificaciones : BusNotificaciones
+}
+class NotificarDonantesInactivos {
+  -donantesRepository : DonantesRepository
+  -publicadorDeInactividad : PublicadorDeInactividad
+}
+class PendienteDeConfirmacionDeAsignacion {
+}
+class Perecedero {
+  -vencimiento : LocalDate
+}
+abstract class Persistible {
+  -id : String
+}
+class PersonaHumana {
+  -nombreCompleto : NombreCompleto
+  -fechaDeNacimiento : LocalDate
+  -genero : Genero
+  -direccion : String
+  -documento : String
+}
+class PersonaJuridica {
+  -razonSocial : String
+  -tipo : TipoJuridica
+  -rubro : String
+  -cuit : String
+}
+class PrioridadSubAtendidos {
+}
+class PublicadorDeAsignacion {
+}
+class PublicadorDeInactividad {
+}
+class PublicadorDeInicioDeRuta {
+}
+class PublicadorEntregaConExito {
+}
+class PublicadorEntregaFallida {
+}
+class PublicadorObservable {
+  -consumidores : List<I>
+}
+class ReciboDeDonacion {
+  -donacionRecibida : DonacionIndependiente
+  -fechaDeRecepcion : LocalDate
+}
+class ReintentoDeEnvioDeNotificacionesPendientes {
+  -notificacionesRepository : NotificacionesRepository
+  -busNotificaciones : BusNotificaciones
+}
+class RepositoriesModule {
+}
+abstract class Repository {
+}
+class SolicitudDeAsignacion {
+  -donacion : DonacionIndependiente
+  -candidatas : List<EntidadBeneficiaria>
+  -entidadAsignada : EntidadBeneficiaria
+}
+class SolicitudDeAsignacionResponseDto {
+  -id : String
+  -donacion : DonacionResponseDto
+  -candidatas : List<EntidadCandidataResponseDto>
+  -idEntidadAsignada : String
+}
+class SolicitudesDeAsignacionController {
+  -crearSolicitudesDeAsignacion : CrearSolicitudesDeAsignacion
+  -beneficiariosRepository : BeneficiariosRepository
+  -solicitudesDeAsignacionRepository : SolicitudesDeAsignacionRepository
+  -publicadorDeAsignacion : PublicadorDeAsignacion
+}
+class SolicitudesDeAsignacionRepository {
+}
+class SubCategoria {
+  -nombre : NombreSubCategoria
+  -categoria : Categoria
+}
+class SubCategoriaRequestDto {
+  -nombre : NombreSubCategoria
+  -categoria : CategoriaRequestDto
+}
+class SubCategoriaResponseDto {
+  -nombre : NombreSubCategoria
+  -categoria : CategoriaResponseDto
+}
+enum TipoCategoria {
+  PERECEDERO
+  NOPERECEDERO
+}
+enum TipoDeMedio {
+  MAIL
+  WPP
+  SMS
+}
+enum TipoEstadoDonacion {
+  EN_DEPOSITO
+  PENDIENTE_DE_CONFIRMACION_DE_ASIGNACION
+  ASIGNACION_REALIZADA
+  LISTA_PARA_ENTREGAR
+  EN_TRANSLADO
+  ENTREGADA
+  ENTREGA_FALLIDA
+  VENCIDA
+}
+enum TipoJuridica {
+  GOUBERNAMENTAL
+  ONG
+  EMPRESA
+  INSTITUCIÓN
+}
+enum TipoNecesidad {
+  RECURRENTE
+  EXTRAORDINARIA
+}
+enum TipoPersona {
+  HUMANA
+  JURIDICA
+}
+abstract class Usuario {
+  -fechaDeUltimoIngreso : LocalDate
+}
+class Vencida {
+}
+
+Persistible <|-- Administrador
+Archivo <|-- ArchivoCsv
+EstadoDonacion <|-- AsignacionRealizada
+Repository <|-- BeneficiariosRepository
+AlgoritmoDeAsignacionSimple <|-- CompatibilidadSemantica
+NotificableDatos <|-- DatosDonante
+NotificableDatos <|-- DatosEntidadesBeneficiarias
+Persistible <|-- DonacionIndependiente
+Repository <|-- DonacionesRepository
+Usuario <|-- Donante
+Repository <|-- DonantesRepository
+EstadoDonacion <|-- EnDeposito
+EstadoDonacion <|-- EnTraslado
+Persistible <|-- EntidadBeneficiaria
+EstadoDonacion <|-- EntregaFallida
+EstadoDonacion <|-- Entregada
+Interesado <|-- InteresadoEnAsignacion
+Interesado <|-- InteresadoEnEntregaConExito
+Interesado <|-- InteresadoEnInactividad
+Interesado <|-- InteresadoEnInicioDeRuta
+Interesado <|-- InteresadoEntregaFallida
+EstadoDonacion <|-- ListaParaEntregar
+MedioDeNotificacion <|-- MedioCorreo
+MedioDeNotificacion <|-- MedioSMS
+MedioDeNotificacion <|-- MedioWhatsApp
+Persistible <|-- Necesidad
+Necesidad <|-- NecesidadExtraordinaria
+Necesidad <|-- NecesidadRecurrente
+Repository <|-- NecesidadesDeLaEntidad
+NotificableMail <|-- Notificable
+NotificableTelefono <|-- Notificable
+Notificacion <|-- NotificacionFija
+Notificacion <|-- NotificacionPreferencial
+NotificadorAnteAsignacion <|-- NotificadorDeDonanteAnteAsignacion
+NotificadorAnteAsignacion <|-- NotificadorDeEntidadBeneficiariaAnteAsignacion
+NotificadorInicioDeRuta <|-- NotificadorDonanteInicioDeRuta
+NotificadorInicioDeRuta <|-- NotificadorEntidadInicioDeRuta
+NotificadorEntregaConExito <|-- NotificadorEntregaConExitoDonante
+NotificadorEntregaConExito <|-- NotificadorEntregaConExitoEntidad
+NotificadorEntregaFallida <|-- NotificadorEntregaFallidaDonante
+NotificadorEntregaFallida <|-- NotificadorEntregaFallidaEntidad
+EstadoDonacion <|-- PendienteDeConfirmacionDeAsignacion
+Donante <|-- PersonaHumana
+Donante <|-- PersonaJuridica
+AlgoritmoDeAsignacionSimple <|-- PrioridadSubAtendidos
+PublicadorObservable <|-- PublicadorDeAsignacion
+PublicadorObservable <|-- PublicadorDeInactividad
+PublicadorObservable <|-- PublicadorDeInicioDeRuta
+PublicadorObservable <|-- PublicadorEntregaConExito
+PublicadorObservable <|-- PublicadorEntregaFallida
+Persistible <|-- SolicitudDeAsignacion
+Persistible <|-- Usuario
+EstadoDonacion <|-- Vencida
+Notificable <|.. Administrador
+AlgoritmoDeAsignacion <|.. AlgoritmoDeAsignacionSimple
+AlgoritmoDeAsignacion <|.. AlgoritmoMixtoPorInterseccion
+ClienteCorreo <|.. ClienteCorreoSendGrid
+ClienteMensajeria <|.. ClienteMensajeriaTwilio
+DatosDonacion <|.. DatosDonacionUpdateRequest
+Actualizable <|.. DonacionIndependiente
+Eliminable <|.. DonacionIndependiente
+Actualizable <|.. Donante
+Eliminable <|.. Donante
+Notificable <|.. Donante
+DatosDonante <|.. DonanteDto
+NotificableBuilder <|.. DonanteHumanoBuilder
+NotificableBuilder <|.. DonanteJuridicoBuilder
+DatosDonante <|.. DonanteRequestDto
+DatosDonante <|.. DonanteResponseDto
+Actualizable <|.. EntidadBeneficiaria
+Eliminable <|.. EntidadBeneficiaria
+Notificable <|.. EntidadBeneficiaria
+NotificableBuilder <|.. EntidadBeneficiariaBuilder
+DatosEntidadesBeneficiarias <|.. EntidadBeneficiariaRequestDto
+GeneradorLinkDeTrackeoEntrega <|.. GeneradorLinkApi
+Actualizable <|.. Necesidad
+DatosNecesidad <|.. NecesidadRequestDto
+Categoria <|.. NoPerecedero
+InteresadoEnAsignacion <|.. NotificadorAnteAsignacion
+InteresadoEnInactividad <|.. NotificadorDeInactividad
+InteresadoEnEntregaConExito <|.. NotificadorEntregaConExito
+InteresadoEntregaFallida <|.. NotificadorEntregaFallida
+InteresadoEntregaFallida <|.. NotificadorEntregaFallidaAdministrador
+InteresadoEnInicioDeRuta <|.. NotificadorInicioDeRuta
+Categoria <|.. Perecedero
+ActualizadorDeInstanciasSegunArchivo --> "1" Archivo
+ActualizadorDeInstanciasSegunArchivo --> "1" DonantesRepository
+Administrador --> "1" Contacto
+Administrador --> "1" TipoDeMedio
+AdministradoresRepository --> "*" Administrador
+AlgoritmoMixtoPorInterseccion --> "*" AlgoritmoDeAsignacion
+AsignacionDeDonacionesModule --> "1" AlgoritmoDeAsignacion
+AsignacionDeDonacionesModule --> "1" CrearSolicitudesDeAsignacion
+Bien --> "1" SubCategoria
+BienRequestDto --> "1" SubCategoriaRequestDto
+BienResponseDto --> "1" SubCategoriaResponseDto
+BusNotificaciones --> "1" MedioNotificacionFactory
+CambioDeEstado --> "1" EntidadBeneficiaria
+CambioDeEstado --> "1" EstadoDonacion
+CambioDeEstadoResponseDto --> "1" TipoEstadoDonacion
+CategoriaRequestDto --> "1" EstadoDeUso
+CategoriaRequestDto --> "1" TipoCategoria
+CategoriaResponseDto --> "1" EstadoDeUso
+CategoriaResponseDto --> "1" TipoCategoria
+ConfirmarAsignacion --> "1" PublicadorDeAsignacion
+ConfirmarAsignacion --> "1" SolicitudesDeAsignacionRepository
+CrearSolicitudesDeAsignacion --> "1" AlgoritmoDeAsignacion
+CrearSolicitudesDeAsignacion --> "1" BeneficiariosRepository
+CrearSolicitudesDeAsignacion --> "1" DonacionesRepository
+CrearSolicitudesDeAsignacion --> "1" SolicitudesDeAsignacionRepository
+DatosDonacionUpdateRequest --> "1" BienRequestDto
+Donacion --> "*" Bien
+Donacion --> "1" Donante
+DonacionCreateRequestDto --> "*" BienRequestDto
+DonacionIndependiente --> "1" Bien
+DonacionIndependiente --> "1" Donante
+DonacionIndependiente --> "1" EntidadBeneficiaria
+DonacionIndependiente --> "1" EstadoDonacion
+DonacionResponseDto --> "1" BienResponseDto
+DonacionResponseDto --> "1" DonanteResponseDto
+DonacionResponseDto --> "1" EntidadBeneficiaria
+DonacionResponseDto --> "1" TipoEstadoDonacion
+DonacionesController --> "1" BeneficiariosRepository
+DonacionesController --> "1" DonacionesRepository
+DonacionesController --> "1" DonantesRepository
+DonacionesController --> "1" PublicadorDeInicioDeRuta
+DonacionesController --> "1" PublicadorEntregaConExito
+DonacionesController --> "1" PublicadorEntregaFallida
+Donante --> "1" Contacto
+Donante --> "1" TipoDeMedio
+DonanteDto --> "1" TipoDeMedio
+DonanteHumanoBuilder --> "1" Contacto
+DonanteHumanoBuilder --> "1" Genero
+DonanteHumanoBuilder --> "1" NombreCompleto
+DonanteHumanoBuilder --> "1" TipoDeMedio
+DonanteJuridicoBuilder --> "1" Contacto
+DonanteJuridicoBuilder --> "1" TipoDeMedio
+DonanteJuridicoBuilder --> "1" TipoJuridica
+DonanteRequestBuilder --> "1" Genero
+DonanteRequestBuilder --> "1" TipoDeMedio
+DonanteRequestBuilder --> "1" TipoJuridica
+DonanteRequestBuilder --> "1" TipoPersona
+DonanteRequestDto --> "1" Genero
+DonanteRequestDto --> "1" TipoDeMedio
+DonanteRequestDto --> "1" TipoJuridica
+DonanteRequestDto --> "1" TipoPersona
+DonanteResponseDto --> "1" Genero
+DonanteResponseDto --> "1" TipoDeMedio
+DonanteResponseDto --> "1" TipoJuridica
+DonanteResponseDto --> "1" TipoPersona
+DonantesController --> "1" DonantesRepository
+EntidadBeneficiaria --> "1" TipoDeMedio
+EntidadBeneficiariaBuilder --> "1" TipoDeMedio
+EntidadBeneficiariaRequestDto --> "*" NecesidadRequestDto
+EntidadBeneficiariaRequestDto --> "1" TipoDeMedio
+EntidadBeneficiariaResponseDto --> "*" NecesidadResponseDto
+EntidadBeneficiariaResponseDto --> "1" TipoDeMedio
+EntidadesBeneficiariasController --> "1" BeneficiariosRepository
+EntregaExitosaRequestDto --> "1" ComprobanteDeEntrega
+EstadoDonacion --> "1" TipoEstadoDonacion
+EventosModule --> "1" GeneradorLinkDeTrackeoEntrega
+EventosModule --> "1" PublicadorDeAsignacion
+EventosModule --> "1" PublicadorDeInactividad
+EventosModule --> "1" PublicadorDeInicioDeRuta
+EventosModule --> "1" PublicadorEntregaConExito
+EventosModule --> "1" PublicadorEntregaFallida
+Injector --> "1" AsignacionDeDonacionesModule
+Injector --> "1" Configuracion
+Injector --> "1" EventosModule
+Injector --> "1" NotificacionesModule
+Injector --> "1" RepositoriesModule
+MedioCorreo --> "1" ClienteCorreo
+MedioDeNotificacion --> "1" NotificacionesRepository
+MedioDeNotificacion --> "1" TipoDeMedio
+MedioNotificacionFactory --> "1" MedioCorreo
+MedioNotificacionFactory --> "1" MedioSMS
+MedioNotificacionFactory --> "1" MedioWhatsApp
+MedioSMS --> "1" ClienteMensajeria
+MedioWhatsApp --> "1" ClienteMensajeria
+Necesidad --> "1" Bien
+NecesidadExtraordinariaBuilder --> "1" Bien
+NecesidadRecurrenteBuilder --> "1" Bien
+NecesidadRequestDto --> "1" BienRequestDto
+NecesidadRequestDto --> "1" TipoNecesidad
+NecesidadResponseDto --> "1" BienResponseDto
+NecesidadResponseDto --> "1" TipoNecesidad
+NecesidadesController --> "1" BeneficiariosRepository
+NoPerecedero --> "1" EstadoDeUso
+Notificacion --> "1" Notificable
+NotificacionFija --> "1" TipoDeMedio
+NotificacionesModule --> "1" BusNotificaciones
+NotificacionesRepository --> "*" Notificacion
+NotificadorAnteAsignacion --> "1" BusNotificaciones
+NotificadorDeInactividad --> "1" BusNotificaciones
+NotificadorEntregaConExito --> "1" BusNotificaciones
+NotificadorEntregaFallida --> "1" BusNotificaciones
+NotificadorEntregaFallidaAdministrador --> "1" AdministradoresRepository
+NotificadorEntregaFallidaAdministrador --> "1" BusNotificaciones
+NotificadorInicioDeRuta --> "1" BusNotificaciones
+NotificadorInicioDeRuta --> "1" GeneradorLinkDeTrackeoEntrega
+NotificarDonantesInactivos --> "1" DonantesRepository
+NotificarDonantesInactivos --> "1" PublicadorDeInactividad
+PersonaHumana --> "1" Genero
+PersonaHumana --> "1" NombreCompleto
+PersonaJuridica --> "1" TipoJuridica
+ReciboDeDonacion --> "1" DonacionIndependiente
+ReintentoDeEnvioDeNotificacionesPendientes --> "1" BusNotificaciones
+ReintentoDeEnvioDeNotificacionesPendientes --> "1" NotificacionesRepository
+SolicitudDeAsignacion --> "1" DonacionIndependiente
+SolicitudDeAsignacion --> "*" EntidadBeneficiaria
+SolicitudDeAsignacionResponseDto --> "1" DonacionResponseDton
+SolicitudDeAsignacionResponseDto --> "*" EntidadCandidataResponseDto
+SolicitudesDeAsignacionController --> "1" BeneficiariosRepository
+SolicitudesDeAsignacionController --> "1" CrearSolicitudesDeAsignacion
+SolicitudesDeAsignacionController --> "1" PublicadorDeAsignacion
+SolicitudesDeAsignacionController --> "1" SolicitudesDeAsignacionRepository
+SubCategoria --> "1" Categoria
+SubCategoria --> "1" NombreSubCategoria
+SubCategoriaRequestDto --> "1" CategoriaRequestDto
+SubCategoriaRequestDto --> "1" NombreSubCategoria
+SubCategoriaResponseDto --> "1" CategoriaResponseDto
+SubCategoriaResponseDto --> "1" NombreSubCategoria
+@enduml

@@ -1,0 +1,80 @@
+@startuml
+' === ESTILOS ===
+skinparam linetype ortho
+skinparam backgroundColor #FFFFFF
+'Configuración visual para los componentes simulados (Gris/Apagado)
+skinparam nodeBackgroundColor<<Simulado>> #F0F0F0
+skinparam nodeFontColor<<Simulado>> #666666
+skinparam nodeBorderColor<<Simulado>> #999999
+
+
+title Diagrama de Despliegue - DonaTrack (version 1)
+
+
+' === ACTORES ===
+actor "Administrador" as Admin
+actor "Donante" as Donante
+actor "Entidad" as Entidad
+
+
+' === RED ===
+cloud "Internet" as Internet
+
+
+' === SERVIDOR DE DONATRACK ===
+node "Servidor.ServidorDonaciones de DonaTrack" {
+  package "Logica de Negocio" {
+    [DonantesRepository] as GD
+    [DonacionesRepository] as GDon
+    [BeneficiariosRepository] as GB
+    [ImportadorCsv] as Csv
+  }
+
+  package "Notificacion"  {
+    [MedioCorreo] as MC
+    [MedioSMS] as MS
+    [MedioWhatsapp] as MW
+  }
+}
+
+
+' === SERVICIOS EXTERNOS SIMULADOS ===
+
+node "Proveedor Correo" <<Simulado>> {
+    component "API Correo" as MailAPI
+}
+
+node "Proveedor SMS" <<Simulado>> {
+    component "API SMS" as SMSAPI
+}
+
+node "Proveedor WhatsApp" <<Simulado>> {
+    component "API WhatsApp Business" as WA_API
+}
+
+
+' === CONEXIONES ===
+' Actores a Red
+Admin --> Internet
+Donante --> Internet
+Entidad --> Internet
+
+' Red a Gestores
+Internet --> GD
+Internet --> GDon
+Internet --> GB
+
+' Inyección interna
+GD --> Csv
+Csv -[hidden]-> GD
+
+' Lógica delega en Adaptadores
+GD --> MC
+GD --> MS
+GD --> MW
+
+' Adaptadores conectan con Servicios Externos
+MC --> MailAPI
+MS --> SMSAPI
+MW --> WA_API
+@enduml

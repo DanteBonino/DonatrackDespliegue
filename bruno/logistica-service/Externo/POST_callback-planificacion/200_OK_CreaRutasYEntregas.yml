@@ -1,0 +1,35 @@
+info:
+  name: 200 OK - Crea Rutas Y Entregas
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/externo/callback-planificacion"
+  body:
+    type: json
+    data: |-
+      {
+        "rutas": [
+          {
+            "patenteCamion": "ABC123",
+            "entregas": [
+              { "idDonacion": "DON-999", "direccion": "Av. Siempre Viva 742" },
+              { "idDonacion": "DON-888", "direccion": "Calle Falsa 123" }
+            ]
+          }
+        ],
+        "donacionesSinAsignar": ["DON-777"]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200 OK", function() {
+          expect(res.status).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true

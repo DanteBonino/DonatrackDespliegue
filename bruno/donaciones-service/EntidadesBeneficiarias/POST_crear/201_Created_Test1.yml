@@ -1,0 +1,23 @@
+info:
+  name: crearEntidadBeneficiariaTest1
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias"
+  body:
+    type: json
+    data: |-
+      {
+                   "razonSocial": "Comedor Los Pibes",
+                   "mails": ["comedor@lospibes.org"],
+                   "telefono": "1145678900"
+                }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

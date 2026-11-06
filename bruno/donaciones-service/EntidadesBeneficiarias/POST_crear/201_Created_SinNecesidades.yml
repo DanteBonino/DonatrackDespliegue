@@ -1,0 +1,32 @@
+info:
+  name: crearEntidadBeneficiariaSinNecesidades
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias"
+  body:
+    type: json
+    data: |-
+      {
+        "razonSocial": "hay que ganarle a Egipto, por favor",
+        "direccion": "final del mundial 2026",
+        "mails":["messi@gmail.com", "lautaro@gmail.com"],
+        "necesidades": null,
+        "telefono": "1523489521"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        let respuesta = res.getBody();
+        bru.setEnvVar("beneficiarioSinNecesidades", respuesta.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,17 @@
+@startuml
+class MonitoreoController {
+ + obtenerRutasActivas(Context ctx): void
+ + obtenerPosicionCamion(Context ctx): void
+}
+
+class FlotaRepositoryConPersistencia{
+  + obtenerEnCurso(): List<Camion>
+}
+
+MonitoreoController ..> FlotaRepositoryConPersistencia
+
+note top of FlotaRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el controller.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+@enduml

@@ -1,0 +1,22 @@
+info:
+  name: actualizarSoloElTelefono
+  type: http
+  seq: 5
+
+http:
+  method: PATCH
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias/:id"
+  params:
+    - name: id
+      value: ce525bc8-711d-491c-9e2a-ab13cd2150f5
+      type: path
+  body:
+    type: json
+    data: '{ "telefono": "1198765432" }'
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

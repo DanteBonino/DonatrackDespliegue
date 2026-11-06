@@ -1,0 +1,42 @@
+@startuml
+interface InteresadoEnAsignacion extends Interesado {
+  + void anteAsignacion(DonacionIndependiente donacion, EntidadBeneficiaria entidad);
+}
+
+abstract class NotificadorAnteAsignacion implements InteresadoEnAsignacion {
+
+ + void anteAsignacion(DonacionIndependiente donacion, EntidadBeneficiaria entidad)
+
+  {abstract} + String mensaje();
+  {abstract} + Notificable receptor(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidad);
+
+}
+
+
+
+class NotificadorDeDonanteAnteAsignacion extends NotificadorAnteAsignacion {
+
+  + String mensaje()
+  + Notificable receptor
+}
+
+class NotificadorDeEntidadBeneficiariaAnteAsignacion extends NotificadorAnteAsignacion {
+
+  + String mensaje()
+
+  + Notificable receptor(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+
+}
+
+NotificadorAnteAsignacion --> "1" BusNotificaciones
+
+class BusNotificaciones {
+    + void procesar(Notificacion notificacion)
+}
+
+class MedioNotificacionFactory {
+    + MedioDeNotificacion construirMedio(TipoDeMedio tipo)
+}
+
+BusNotificaciones --> "1" MedioNotificacionFactory
+@enduml

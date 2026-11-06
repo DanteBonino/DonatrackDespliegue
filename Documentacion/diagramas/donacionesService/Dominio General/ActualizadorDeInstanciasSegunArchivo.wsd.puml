@@ -1,0 +1,51 @@
+@startuml
+
+class ActualizadorDeInstanciasSegunArchivo {
+  + void crearOActualizarInstanciasSegunArchivo()
+}
+
+class DonantesRepository {
+    + getInstancias()
+    + registrar(Donante unDonante)
+}
+
+abstract class Archivo {
+ - path
+ {abstract} + importarInstancias()
+}
+
+class ArchivoCsv extends Archivo {
+    + importarInstancias()
+}
+
+class Donante {
+    + refrescar(DatosDonante unosDatos)
+    + esIgualA(Donante otroDonante)
+}
+
+class DonanteDTO implements DatosDonante {
+    + crearInstancia()
+}
+
+interface DatosDonante {
+  String getNombreRazonSocial();
+  String getApellido();
+  String getDocumento();
+  String getEmail();
+  String getTelefono();
+  LocalDate getFechaDeNacimiento();
+  Genero getGenero();
+  String getDireccion();
+  String getRubro();
+  TipoJuridica getTipoJuridico();
+  TipoPersona getTipoPersona();
+}
+
+ActualizadorDeInstanciasSegunArchivo --> Archivo
+ActualizadorDeInstanciasSegunArchivo --> DonantesRepository
+DonantesRepository --> "*" Donante
+Archivo ..> "*" DonanteDTO: "importar"
+Donante ..> "1" DatosDonante: "refrescar"
+
+
+@enduml

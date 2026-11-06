@@ -1,0 +1,24 @@
+info:
+  name: 409 Conflict - No se puede reprogramar si no está en INCIDENCIA
+  type: http
+  seq: 2
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/entregas/ENT-001/reprogramar"
+  body:
+    type: json
+    data: |-
+      {}
+  auth: inherit
+  runtime:
+    scripts:
+      - type: tests
+        code: |-
+          test("should return 409 Conflict", function() {
+              expect(res.status).to.equal(409);
+          });
+          test("should return error message about state", function() {
+              expect(res.body.mensaje).to.contain("reprogramar");
+          });
+settings:
+  encodeUrl: true

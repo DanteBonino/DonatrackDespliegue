@@ -1,0 +1,325 @@
+@startuml Logistica
+
+class Camion {
+  -patente : String
+  -volumen : double
+  -altura : double
+  -capacidad : double
+  -posicionActual : Posicion
+  -rutaActual : Ruta
+  +Camion(patente : String, volumen : double, altura : double, capacidad : double)
+  +estaDisponible() : boolean
+  +asignarRuta(ruta : Ruta) : void
+  +finalizarRuta() : void
+  +actualizarPosicion(posicion : Posicion) : void
+  +getPatente() : String
+  +getVolumen() : double
+  +getAltura() : double
+  +getCapacidad() : double
+  +getPosicionActual() : Posicion
+  +getRutaActual() : Ruta
+}
+
+class Posicion {
+  -latitud : double
+  -longitud : double
+  -velocidad : double
+  +Posicion(latitud : double, longitud : double, velocidad : double)
+  +getLatitud() : double
+  +getLongitud() : double
+  +getVelocidad() : double
+  +calcularDistancia(otraPosicion : Posicion) : double
+}
+
+class Ruta {
+  -id : String
+  -fechaDeReparto : LocalDate
+  -camionAsignado : Camion
+  -entregas : List<Entrega>
+  -estado : EstadoRuta
+  +Ruta(id : String, fechaDeReparto : LocalDate)
+  +asignarCamion(camion : Camion) : void
+  +agregarEntrega(entrega : Entrega) : void
+  +darInicio() : void
+  +verificarFinalizacion() : void
+  +getSiguienteEntrega() : Entrega
+  +getId() : String
+  +getFechaDeReparto() : LocalDate
+  +getCamionAsignado() : Camion
+  +getEntregas() : List<Entrega>
+  +getEstado() : EstadoRuta
+  +estaFinalizada() : boolean
+}
+
+class Entrega {
+  -donacion : DonacionIndependiente
+  -destinatario : EntidadBeneficiaria
+  -estado : EstadoEntrega
+  -comprobanteFoto : String
+  -motivoNoRecepcion : String
+  -historialDeEstados : List<EstadoHistorico>
+  +Entrega(donacion : DonacionIndependiente, destinatario : EntidadBeneficiaria)
+  +iniciarViaje() : void
+  +confirmarRecepcion(comprobanteFoto : String) : void
+  +reportarIncidencia(motivoNoRecepcion : String) : void
+  +reprogramar() : void
+  -validarEstadoEsperado(estadoRequerido : EstadoEntrega, accion : String) : void
+  -cambiarEstadoA(nuevoEstado : EstadoEntrega) : void
+  +getDonacion() : DonacionIndependiente
+  +getDestinatario() : EntidadBeneficiaria
+  +getEstado() : EstadoEntrega
+  +getComprobanteFoto() : String
+  +getMotivoNoRecepcion() : String
+}
+
+class EstadoHistorico {
+  -estado : EstadoEntrega
+  -fechaDeTransicion : LocalDate
+  +EstadoHistorico(estado : EstadoEntrega)
+}
+
+enum EstadoEntrega {
+  PLANIFICADA
+  EN_CAMINO
+  COMPLETADA
+  INCIDENCIA
+}
+
+enum EstadoRuta {
+  PLANIFICADA
+  EN_CURSO
+  FINALIZADA
+}
+
+' =========================================================
+' PAQUETE: Config
+' =========================================================
+
+
+class Configuracion {
+    -propiedades : Properties
+    +Configuracion()
+    +getApiKeySendGrid() : String
+    +getEmisorSendGrid() : String
+    +getAccountSidTwilio() : String
+    +getAuthTokenTwilio() : String
+    +getEmisorWhatsAppTwilio() : String
+}
+
+
+' =========================================================
+' PAQUETE: DTOs
+' =========================================================
+
+
+class CamionDto {
+    -patente : String
+    -volumen : double
+    -capacidad : double
+    +CamionDto(patente : String, volumen : double, capacidad : double)
+    +getPatente() : String
+}
+
+class DonacionDto {
+    -id : String
+    -direccionDestino : String
+    +DonacionDto(id : String, direccionDestino : String)
+    +getId() : String
+    +getDireccionDestino() : String
+}
+
+class EntregaDto {
+    -idDonacion : String
+    -direccion : String
+    +EntregaDto(idDonacion : String, direccion : String)
+    +getIdDonacion() : String
+    +getDireccion() : String
+}
+
+class RutaPlanificadaDto {
+    -patenteCamion : String
+    -entregas : List<EntregaDto>
+    +RutaPlanificadaDto(patenteCamion : String, entregas : List<EntregaDto>)
+    +getPatenteCamion() : String
+    +getEntregas() : List<EntregaDto>
+}
+
+class PlanificacionResponse {
+    -rutas : List<RutaPlanificadaDto>
+    -donacionesSinAsignar : List<String>
+    +PlanificacionResponse(rutas : List<RutaPlanificadaDto>, donacionesSinAsignar : List<String>)
+    +getRutas() : List<RutaPlanificadaDto>
+    +getDonacionesSinAsignar() : List<String>
+}
+
+class SolicitudPlanificacionRequest {
+    -donaciones : List<DonacionDto>
+    -camiones : List<CamionDto>
+    +SolicitudPlanificacionRequest(donaciones : List<DonacionDto>, camiones : List<CamionDto>)
+}
+
+
+' =========================================================
+' PAQUETE: ExceptionHandler
+' =========================================================
+
+
+  class CamionNoDisponible <<exception>> {
+    +CamionNoDisponible(patente : String)
+  }
+
+  class CamionSinRutaActiva <<exception>> {
+    +CamionSinRutaActiva(patente : String)
+  }
+
+  class EstadoEntregaInvalido <<exception>> {
+    +EstadoEntregaInvalido(accion : String, estadoActual : EstadoEntrega)
+  }
+
+  class EstadoRutaInvalido <<exception>> {
+    +EstadoRutaInvalido(operacion : String, estadoActual : EstadoRuta)
+  }
+
+  class RutaSinCamionAsignado <<exception>> {
+    +RutaSinCamionAsignado(idRuta : String)
+  }
+
+  class RutaSinEntregas <<exception>> {
+    +RutaSinEntregas(idRuta : String)
+  }
+
+
+class RuntimeException <<external java.lang>> {
+}
+
+class ConfiguracionNoCargadaException <<external MicroServicios.Donaciones>> {
+}
+
+    class CallbackPlanificadorReceiver {
+      -gson : Gson
+      +CallbackPlanificadorReceiver()
+      +procesarCallback(jsonRecibido : String) : PlanificacionResponse
+    }
+
+    class PlanificadorRutasAdapter {
+      -{static} MAX_DONACIONES_POR_LOTE : int
+      -urlPlanificador : String
+      -gson : Gson
+      +PlanificadorRutasAdapter(urlPlanificador : String)
+      +solicitarPlanificacion(donaciones : List<DonacionDto>, camiones : List<CamionDto>) : void
+      +dividirEnLotes(lista : List<DonacionDto>, tamanoMaxLote : int) : List<List<DonacionDto>>
+      +simularEnvioHttp(json : String) : void
+    }
+
+
+
+class Gson <<external com.google.gson>> {
+}
+
+  class LogisticaInjector {
+    -flotaRepository : FlotaRepository
+    -rutasRepository : RutasRepository
+    -callbackReceiver : CallbackPlanificadorReceiver
+    -planificadorAdapter : PlanificadorRutasAdapter
+    +LogisticaInjector()
+    +getFlotaRepository() : FlotaRepository
+    +getRutasRepository() : RutasRepository
+    +getCallbackReceiver() : CallbackPlanificadorReceiver
+    +getPlanificadorAdapter() : PlanificadorRutasAdapter
+  }
+
+  class FlotaRepository {
+    -camiones : Map<String, Camion>
+    +registrarCamion(camion : Camion) : void
+    +buscarPorPatente(patente : String) : Camion
+    +obtenerTodos() : List<Camion>
+    +obtenerDisponibles() : List<Camion>
+    +existeCamion(patente : String) : boolean
+  }
+
+  class RutasRepository {
+    -rutas : Map<String, Ruta>
+    +guardar(ruta : Ruta) : void
+    +buscarPorId(idRuta : String) : Ruta
+    +obtenerTodas() : List<Ruta>
+    +obtenerRutasDelDia(fecha : LocalDate) : List<Ruta>
+    +obtenerRutasEnCurso() : List<Ruta>
+  }
+
+class DonacionIndependiente <<external MicroServicios.Donaciones.Donaciones>> {
+  +cambiarEstado(estado : EstadoDonacion) : void
+}
+
+class EntidadBeneficiaria <<external MicroServicios.Donaciones.EntidadesBeneficiarias>> {
+}
+
+class EnDeposito <<external MicroServicios.Donaciones.EstadoDonacionImpl>> {
+}
+
+class EnTraslado <<external MicroServicios.Donaciones.EstadoDonacionImpl>> {
+}
+
+class Entregada <<external MicroServicios.Donaciones.EstadoDonacionImpl>> {
+}
+
+class EntregaFallida <<external MicroServicios.Donaciones.EstadoDonacionImpl>> {
+  +EntregaFallida(motivo : String)
+}
+
+Camion "1" *-- "1" Posicion
+Ruta "1" *-- "0..*" Entrega
+Entrega "1" *-- "0..*" EstadoHistorico
+
+Camion "0..1" --> "0..1" Ruta
+Ruta "0..1" --> "0..1" Camion
+Ruta --> EstadoRuta
+Entrega --> EstadoEntrega
+EstadoHistorico --> EstadoEntrega
+Entrega --> DonacionIndependiente
+Entrega --> EntidadBeneficiaria
+
+Entrega ..> EnTraslado
+Entrega ..> Entregada
+Entrega ..> EntregaFallida
+Entrega ..> EnDeposito
+
+FlotaRepository "1" o-- "0..*" Camion
+RutasRepository "1" o-- "0..*" Ruta
+
+LogisticaInjector --> FlotaRepository
+LogisticaInjector --> RutasRepository
+LogisticaInjector --> CallbackPlanificadorReceiver
+LogisticaInjector --> PlanificadorRutasAdapter
+
+CallbackPlanificadorReceiver --> Gson
+CallbackPlanificadorReceiver ..> PlanificacionResponse
+
+PlanificadorRutasAdapter --> Gson
+PlanificadorRutasAdapter ..> SolicitudPlanificacionRequest
+PlanificadorRutasAdapter ..> DonacionDto
+PlanificadorRutasAdapter ..> CamionDto
+
+PlanificacionResponse "1" o-- "0..*" RutaPlanificadaDto
+RutaPlanificadaDto "1" o-- "0..*" EntregaDto
+SolicitudPlanificacionRequest "1" o-- "0..*" DonacionDto
+SolicitudPlanificacionRequest "1" o-- "0..*" CamionDto
+
+Configuracion ..> ConfiguracionNoCargadaException
+
+CamionNoDisponible --|> RuntimeException
+CamionSinRutaActiva --|> RuntimeException
+EstadoEntregaInvalido --|> RuntimeException
+EstadoRutaInvalido --|> RuntimeException
+RutaSinCamionAsignado --|> RuntimeException
+RutaSinEntregas --|> RuntimeException
+ConfiguracionNoCargadaException --|> RuntimeException
+
+Camion ..> CamionNoDisponible
+Camion ..> CamionSinRutaActiva
+Ruta ..> CamionNoDisponible
+Ruta ..> EstadoRutaInvalido
+Ruta ..> RutaSinCamionAsignado
+Ruta ..> RutaSinEntregas
+Entrega ..> EstadoEntregaInvalido
+
+@enduml

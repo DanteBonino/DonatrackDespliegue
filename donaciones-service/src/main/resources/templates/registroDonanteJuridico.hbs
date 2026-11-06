@@ -1,0 +1,29 @@
+{{#partial "contenido"}}
+    {{#*inline "camposEspecificos"}}
+        {{#> partials/registro/seccionDeFormulario titulo="Datos de la Institución"}}
+            <div class="col-12 col-md-6 mb-3">
+                {{>partials/registro/camposRazonSocial}}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{> partials/registro/inputField name="cuit" required=true label="Cuit *" placeholder="Ej: XXXXXXXXXXX" valor=valores.cuit error=errores.cuit}}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{> partials/registro/inputField name="rubro" required=true label="Rubro *"  valor=valores.rubro error=errores.rubro}}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="tipoJuridico">Tipo *</label>
+                <select class="form-select {{#if errores.tipoJuridico}}is-invalid{{/if}}"
+                        id="tipoJuridico" name="tipoJuridico" required>
+                    <option value="">Elegí un tipo</option>
+                    {{#each tipos}}
+                        <option value="{{codigo}}" {{#if (eq codigo ../valores.tipoJuridico)}}selected{{/if}}>{{descripcion}}</option>
+                    {{/each}}
+                </select>
+                {{#if errores.tipoJuridico}}<div class="invalid-feedback">{{errores.tipoJuridico}}</div>{{/if}}
+            </div>
+        {{/partials/registro/seccionDeFormulario}}
+    {{/inline}}
+
+    {{> partials/registro/formwrapper tituloForm="Registro de Donante Juridico" actionUrl="/registro/donante-juridico"}}
+{{/partial}}
+{{>layout}}

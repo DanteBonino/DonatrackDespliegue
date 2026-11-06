@@ -1,0 +1,32 @@
+# ========================
+# Configuración de IntelliJ
+# ========================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# ========================
+# Configuración de Maven
+# ========================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+
+# ========================
+# Archivos del Sistema Operativo
+# ========================
+.DS_Store
+Thumbs.db
+
+# Ignora todo dentro de uploads
+uploads/*
+
+# Pero no ignorar la carpeta en sí
+!uploads/.gitkeep
+
+schema.sql
+.env

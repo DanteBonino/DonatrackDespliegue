@@ -1,0 +1,23 @@
+info:
+  name: 200 OK - Confirmar Recepcion
+  type: http
+  seq: 7
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/entregas/ENT-001/confirmar"
+  body:
+    type: json
+    data: |-
+      {
+        "comprobante": "foto_comprobante.jpg"
+      }
+  auth: inherit
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200 OK", function() {
+          expect(res.status).to.equal(200);
+        });
+settings:
+  encodeUrl: true

@@ -1,0 +1,110 @@
+{{#partial "contenido"}}
+<div class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center gap-2 mb-4">
+        <h1 class="h2">Mi Panel de Donante</h1>
+        <span class="text-muted">Bienvenido/a, {{sesion.nombreMostrable}}</span>
+    </div>
+
+    <!-- Tarjetas de resumen -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card border-primary shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-box-seam fs-1 text-primary"></i>
+                    <h2 class="display-6 fw-bold mt-2">{{totalDonaciones}}</h2>
+                    <p class="text-muted mb-0">Total Donaciones</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-warning shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-building fs-1 text-warning"></i>
+                    <h2 class="display-6 fw-bold mt-2">{{enDeposito}}</h2>
+                    <p class="text-muted mb-0">En Depósito</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-info shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-truck fs-1 text-info"></i>
+                    <h2 class="display-6 fw-bold mt-2">{{enTraslado}}</h2>
+                    <p class="text-muted mb-0">En Traslado</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-success shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+                    <h2 class="display-6 fw-bold mt-2">{{entregadas}}</h2>
+                    <p class="text-muted mb-0">Entregadas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Segunda fila de tarjetas -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card border-secondary shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-hourglass-split fs-2 text-secondary"></i>
+                    <h3 class="fw-bold mt-2">{{asignadas}}</h3>
+                    <p class="text-muted mb-0">Asignadas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-bell me-2"></i>Últimas Notificaciones
+                    </h5>
+                    {{#if notificaciones}}
+                    <ul class="list-group list-group-flush">
+                        {{#each notificaciones}}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-envelope me-2 text-primary"></i>{{this.mensaje}}</span>
+                            <span class="badge bg-{{#if this.fueEntregada}}success{{else}}warning{{/if}} rounded-pill">
+                                {{#if this.fueEntregada}}Entregada{{else}}Pendiente{{/if}}
+                            </span>
+                        </li>
+                        {{/each}}
+                    </ul>
+                    {{else}}
+                    <p class="text-muted mt-3">No tenés notificaciones todavía.</p>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de progreso general -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title mb-3">
+                <i class="bi bi-graph-up me-2"></i>Resumen de Estado
+            </h5>
+            <div class="progress mb-2" style="height: 30px;">
+                {{#if totalDonaciones}}
+                <div class="progress-bar bg-warning" style="width: {{enDeposito}}%">
+                    Depósito
+                </div>
+                <div class="progress-bar bg-info" style="width: {{enTraslado}}%">
+                    Tránsito
+                </div>
+                <div class="progress-bar bg-success" style="width: {{entregadas}}%">
+                    Entregadas
+                </div>
+                {{/if}}
+            </div>
+            <small class="text-muted">
+                {{enDeposito}} en depósito · {{enTraslado}} en traslado · {{entregadas}} entregadas
+            </small>
+        </div>
+    </div>
+</div>
+{{/partial}}
+{{>layout}}

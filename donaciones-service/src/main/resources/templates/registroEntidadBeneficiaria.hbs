@@ -1,0 +1,15 @@
+{{#partial "contenido"}}
+    {{#*inline "camposEspecificos"}}
+        {{#> partials/registro/seccionDeFormulario titulo="Datos de la Institución"}}
+            <div class="col-12 mb-3">
+               {{>partials/registro/camposRazonSocial}}
+            </div>
+        {{/partials/registro/seccionDeFormulario}}
+        {{#> partials/registro/seccionFormulario titulo="Dirección"}}
+            {{> partials/registro/camposDireccion}}
+        {{/partials/registro/seccionFormulario}}
+    {{/inline}}
+
+    {{> partials/registro/formwrapper tituloForm="Registro de Entidad Beneficiaria" actionUrl="/registro/entidad-beneficiaria"}}
+{{/partial}}
+{{>layout}}

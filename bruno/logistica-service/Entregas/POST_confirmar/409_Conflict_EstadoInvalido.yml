@@ -1,0 +1,23 @@
+info:
+  name: 409 Conflict - Estado Invalido para Confirmar
+  type: http
+  seq: 8
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/entregas/ENT-002/confirmar"
+  body:
+    type: json
+    data: |-
+      {
+        "comprobante": "foto.jpg"
+      }
+  auth: inherit
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 409 Conflict", function() {
+          expect(res.status).to.equal(409);
+        });
+settings:
+  encodeUrl: true

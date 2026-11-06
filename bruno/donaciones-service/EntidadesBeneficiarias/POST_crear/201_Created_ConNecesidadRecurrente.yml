@@ -1,0 +1,49 @@
+info:
+  name: crearEntidadBeneficiariaConUnaNecesidadRecurrente
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias"
+  body:
+    type: json
+    data: |-
+      {
+        "razonSocial": "Comedor Cuti Romero",
+        "direccion": "Av. Rivadavia 1234",
+        "mails": ["comedor@cutiRomero.org"],
+        "telefono": "1145678900",
+        "necesidades": [
+          {
+            "tipo": "RECURRENTE",
+            "bienRequerido": {
+              "descripcion": "Paquete de fideos secos 500g",
+              "foto": "https://example.com/fideos.jpg",
+              "cantidad": 100,
+              "subCategoria": {
+                "nombre": "FIDEOSSECOS",
+                "categoria": {
+                  "tipo": "PERECEDERO",
+                  "fechaDeVencimiento": "2027-03-15"
+                }
+              }
+            },
+            "periodo": "P1M"
+          }
+        ]
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        let respuesta = res.getBody();
+        bru.setEnvVar("beneficiarioConNecesidadRecurrente", respuesta.id);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

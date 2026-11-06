@@ -1,0 +1,33 @@
+info:
+  name: crearNecesidadExtraordinaria
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias/{{beneficiarioConAmbosTiposDeNecesidades}}/necesidades"
+  body:
+    type: json
+    data: |-
+      {
+        "tipo": "EXTRAORDINARIA",
+        "bienRequerido": {
+          "descripcion": "Remera talle M",
+          "foto": "https://example.com/remera.jpg",
+          "cantidad": 50,
+          "subCategoria": {
+            "nombre": "REMERA",
+            "categoria": {
+              "tipo": "NOPERECEDERO",
+              "estadoDeUso": "NUEVO"
+            }
+          }
+        }
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

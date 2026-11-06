@@ -1,0 +1,19 @@
+info:
+  name: delete
+  type: http
+  seq: 3
+
+http:
+  method: DELETE
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias/{{beneficiarioConAmbosTiposDeNecesidades}}/necesidades/:idNecesidad"
+  params:
+    - name: idNecesidad
+      value: 971d9940-4187-4f4a-9d57-692928febdef
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

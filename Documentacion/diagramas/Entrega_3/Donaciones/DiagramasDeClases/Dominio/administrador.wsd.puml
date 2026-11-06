@@ -1,0 +1,51 @@
+@startuml
+abstract class EntidadBase <<MappedSuperclass>> {
+  + String getIdDominio()
+
+  + boolean esLaMismaEntidad(String id)
+
+  + Long getId()
+
+}
+
+
+
+class Administrador <<Entity>> extends EntidadBase {
+
+}
+
+interface ConMailIndividual extends ConContacto {
+  + default void setEmail(String email)
+
+  + default String getEmail()
+}
+
+
+
+class DatosDeContacto <<Entity>> {
+ + List<String> getMailsParaNotificar()
+ + TipoDeMedio getMedioDeNotificacionPreferencial()
+ + String getTelefono()
+}
+
+interface ConMedioPreferencial extends ConContacto {
+ + default void setMedioPreferido(TipoDeMedio nuevoMedio)
+
+ + default TipoDeMedio getMedioDeNotificacionPreferencial()
+}
+
+interface ConContacto {
+ + DatosDeContacto getDatosDeContacto()
+}
+
+
+interface ConTelefono extends ConContacto {
+  + default String getTelefono()
+  + default void setTelefono(String nuevoTelefono)
+}
+
+Administrador ..|> ConMailIndividual
+Administrador ..|> ConTelefono
+Administrador ..|> ConMedioPreferencial
+Administrador --> DatosDeContacto
+@enduml

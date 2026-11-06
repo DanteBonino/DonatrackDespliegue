@@ -1,0 +1,136 @@
+@startuml
+class DonacionesRepository {
+ recibirDonacion(Donacion donacion)
+ donacionesSegun(SubCategoria unaSubCategoria)
+}
+
+DonacionesRepository --> "*" DonacionIndependiente
+
+class DonacionIndependiente {
+ fechaDeDonacion
+ esPosteriorA(unaFecha)
+ getCantidad()
+ seAgrupaPor()
+ validarTransicion(otroEstado)
+}
+
+DonacionIndependiente --> EstadoDonacion
+DonacionIndependiente --> Bien
+
+interface EstadoDonacion {
+    + esValidaLaTransicion(estado: EstadoDonacion): Boolean
+    + esTransicionableDesdeDeposito(): Boolean
+    + esTransicionableDesdeAsignada(): Boolean
+    + esTransicionableDesdeEntregable(): Boolean
+    + esTransicionableDesdeTraslado(): Boolean
+    + esTransicionableDesdeEntregada(): Boolean
+    + esTransicionableDesdeFallida(): Boolean
+}
+
+class EnDeposito {
+    + esTransicionableDesdeFallida(): Boolean
+}
+
+class Asignada {
+    + esTransicionableDesdeDeposito(): Boolean
+}
+
+class Entregable {
+    + esTransicionableDesdeAsignada(): Boolean
+}
+
+class EnTraslado {
+    + esTransicionableDesdeEntregable(): Boolean
+}
+
+class Entregada {
+    + esTransicionableDesdeTraslado(): Boolean
+}
+
+class EntregaFallida {
+    + esTransicionableDesdeTraslado(): Boolean
+}
+
+class Vencida {
+    + esTransicionableDesdeDeposito(): Boolean
+}
+
+EnDeposito .up.|> EstadoDonacion
+Asignada .up.|> EstadoDonacion
+Entregable .up.|> EstadoDonacion
+EnTraslado .up.|> EstadoDonacion
+Entregada .up.|> EstadoDonacion
+EntregaFallida .up.|> EstadoDonacion
+Vencida .up.|> EstadoDonacion
+
+class Bien {
+ seAgrupaPor(unaSubCategoria)
+}
+
+Bien --> SubCategoria
+
+class SubCategoria {
+ esLaMismaSubCategoria(otraSubCategoria)
+}
+
+SubCategoria --> Categoria
+
+interface Categoria {
+ esLaMisma(OtraCategoria)
+}
+
+class Perecedero {
+ fechaDeVencimiento
+}
+
+class NoPerecedero {
+}
+
+Perecedero ..|> Categoria
+NoPerecedero ..|> Categoria
+
+NoPerecedero --> EstadoDeUso
+
+enum EstadoDeUso {
+ USADO
+ NUEVO
+}
+
+
+abstract class Necesidad {
+
+  + estaSatisfecha()
+  + estaActiva()
+  {abstract} ~ bienesRecibidosActuales()
+}
+
+class NecesidadExtraordinaria {
+  + bienesRecibidosActuales()
+}
+
+class NecesidadRecurrente {
+  - periodo: Period
+  - inicioPeriodoActual: LocalDate
+
+  + bienesRecibidosActuales()
+}
+
+
+Necesidad <|-- NecesidadExtraordinaria
+Necesidad <|-- NecesidadRecurrente
+
+Necesidad "1" --> "1" Bien
+Necesidad "1" --> "*" DonacionIndependiente
+
+class BeneficiariosRepository {
+ +registrarEntidadBeneficiaria(EntidadBeneficiaria beneficiaria): void
+}
+
+class EntidadBeneficiaria {
+ + agregarNecesidad(Necesidad unaNecesidad): void
+}
+
+BeneficiariosRepository --> "*" EntidadBeneficiaria
+EntidadBeneficiaria--> "*" Necesidad
+
+@enduml

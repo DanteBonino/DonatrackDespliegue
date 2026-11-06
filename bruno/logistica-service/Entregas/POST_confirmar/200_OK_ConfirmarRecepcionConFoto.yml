@@ -1,0 +1,33 @@
+info:
+  name: 200 OK - Confirmar Recepcion Con Foto
+  type: http
+  seq: 10
+
+http:
+  method: POST
+  url: "{{baseUrlLogistica}}/entregas/ENT-003/confirmar"
+  body:
+    type: multipart-form
+    data:
+      - name: foto
+        type: file
+        value:
+          - assets\fotodeprueba.jpg
+        contentType: image/jpeg
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200 OK", function() {
+          expect(res.status).to.equal(200);
+        });
+        test("should return success message", function() {
+          expect(res.body.mensaje).to.contain("foto guardada");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,6 @@
+@startuml
+class PlanificacionController {
+ - accionPlanificacion: Runnable
+ + ejecutarPlanificacion(Context ctx): void
+}
+@enduml

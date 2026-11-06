@@ -1,0 +1,14 @@
+info:
+  name: Local
+  type: environment
+
+variables:
+  - name: baseUrlLogistica
+    value: http://localhost:8080
+    enabled: true
+  - name: baseUrlDonaciones
+    value: http://localhost:7070
+    enabled: true
+  - name: donanteId
+    value: "test-donante-id"
+    enabled: true

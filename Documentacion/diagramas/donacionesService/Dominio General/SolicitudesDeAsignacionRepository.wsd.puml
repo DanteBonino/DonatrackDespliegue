@@ -1,0 +1,16 @@
+@startuml
+
+class SolicitudesDeAsignacionRepository {
+  - solicitudes: List<SolicitudDeAsignacion>
+
+  + SolicitudesDeAsignacionRepository(solicitudes: List<SolicitudDeAsignacion>)
+  + eliminar(solicitudDeAsignacion: SolicitudDeAsignacion): void
+  + registrar(solicitudDeAsignacion: SolicitudDeAsignacion): void
+  + findById(id: String): SolicitudDeAsignacion
+  + nombreDeEntidad(): String
+  + getInstancias(): List<SolicitudDeAsignacion>
+}
+
+SolicitudesDeAsignacionRepository --> "*" SolicitudDeAsignacion : solicitudes
+
+@enduml

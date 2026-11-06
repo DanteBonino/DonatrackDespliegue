@@ -1,0 +1,11 @@
+@startuml
+
+class Persistible {
+    + getId();
+}
+
+class Notificable extends Persistible {
+
+}
+
+@enduml

@@ -1,0 +1,3 @@
+TipoPersona,TipoDoc,Documento,Nombre/RazonSocial,Email,Telefono,Apellido,FechaDeNacimiento,NombreCalle,AlturaCalle,Genero,Rubro,TipoJuridico,ID
+HUMANA,DNI,12345678,Ana,ana@mail.com,+54 11 5555-5555,Perez,1990-05-15,Tinogasta,3000,Femenino,,,1
+JURIDICA,CUIT,30-12345678-9,Arcos Plateados S.A.,contacto@empresa.com,+54 11 4444-4444,,,,,,Metalurgica,EMPRESA,2

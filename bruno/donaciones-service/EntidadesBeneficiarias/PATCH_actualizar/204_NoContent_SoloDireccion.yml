@@ -1,0 +1,22 @@
+info:
+  name: actualizarSoloLaDireccion
+  type: http
+  seq: 3
+
+http:
+  method: PATCH
+  url: "{{baseUrlDonaciones}}/entidades-beneficiarias/:id"
+  params:
+    - name: id
+      value: ce525bc8-711d-491c-9e2a-ab13cd2150f5
+      type: path
+  body:
+    type: json
+    data: '{ "direccion": "Calle Nueva 456" }'
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
