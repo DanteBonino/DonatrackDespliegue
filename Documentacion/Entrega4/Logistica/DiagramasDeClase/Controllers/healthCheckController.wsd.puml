@@ -1,0 +1,15 @@
+@startuml
+class HealthCheckController {
+  - Instant inicioServidor
+  - String nombreServicio
+  + check(Context ctx): void
+}
+class HealthResponseDto{
+    + String getStatus()
+    + String  getTimestamp()
+    + String  getuptime()
+    + String  getServiceName()
+ }
+
+HealthCheckController ..> HealthResponseDto
+@enduml

@@ -1,0 +1,71 @@
+@startuml
+class CallbackController {
+ - objectMapper: ObjectMapper
+ + recibirPlanificacion(Context ctx): void
+}
+
+class CallbackPlanificadorReciever {
+ - objectMapper: ObjectMapper
+ + procesarCallback(String jsonRecibido): PlanificacionResponse
+}
+
+class PlanificacionResponse {
+ - donacionesSinAsignar: List<String>
+}
+
+class RutaPlanificadaDto{
+ - patenteCamion: String
+}
+
+RutaPlanificadaDto--> "*" EntregaDto : entregas
+
+class EntregaDto {
+ - idDonacion: String
+ - idEntidadBeneficiaria: String
+}
+
+class AsignadorDePlanificacion {
+ + asignarRutas(PlanificacionResponse planificacion, LocalDate fehcaDeReparto): List<Ruta>
+}
+
+PlanificacionResponse --> "*" RutaPlanificadaDto: rutas
+
+CallbackPlanificadorReciever ..> PlanificacionResponse: devuelve
+
+CallbackController--> CallbackPlanificadorReciever: reciever
+CallbackController--> AsignadorDePlanificacion: asignadorDePlanificacion
+CallbackController--> DonacionesServiceAdapter: donacionesServiceAdapter
+
+
+class RutasRepositoryConPersistencia <<Singleto>> {
+  + registrar(Ruta ruta): void;
+}
+
+class FlotaRepositoryConPersistencia <<Singleto>> {
+  + buscarPorPatente(String patente): Camion
+}
+
+interface DonacionesServiceAdapter {
+  + notificarInicioDeEntrega(String idEntrega, String idDonacion, String idEntidadBeneficiaria): void
+  + notificarEntregaCompletada(String idDonacion, String idEntidadBeneficiaria, String comprobanteFoto, String patenteCamion): void
+  + notificarIncidencia(String idDonacion, String idEntidadBeneficiaria, String motivoNoRecepcion): void
+  + notificarReprogramacion(String idDonacion): void
+  + obtenerDonacionesListasParaEntregar(): List<DonacionDto>
+  + notificarDonacionesNoPlanificadas(List<String> listaIdDonaciones): void
+}
+
+AsignadorDePlanificacion ..> FlotaRepositoryConPersistencia
+AsignadorDePlanificacion ..> RutasRepositoryConPersistencia
+
+
+note bottom of FlotaRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el asignadorDePlanificacion.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+
+note bottom of RutasRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el controller.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+
+@enduml

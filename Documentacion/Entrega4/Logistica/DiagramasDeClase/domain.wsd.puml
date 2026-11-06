@@ -1,0 +1,164 @@
+@startuml
+class Entrega extends EntidadBase{
+        - nombreEntrega: String
+        - idDonacion: String
+        - idEntidadBeneficiaria: String
+        - comprobanteFoto: String
+        - motivoNoRecepcion: String
+        + iniciarViaje(): void
+        + confirmarRecepcion(comprobanteDeFoto, patenteCamion): void
+        + reportarIncidencia(motivo): void
+        + reprogramar(): void
+        + estaEn(unEstado): Boolean
+    }
+
+enum EstadoEntrega {
+        PLANIFICADA
+        EN_CAMINO
+        COMPLETADA
+        INCIDENCIA
+}
+
+class EstadoHistorico {
+   - fechaDeTransicion: LocalDateTime
+}
+
+class EntidadBase{
+  - id: Long
+  + getId(): Long
+}
+
+EstadoHistorico --> "1" EstadoEntrega
+Entrega --> "*" EstadoHistorico: historialDeEstados
+
+class Ruta extends EntidadBase{
+        - nombre: String
+        - fechaDeReparto: LocalDate
+        + agregarEntrega(Entrega): void
+        + darInicio(Camion camion): void
+        + finalizar(Camion camion): void
+        + estaParaFinalizar(): Boolean
+        + estaEnEstado(EstadoRuta estado): Boolean
+        + estaAsignadaParaHoy(): Boolean
+        + getTotalDeEntregas():int
+        + getTotalDeEntregasCompletadas(): int
+        + seVencio():Boolean
+        + debeRecorrerseEn(LocalDate unaFecha): Boolean
+        + esLaMisma(Ruta otraRuta): Boolean
+}
+
+enum EstadoRuta {
+  PLANIFICADA,
+  EN_CURSO,
+  FINALIZADA,
+  DISPONIBLE
+}
+
+Ruta --> "*" Entrega
+Ruta --> "1" EstadoRuta
+
+class Camion extends EntidadBase{
+        - patente: String
+        - volumen: double
+        - altura: double
+        - capacidad: double
+        + estaDisponible(): boolean
+        + tieneRutaAsignada(): Boolean
+        + tieneAsignadaALaRuta(Ruta unaRuta): Boolean
+        + rutaAsignada(): Optional<Ruta>
+        + iniciarRuta(): void
+        + asignarRuta(Ruta): void
+        + finalizarRuta(): void
+        + actualizarPosicion(Posicion posicion): void
+        + totalDeEntregasRutaAsignada():int
+        + totalDeEntregasCompletadasRutaAsignada():int
+        + estaEnViaje(): Boolean
+}
+
+Camion --> "1" Posicion: posicionActual
+Camion --> "*" Ruta: rutasAsignadasHistoricamente
+
+class Posicion {
+ - latitud: double
+ - longitud: double
+
+ + esIgual(Posicion otraPosicion): Boolean
+ + estaCerca(Posicion otraPosicion): Boolean
+}
+
+class EntregaPublicador {
+        - observers: List<EntregaObserver>
+        + suscribir(EntregaObserver): void
+        + desuscribir(EntregaObserver): void
+        + publicarEntregaIniciada(EntregaIniciadaEvent): void
+        + publicarEntregaCompletada(EntregaCompletadaEvent): void
+        + publicarIncidenciaLogistica(IncidenciaLogisticaEvent): void
+        + publicarEntregaReprogramada(EntregaReprogramadaEvent): void
+    }
+
+    interface EntregaObserver {
+        + anteEntregaIniciada(EntregaIniciadaEvent): void
+        + anteEntregaCompletada(EntregaCompletadaEvent): void
+        + anteIncidenciaLogistica(IncidenciaLogisticaEvent): void
+        + anteEntregaReprogramada(EntregaReprogramadaEvent): void
+    }
+
+    record EntregaIniciadaEvent {
+        idEntrega: String
+        idDonacion: String
+        idEntidadBeneficiaria: String
+    }
+    record EntregaCompletadaEvent {
+        idEntrega: String
+        idDonacion: String
+        idEntidadBeneficiaria: String
+        comprobanteFoto: String
+        patenteCamion: String
+    }
+    record IncidenciaLogisticaEvent {
+        idEntrega: String
+        idDonacion: String
+        idEntidadBeneficiaria: String
+        motivoNoRecepcion: String
+    }
+    record EntregaReprogramadaEvent {
+        idEntrega: String
+        idDonacion: String
+    }
+
+    class SincronizadorDeEstadosObserver implements EntregaObserver {
+
+    }
+
+    interface DonacionesServiceAdapter {
+      + notificarInicioDeEntrega(String idEntrega, String idDonacion, String idEntidadBeneficiaria): void
+      + notificarEntregaCompletada(String idDonacion, String idEntidadBeneficiaria, String comprobanteFoto, String patenteCamion): void
+      + notificarIncidencia(String idDonacion, String idEntidadBeneficiaria, String motivoNoRecepcion): void
+      + notificarReprogramacion(String idDonacion): void
+      + obtenerDonacionesListasParaEntregar(): List<DonacionDto>
+      + notificarDonacionesNoPlanificadas(List<String> listaIdDonaciones): void
+    }
+
+class Direccion {
+  Boolean esLaMismaQue(otraDireccion)
+}
+
+class Calle {
+ Boolean esLaMismaQue(otraCalle)
+}
+
+Direccion --> Calle
+Direccion --> Posicion
+Entrega --> Direccion
+
+' --- Eventos (Observer) ---
+Entrega --> EntregaPublicador : publica eventos (inyectado)
+EntregaPublicador o-- "*" EntregaObserver : mantiene lista (Agregación)
+
+EntregaPublicador --> EntregaIniciadaEvent : crea
+EntregaPublicador --> EntregaCompletadaEvent : crea
+EntregaPublicador --> IncidenciaLogisticaEvent : crea
+EntregaPublicador --> EntregaReprogramadaEvent : crea
+
+SincronizadorDeEstadosObserver --> DonacionesServiceAdapter
+@enduml
