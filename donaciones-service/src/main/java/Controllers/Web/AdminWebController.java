@@ -79,7 +79,7 @@ public class AdminWebController {
     DonacionIndependiente donacion = DonacionesRepository.getInstance()
         .findById(ctx.pathParam("id"));
     donacion.vencer();
-    ctx.redirect("/donaciones/en-deposito?vencida=true" + donacion.getIdDominio());
+    ctx.redirect("/donaciones/en-deposito?vencida=true");
   }
 
   private Optional<Administrador> getAdministrador(Context context) {
