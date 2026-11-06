@@ -4,7 +4,7 @@ WORKDIR /src
 COPY . .
 RUN --mount=type=cache,target=/root/.m2 mvn -B -q -DskipTests package
 
-# ===== Etapa 2: imagen FINAL de donaciones =====
+# Etapa 2
 # Imagen liviana: solo JRE (para ejecutar), sin Maven ni compilador.
 FROM eclipse-temurin:17-jre AS donaciones
 WORKDIR /app
