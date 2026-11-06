@@ -1,0 +1,38 @@
+@startuml
+class AdminWebController {
+ void dashboard(Context ctx)
+ void deposito(Context ctx)
+ void vencerDonacion(Context ctx)
+}
+
+class HomeControlle {
+  void index(Context ctx)
+  void donacionesEntregadas(Context ctx)
+  void legal(Context ctx)
+}
+
+class DonanteWebController {
+  void dashboard(Context ctx)
+  void misDonaciones(Context ctx)
+  void entidades(Context ctx)
+}
+
+class BeneficiariaWebController {
+  void dashboard(Context ctx)
+  void necesidades(Context ctx)
+  void donacionesAsignadas(Context ctx)
+}
+
+class AuthController {
+  void showLogin(Context ctx)
+  void doLogin(Context ctx)
+  void doLogout(Context ctx)
+  void showRegistro(Context ctx)
+  void showRegistroHumano(Context ctx)
+  void doRegistroHumano(Context ctx)
+  void showRegistroJuridico(Context ctx)
+  void doRegistroJuridico(Context ctx)
+  void showRegistroBeneficiario(Context ctx)
+  void doRegistroBeneficiario(Context ctx)
+}
+@enduml

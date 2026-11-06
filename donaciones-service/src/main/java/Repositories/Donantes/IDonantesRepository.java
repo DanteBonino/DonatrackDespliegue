@@ -12,8 +12,6 @@ public interface IDonantesRepository {
 
   List<Donante> getInstancias();
 
-  List<Donante> getInactivos();
-
   void registrar(Donante instancia);
 
   Donante findById(String id);

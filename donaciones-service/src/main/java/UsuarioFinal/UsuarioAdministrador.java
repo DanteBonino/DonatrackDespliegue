@@ -7,7 +7,7 @@ import javax.persistence.OneToOne;
 
 @Entity
 @DiscriminatorValue(value = "ADMINISTRADOR")
-public class UsuarioAdministrador extends Usuario {
+public class  UsuarioAdministrador extends Usuario {
   @OneToOne
   @JoinColumn(name = "id_administrador")
   private Administrador administrador;

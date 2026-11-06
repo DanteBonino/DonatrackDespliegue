@@ -1,0 +1,51 @@
+@startuml
+class Categoria extends EntidadBase implements ConNombreUnico{
+  - nombre
+  esLaMisma(otraCategoria)
+}
+
+enum Unidad {
+ KILOGRAMOS, UNIDADES,
+}
+
+Categoria --> Unidad
+
+
+interface ConNombreUnico extends ConNombre {
+  boolean esLaMisma(ConNombreUnico algoConNombre)
+}
+
+interface ConNombre {
+ String getNombre();
+ Boolean seLlama(nombre)
+}
+
+class SubCategoria extends EntidadBase implements ConNombreUnico {
+ Boolean esPerecedera()
+ Boolean esLaMisma(otraSubCategoria)
+}
+
+SubCategoria --> Categoria
+
+abstract class Bien extends EntidadBase {
+  esAgrupableCon(otroBien)
+  perteneceA(unaSubCategoria)
+  cantidadSatisfechaSegunCantidadDeBien(int cantidad)
+  # estaEn(estadoDeUso)
+  # estaVigente()
+}
+
+class Perecedero extends Bien {
+   - fechaVencimiento
+   estaEn(estadoDeUso)
+   estaVigente()
+}
+
+class NoPerecedero extends Bien {
+ - estadoDeUso
+  estaEn(estadoDeUso)
+  estaVigente()
+
+
+}
+@enduml

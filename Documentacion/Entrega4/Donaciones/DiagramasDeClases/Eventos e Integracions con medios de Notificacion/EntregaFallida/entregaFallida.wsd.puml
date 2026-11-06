@@ -1,0 +1,48 @@
+@startuml
+
+abstract class NotificadorAnteAsignacion implements InteresadoEnCambiosDeEstado {
+
+  + void anteAsignacion(DonacionIndependiente donacion, EntidadBeneficiaria entidad)
+
+  {abstract} + String inicioMensaje(String idDonacion);
+
+  {abstract} + ConContacto receptor(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria);
+
+}
+
+
+class NotificadorDeDonanteAnteAsignacion extends NotificadorAnteAsignacion implements ConNotificacionADonante {
+
+  + String inicioMensaje(String idDonacion)
+}
+
+class NotificadorDeEntidadBeneficiariaAnteAsignacion extends NotificadorAnteAsignacion implements ConNotificacionAEntidadBeneficiaria {
+
+  + String inicioMensaje(String idDonacion)
+
+}
+
+
+interface InteresadoEnCambiosDeEstado extends Interesado {
+  + default void anteAsignacion(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+  + default void anteEntregaConExito(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, ComprobanteDeEntrega comprobante)
+  + default void anteEntregaFallida(String justificacion, EntidadBeneficiaria entidadBeneficiaria, DonacionIndependiente donacionIndependiente)
+  + default void anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega)
+}
+
+NotificadorAnteAsignacion ..> NotificacionesRepositoryConPersistencia
+
+class NotificacionesRepositoryConPersistencia {
+ registrar(Notificacion nuevaNotificacion)
+}
+
+interface ConNotificacionAEntidadBeneficiaria {
+  + default ConContacto receptor(DonacionIndependiente donacion, EntidadBeneficiaria entidad)
+}
+
+interface ConNotificacionADonante{
+  + default ConContacto receptor(DonacionIndependiente donacion, EntidadBeneficiaria entidad)
+}
+
+
+@enduml

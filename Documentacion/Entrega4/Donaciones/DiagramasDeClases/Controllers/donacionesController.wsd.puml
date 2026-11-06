@@ -1,0 +1,91 @@
+@startuml
+interface CrudHandler {
+    fun getAll(ctx: Context)
+    fun getOne(ctx: Context, resourceId: String)
+    fun create(ctx: Context)
+    fun update(ctx: Context, resourceId: String)
+    fun delete(ctx: Context, resourceId: String)
+}
+
+class DonacionesController implements CrudHandler {
+  + void getAll(@NotNull Context contexto)
+  + void getOne(@NotNull Context contexto, @NotNull String idDonante)
+  + void create(@NotNull Context contexto)
+  + void update(Context contexto, @NotNull String idDonante)
+  + void delete(@NotNull Context contexto, @NotNull String idDonante)
+  + void iniciarTraslado (Context context)
+  + void marcarComoFallida(Context context)
+  + void marcarComoEntregada(Context context)
+  + void almacenarEnDeposito(Context context)
+  + void alistarParaEntregar(Context contexto)
+  + void vencer(Context contexto)
+  + void getListasParaEntregar(Context ctx)
+  + List<DonacionIndependiente> getListasParaEntregar()
+  + List<DonacionIndependiente> getAsignadas()
+  + List<DonacionIndependiente> getPendientesDeRevision()
+  + void getHistorialDeCambiosDeEstado(Context contexto)
+}
+
+class DonacionesRepositoryConPersistencia<<Singleton>> {
+  + List<DonacionIndependiente> getInstancias()
+  + DonacionIndependiente findById(String idDonacion)
+  + void eliminarInstancia (String idDonacion)
+  + void actualizarInstancia(String idDonacion, DatosDonacion datos)
+  + void registrar(DonacionIndependiente unaDonacion)
+  + List<DonacionIndependiente> recibirDonacion(Donacion nuevaDonacion)
+}
+
+DonacionesController ..> DonacionesRepositoryConPersistencia
+
+class DonantesRepositoryConPersistencia <<Singleton>> {
+  + Donante findById(String idDonante)
+}
+
+DonacionesController ..> DonantesRepositoryConPersistencia
+
+class DonacionResponseDto {
+
+  + <<static>> DonacionResponseDto desde(DonacionIndependiente donacion)
+  + String getId()
+  + LocalDateTime getFecha()
+  + DonanteResponseDto getDonante()
+  + BienResponseDto getBien()
+  + EstadoDonacion getEstadoActual()
+  + EntidadBeneficiariaResponseDto getAsignado()
+}
+
+DonacionesController ..> DonacionResponseDto
+
+class DonacionIndependiente {
+  + void iniciarTraslado(String idEntrega)
+  + void marcarComoEntregada(ComprobanteDeEntrega comprobante)
+  + void marcarComoFallida(String justificacion)
+  + void almacenarEnDeposito()
+  + void alistarParaEntregar()
+  +  void vencer()
+  + List<CambioDeEstado> getHistorialEstados()
+}
+
+class ComprobanteDeEntrega {
+ + getTimestamp()
+ + getPatente()
+}
+
+DonacionIndependiente ..> ComprobanteDeEntrega
+DonacionesRepositoryConPersistencia ..> DonacionIndependiente
+
+note top of DonantesRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el controller.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+
+note top of DonacionesRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el controller.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+
+note top of DonacionIndependiente
+  Se documentan unicamente los métodos que usa el controller.
+end note
+
+@enduml

@@ -42,4 +42,8 @@ public class UsuarioDonante extends Usuario {
   public String getIdDeAsociado() {
     return donante.getIdDominio();
   }
+
+  public Donante getDonante() {
+    return donante;
+  }
 }

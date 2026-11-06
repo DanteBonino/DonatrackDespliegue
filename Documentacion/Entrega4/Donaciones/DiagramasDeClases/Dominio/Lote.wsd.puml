@@ -1,0 +1,48 @@
+class Lote extends EntidadBase {
+
+}
+
+Lote --> Donante
+Lote --> "*" DonacionIndependiente
+
+
+abstract class EntidadBase <<MappedSuperclass>> {
+  + String getIdDominio()
+
+  + boolean esLaMismaEntidad(String id)
+
+  + Long getId()
+
+}
+
+interface Eliminable {
+  + boolean estaEliminado();
+  + void marcarComoEliminado();
+}
+
+class DonacionIndependiente <<Entity>> extends EntidadBase {
+  BigDecimal getCantidadDeSatisfacccion()
+  int getCantidadDeUnidades()
+
+}
+
+DonacionIndependiente ..|> Eliminable
+
+
+DonacionIndependiente --> Item
+
+
+
+note bottom of Donante: "No tiene métodos porque DonacionIndependiente no hace uso de ninguno de sus métodos"
+
+class Item {
+ - cantidadDeUnidades
+ esAgrupableCon(otroItem)
+ combinacionCon(otroItem)
+ BigDecimal getCantidadDeSatisfacccion()
+ int getCantidadDeUnidades()
+}
+
+Item --> Bien
+Item --> "*" String:fotos
+@enduml

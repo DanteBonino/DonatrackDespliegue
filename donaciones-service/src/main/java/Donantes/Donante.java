@@ -37,7 +37,7 @@ import javax.persistence.Table;
 @Table(name = "Donantes")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_donante")
-abstract public class Donante extends Persistible implements Actualizable <DatosDonante>, Eliminable, ConSesion, ConMailIndividual, ConTelefono, ConMedioPreferencial {
+abstract public class Donante extends Persistible implements Actualizable <DatosDonante>, Eliminable, ConMailIndividual, ConTelefono, ConMedioPreferencial {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_datos_de_contacto")
@@ -46,15 +46,10 @@ abstract public class Donante extends Persistible implements Actualizable <Datos
     @Column(name = "esta_eliminado")
     private boolean estaEliminado = false;
 
-    @Column(name = "fecha_de_ultimo_acceso")
-    private LocalDate fechaDeUltimoIngreso;
-
-
     protected Donante() {
     }
     public Donante(DatosDeContacto contacto) {
         this.datosDeContacto = contacto;
-        fechaDeUltimoIngreso = LocalDate.now();
     }
 
     public void actualizarDesde(DatosDonante datos, boolean parcial) {
@@ -116,14 +111,6 @@ abstract public class Donante extends Persistible implements Actualizable <Datos
 
     public void marcarComoEliminado() {
         this.estaEliminado = true;
-    }
-
-    public LocalDate fechaDeUltimoIngreso() {
-        return this.fechaDeUltimoIngreso;
-    }
-
-    public void registrarIngreso(){
-        this.fechaDeUltimoIngreso = LocalDate.now();
     }
 
     public abstract String getNombreAMostrar();

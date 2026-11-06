@@ -1,0 +1,46 @@
+@startuml
+class NotificadorDonanteInicioDeRuta extends NotificadorInicioDeRuta implements ConNotificacionADonante {
+    + String mensaje(String idDonacion)
+}
+
+abstract class NotificadorInicioDeRuta implements  InteresadoEnCambiosDeEstado {
+  + void anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega)
+  + {abstract} String mensaje(String idDonacion);
+}
+class NotificadorEntidadInicioDeRuta extends NotificadorInicioDeRuta implements ConNotificacionAEntidadBeneficiaria {
+  + String mensaje(String idDonacion)
+}
+
+interface GeneradorLinkDeTrackeoEntrega {
+  String generarLink(String idEntrega);
+}
+
+class NotificacionesRepositoryConPersistencia {
+ registrar(Notificacion nuevaNotificacion)
+}
+
+interface ConNotificacionAEntidadBeneficiaria {
+  + default ConContacto receptor(DonacionIndependiente donacion, EntidadBeneficiaria entidad)
+}
+
+interface ConNotificacionADonante{
+  + default ConContacto receptor(DonacionIndependiente donacion, EntidadBeneficiaria entidad)
+}
+
+NotificadorInicioDeRuta --> "1" GeneradorLinkDeTrackeoEntrega
+NotificadorInicioDeRuta ..> NotificacionesRepositoryConPersistencia
+
+class GeneradorLinkApi implements GeneradorLinkDeTrackeoEntrega {
+  - String urlLogisitica;
+
+  + String generarLink(String idEntrega)
+}
+
+interface InteresadoEnCambiosDeEstado extends Interesado {
+  + default void anteAsignacion(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria)
+  + default void anteEntregaConExito(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, ComprobanteDeEntrega comprobante)
+  + default void anteEntregaFallida(String justificacion, EntidadBeneficiaria entidadBeneficiaria, DonacionIndependiente donacionIndependiente)
+  + default void anteInicioDeRuta(DonacionIndependiente donacionIndependiente, EntidadBeneficiaria entidadBeneficiaria, String idEntrega)
+}
+
+@enduml

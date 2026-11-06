@@ -26,12 +26,6 @@ public class DonantesRepository implements IDonantesRepository, RepositorioConSo
   }
 
   @Override
-  public List<Donante> getInactivos() {
-    LocalDate fechaCorte = LocalDate.now().minusDays(ConSesion.DIAS_PARA_INACTIVIDAD);
-    return obtenerSegun(Filtro.menorOIgual("fechaDeUltimoIngreso", fechaCorte));
-  }
-
-  @Override
   public Donante findById(String id) {
     return RepositorioConSoftDelete.super.findById(id);
   }

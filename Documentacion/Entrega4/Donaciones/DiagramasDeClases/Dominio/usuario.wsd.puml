@@ -1,0 +1,61 @@
+@startuml
+interface ConSesion {
+  <<static>> int DIAS_PARA_INACTIVIDAD
+  LocalDate fechaDeUltimoIngreso();
+
+  + default Boolean esInactivo()
+
+  + default int getCantidadDeDiasInactivo()
+
+  + void registrarIngreso()
+}
+
+class Usuario extends Persistible implements ConSesion {
+  Boolean verificarContrasenia(unaContraseña)
+  void registrarIngreso()
+  # Rol getRol()
+  # String getNombreAMostrar()
+  # String getIdAsociado()
+}
+
+class UsuarioDonante extends Usuario {
+ Donante getDonante()
+ Rol getRol()
+ String getNombreAMostrar()
+ String getIdAsociado()
+}
+
+class Donante {
+ String getNombreAMostrar()
+ String getIdDominio()
+}
+
+UsuarioDonante --> Donante
+
+class UsuarioBeneficiario extends Usuario {
+ Rol getRol()
+ String getNombreAMostrar()
+ String getIdAsociado()
+}
+
+class EntidadBeneficiaria {
+ String getRazonSocial()
+ String getIdDominio()
+}
+
+UsuarioBeneficiario --> EntidadBeneficiaria
+
+class UsuarioAdministrador extends Usuario {
+ Rol getRol()
+ String getNombreAMostrar()
+ String getIdAsociado()
+}
+
+class Administrador{
+ String getIdDominio()
+}
+
+UsuarioAdministrador --> Administrador
+
+
+@enduml

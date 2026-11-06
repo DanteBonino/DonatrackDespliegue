@@ -1,0 +1,72 @@
+@startuml
+interface CrudHandler {
+    fun getAll(ctx: Context)
+    fun getOne(ctx: Context, resourceId: String)
+    fun create(ctx: Context)
+    fun update(ctx: Context, resourceId: String)
+    fun delete(ctx: Context, resourceId: String)
+}
+
+class DonantesController implements CrudHandler {
+  + void getAll(@NotNull Context contexto)
+ + void getOne(@NotNull Context contexto, @NotNull String idDonante)
+ + void create(@NotNull Context contexto)
+ + void update(Context contexto, @NotNull String idDonante)
+ + void delete(@NotNull Context contexto, @NotNull String idDonante)
+}
+
+class DonantesRepositoryConPersistencia <<Singleton>> {
+  + List<Donante> getInstancias()
+  + Donante findById(String idDonante)
+  + void eliminarInstancia (String idDonante)
+  + void actualizarInstancia(String idDonante, @NotNull   DatosDonante datos)
+  + void registrar(Donante unDonante)
+}
+
+DonantesController ..> DonantesRepositoryConPersistencia
+
+interface DatosDonante extends NotificableDatos {
+  String getNombreRazonSocial();
+  String getApellido();
+  String getDocumento();
+  String getEmail();
+  String getTelefono();
+  LocalDate getFechaDeNacimiento();
+  Genero getGenero();
+  String getDireccion();
+  String getRubro();
+  TipoJuridica getTipoJuridico();
+  TipoPersona getTipoPersona();
+}
+
+interface NotificableDatos {
+  TipoDeMedio getTipoDeMedio();
+}
+
+class DonanteResponseDto implements DatosDonante {
+
+  + <<static>> DonanteResponseDto desde(Donante donante)
+  + String getId()
+  + TipoPersona getTipoPersona()
+  + String getDocumento()
+  + String getNombreRazonSocial()
+  + String getApellido()
+  + String getEmail()
+  + String getTelefono()
+  + LocalDate getFechaDeNacimiento()
+  + String getDireccion()
+  + Genero getGenero()
+  + String getRubro()
+  + TipoJuridica getTipoJuridico()
+  + TipoDeMedio getTipoDeMedio()
+}
+
+DonantesController ..> DonanteResponseDto
+
+
+note top of DonantesRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el controller.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+
+@enduml

@@ -1,0 +1,72 @@
+@startuml
+abstract class MedioDeNotificacion {
+
+  + void enviarNotificacion(Notificacion unaNotificacion)
+
+  {abstract} + void envioDeNotificacion(Notificacion unaNotificacion);
+
+  + TipoDeMedio getTipoDeMedio()
+}
+
+enum TipoDeMedio {
+  MAIL, WPP, SMS
+}
+
+MedioDeNotificacion ..> TipoDeMedio
+
+class MedioCorreo extends MedioDeNotificacion {
+  - static final String ASUNTO = "Notificacion Donatrack";
+
+  + void envioDeNotificacion(Notificacion notificacion)
+}
+
+interface ClienteCorreo {
+ + void enviarEmail(Post post);
+}
+
+class Post {
+ String receptor
+ String asunto
+ String contenido
+}
+
+MedioCorreo --> "1" ClienteCorreo
+
+ClienteCorreo ..> "1" Post
+
+class ClienteCorreoSengrid implements ClienteCorreo {
+ + void enviarMail(Post post)
+}
+
+class MedioSMS extends MedioDeNotificacion {
+
+  + void envioDeNotificacion(Notificacion notificacion)
+
+}
+
+interface ClienteMensajeria {
+ + void enviarMensaje(Mensaje mensaje)
+}
+
+class Mensaje {
+  String receptor
+  String contenido
+}
+
+ClienteMensajeria ..> "1" Mensaje
+
+MedioSMS --> "1" ClienteMensajeria
+
+class ClienteMensajeriaTwilio implements ClienteMensajeria {
+  + void enviarMensaje(Mensaje mensaje)
+}
+
+class MedioWPP extends MedioDeNotificacion {
+
+  + void envioDeNotificacion(Notificacion notificacion)
+
+}
+
+MedioWPP --> "1" ClienteMensajeria
+
+@enduml

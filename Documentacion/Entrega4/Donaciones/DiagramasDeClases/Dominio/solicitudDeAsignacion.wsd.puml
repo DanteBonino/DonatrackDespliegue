@@ -1,0 +1,31 @@
+@startuml
+
+abstract class EntidadBase <<MappedSuperclass>> {
+  + String getIdDominio()
+
+  + boolean esLaMismaEntidad(String id)
+
+  + Long getId()
+
+}
+
+
+
+class SolicitudDeAsignacion <<Entity>> extends EntidadBase {
+  + void aceptar(EntidadBeneficiaria candidata)
+  + boolean esCandidataValida(EntidadBeneficiaria candidata)
+  + boolean estaAceptada()
+}
+
+class DonacionIndependiente <<Entity>> {
+ +  void asignarA(EntidadBeneficiaria asignado)
+}
+
+SolicitudDeAsignacion --> DonacionIndependiente
+SolicitudDeAsignacion --> EntidadBeneficiaria: "elegida"
+SolicitudDeAsignacion --> "*" EntidadBeneficiaria: "candidatas"
+
+note bottom of DonacionIndependiente: Sólo se documentaron los métodos que importan para la SolicitudDeAsignacion
+note bottom of EntidadBeneficiaria: No hay ningún método que sea útil desde la perspectiva de la SolicitudDeAsignacion
+
+@enduml

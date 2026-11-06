@@ -1,0 +1,100 @@
+@startuml
+
+
+abstract class EntidadBase <<MappedSuperclass>> {
+  + String getIdDominio()
+
+  + boolean esLaMismaEntidad(String id)
+
+  + Long getId()
+
+}
+
+interface Eliminable {
+  + boolean estaEliminado();
+  + void marcarComoEliminado();
+}
+
+
+abstract class Necesidad <<Entity>> extends EntidadBase {
+  + estaEliminado
+  + Boolean estaSatisfecha();
+  + BigDecimal cantidadRecibida()
+  + BigDecimal cantidadRequerida()
+  + Boolean estaActiva()
+  + Set<ReciboDeDonacion> bienesRecibidosActuales()
+  # <<abstract>> boolean condicionDeActualidad(ReciboDeDonacion unBienRecibido)
+  + void recibirBien(DonacionIndependiente unaDonacion)
+  + int cantidadDeDonacionesRecibidasDespuesDe(LocalDate unaFecha)
+  + abstract TipoNecesidad getTipo();
+  Boolean esCompatibleCon(DonacionIndependiente donacionIndependiente)
+  Boolean puedeAceptarA(DonacionIndependiente donacionIndependiente)
+}
+
+
+
+
+Necesidad --> "*" ReciboDeDonacion
+
+
+class ReciboDeDonacion <<Embeddable>> {
+  - LocalDate fechaDeRecepcion
+  + boolean esPosteriorA(LocalDate unaFecha)
+  + int getCantidad()
+  + Bien getBienDonado()
+}
+
+class DonacionIndependiente <<Entity>> {
+  + int getCantidad()
+  + Bien getBienDonado()
+  estaEn(estadoDeUso)
+  seAgrupaPor(subCategoria)
+  sigueEnVigencia()
+}
+
+note top of DonacionIndependiente
+  Simplificada por una cuestión de tamaño del diagrama,
+  ver su propio diagrama
+end note
+
+
+ReciboDeDonacion --> DonacionIndependiente
+
+class NecesidadExtraordinaria <<Entity>> extends Necesidad {
+  + TipoNecesidad getTipo()
+  # boolean condicionDeActualidad()
+}
+
+class NecesidadRecurrente <<Entity>> extends Necesidad {
+ - Period periodo
+ - LocalDate inicioPeriodoActual
+
+ + TipoNecesidad getTipo()
+ #  boolean condicionDeActualidad()
+}
+
+abstract class CondicionDeAceptacion extends EntidadBase {
+  esAceptable(unaDonacionIndependiente)
+  factorDeAceptacion(unaDonacionIndependiente)
+  validarSubCategoria(unaSubCategoria)
+}
+
+class Basica extends CondicionDeAceptacion {
+  factorDeAceptacion(unaDonacionIndependiente)
+  validarSubCategoria(unaSubCategoria)
+}
+
+class EnEstado extends CondicionDeAceptacion {
+ factorDeAceptacion(unaDonacionIndependiente)
+  validarSubCategoria(unaSubCategoria)
+}
+
+Necesidad --> CondicionDeAceptacion
+
+CondicionDeAceptacion --> SubCategoria
+CondicionDeAceptacion ..> DonacionIndependiente
+
+class SubCategoria {
+ Boolean esLaMisma(otraSubCategoria)
+}
+@enduml

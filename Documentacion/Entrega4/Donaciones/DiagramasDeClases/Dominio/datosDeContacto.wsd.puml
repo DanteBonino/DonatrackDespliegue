@@ -1,0 +1,12 @@
+class DatosDeContacto <<Entity>> {
+ + List<String> getMailsParaNotificar()
+ + TipoDeMedio getMedioDeNotificacionPreferencial()
+}
+
+class Telefono {
+ + String getNumeroSms()
+ + String getNumeroWpp()
+ + String getNumero()
+}
+
+DatosDeContacto --> Telefono

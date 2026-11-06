@@ -1,0 +1,72 @@
+@startuml
+interface CrudHandler {
+    fun getAll(ctx: Context)
+    fun getOne(ctx: Context, resourceId: String)
+    fun create(ctx: Context)
+    fun update(ctx: Context, resourceId: String)
+    fun delete(ctx: Context, resourceId: String)
+}
+
+class NecesidadesController implements CrudHandler {
+ + void getAll(@NotNull Context contexto)
+ + void getOne(@NotNull Context contexto, @NotNull String necesidadId)
+ + void create(@NotNull Context contexto)
+ + void update(Context contexto, @NotNull String necesidadId)
+ + void delete(@NotNull Context contexto, @NotNull String necesidadId)
+}
+
+class BeneficiariosRepositoryConPersistencia <<Singleton>> {
+  + EntidadBeneficiaria findById(String id)
+}
+
+class EntidadBeneficiaria {
+  + void eliminarNecesidad(String idNecesidad)
+  + void refrescarNecesidadParcial(String idNecesidad, @NotNull   DatosNecesidad datos)
+  + void agregarNecesidad(Necesidad unaNecesidad)
+  +  Necesidad buscarNecesidadPorId(String idNecesidad)
+}
+
+abstract class Necesidad {
+
+}
+
+NecesidadesController  ..> BeneficiariosRepositoryConPersistencia
+BeneficiariosRepositoryConPersistencia ..> EntidadBeneficiaria
+EntidadBeneficiaria  --> "*" Necesidad
+
+class NecesidadResponseDto {
+
+  + <<static>> NecesidadResponseDto desde(Necesidad unaNecesidad)
+
+  + BienResponseDto getBienRequerido()
+
+  + Period getPeriodo()
+
+  + Integer getCantidadRecibida()
+
+  + Boolean getEstaSatisfecha()
+
+  + String getId()
+
+  + TipoNecesidad getTipo()
+
+}
+
+NecesidadesController  ..> NecesidadResponseDto
+
+note top of BeneficiariosRepositoryConPersistencia
+  Se documentan unicamente los métodos que usa el controller.
+  Para ver todos los métodos de los repositorios y la jerarquía existente ver el diagrama específico de los mismos
+end note
+
+note top of EntidadBeneficiaria
+  Se documentan unicamente los métodos que usa el controller.
+  En el diagrama de dominio se pueden ver todos los métodos y no una simplificación
+end note
+
+note top of Necesidad
+  Se documentan unicamente los métodos que usa el controller.
+  En el diagrama de dominio se pueden ver todos los métodos y no una simplificación
+end note
+
+@enduml

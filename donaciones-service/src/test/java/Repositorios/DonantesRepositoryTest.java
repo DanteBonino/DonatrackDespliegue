@@ -66,23 +66,14 @@ public class DonantesRepositoryTest implements ConLimpiezaDeBaseDeDatos {
 
     @Nested
     class OperacionesDeFiltrado {
-      private Donante unDonanteInactivo;
       private Donante unDonanteActivo;
 
       @BeforeEach
       void setUp() {
        unDonanteActivo = unDonanteDePrueba();
-       unDonanteInactivo = unDonanteDePrueba();
-       setFechaDeUltimoIngreso(unDonanteInactivo, LocalDate.now().minusDays(21));
        withTransaction(() -> {
          donantesRepository.registrar(unDonanteActivo);
-         donantesRepository.registrar(unDonanteInactivo);
        });
-      }
-
-      @Test
-      void getDonantesInactivosSoloRetornaLosDonantesInactivos() {
-        assertEquals(1, donantesRepository.getInactivos().size());
       }
 
       @Test
@@ -347,24 +338,5 @@ public class DonantesRepositoryTest implements ConLimpiezaDeBaseDeDatos {
           "1122334455",
           LocalDate.now().minusYears(10),
           new CalleRequestDto("calle", 111), Genero.MASCULINO, null, null, TipoDeMedio.WPP);
-  }
-
-  private void setFechaDeUltimoIngreso(Object usuario, LocalDate fecha) {
-    try {
-      Field f = usuario.getClass().getSuperclass().getDeclaredField("fechaDeUltimoIngreso");
-      f.setAccessible(true);
-      f.set(usuario, fecha);
-    } catch (NoSuchFieldException e) {
-      try {
-        // in case the field is declared higher in the hierarchy
-        Field f = usuario.getClass().getSuperclass().getSuperclass().getDeclaredField("fechaDeUltimoIngreso");
-        f.setAccessible(true);
-        f.set(usuario, fecha);
-      } catch (Exception ex) {
-        throw new RuntimeException(ex);
-      }
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
   }
 }
