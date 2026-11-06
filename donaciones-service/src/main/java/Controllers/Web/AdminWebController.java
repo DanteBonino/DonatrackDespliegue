@@ -53,7 +53,7 @@ public class AdminWebController {
   public void deposito(Context ctx) {
     validarAdministrador(ctx);
     List<DonacionIndependiente> enDeposito = donacionesRepository().getDonacionesEnDepositoConDetalles();
-
+    boolean mostrarAlerta = "true".equals(ctx.queryParam("vencida"));
     List<Map<String, Object>> filas = new ArrayList<>();
     for (DonacionIndependiente d : enDeposito) {
       Map<String, Object> fila = new HashMap<>();
@@ -71,6 +71,7 @@ public class AdminWebController {
     model.put("sesion", ctx.attribute("sesion"));
     model.put("donaciones", filas);
     model.put("hayDonaciones", !filas.isEmpty());
+    model.put("vencidaExito", mostrarAlerta);
     ctx.render("admin/deposito.hbs", model);
   }
 
@@ -78,7 +79,7 @@ public class AdminWebController {
     DonacionIndependiente donacion = DonacionesRepository.getInstance()
         .findById(ctx.pathParam("id"));
     donacion.vencer();
-    ctx.redirect("/donaciones/en-deposito");
+    ctx.redirect("/donaciones/en-deposito?vencida=true" + donacion.getIdDominio());
   }
 
   private Optional<Administrador> getAdministrador(Context context) {

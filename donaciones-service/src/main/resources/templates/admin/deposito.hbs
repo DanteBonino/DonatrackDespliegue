@@ -9,7 +9,9 @@
             Donaciones disponibles en depósito. Si el bien donado ya no está vigente,
             podés marcar la donación como <strong>VENCIDA</strong>.
         </p>
-
+        {{#if vencidaExito}}
+            <div class="alert alert-success">Se pasó a vencida la donación</div>
+        {{/if}}
         {{#if hayDonaciones}}
             <div class="table-responsive shadow-sm rounded">
                 <table class="table table-hover align-middle mb-0">
