@@ -1,25 +1,47 @@
+<!-- Archivos CSS de Leaflet y MarkerCluster -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<!-- Opcional: FontAwesome para usar el ícono de caja/paquete -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-<div id="{{mapId}}" style="height: {{mapHeight}};" class="rounded border"></div>
+<div id="{{mapaData.mapId}}" style="height: {{mapaData.mapHeight}};" class="rounded border"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
 <script>
     (function() {
-        var mapa = L.map('{{mapId}}').setView([{{centerLat}}, {{centerLng}}], {{zoom}});
+        var southWest = L.latLng(-56.0, -76.0);
+        var northEast = L.latLng(-21.0, -53.0);
+        var bounds = L.latLngBounds(southWest, northEast);
+
+        var mapa = L.map('{{mapaData.mapId}}', {
+            center: [{{mapaData.centerLat}}, {{mapaData.centerLng}}],
+            zoom: {{mapaData.zoom}},
+            minZoom: 4,                  // Evita que se alejen demasiado
+            maxBounds: bounds,           // Bloquea el paneo fuera de Argentina/región
+            maxBoundsViscosity: 1.0      // Hace que el rebote en los bordes sea firme
+        });
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
         }).addTo(mapa);
 
+        var iconoDonacion = L.divIcon({
+            className: 'custom-package-marker',
+            html: '<div style="background-color: #0d6efd; color: white; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid white;"><i class="fas fa-box" style="font-size: 14px;"></i></div>',
+            iconSize: [34, 34],
+            iconAnchor: [17, 17],
+            popupAnchor: [0, -17]
+        });
+
         var grupo = L.markerClusterGroup();
 
-        {{#each marcadores}}
+        {{#each mapaData.marcadores}}
             grupo.addLayer(
-                    L.marker([{{this.lat}}, {{this.lng}}])
+                    L.marker([{{this.lat}}, {{this.lng}}], { icon: iconoDonacion }) // <--- Acá se asigna el ícono
                             .bindPopup(
                                     '<b>{{this.titulo}}</b><br>' +
                                     '{{this.descripcion}}'
