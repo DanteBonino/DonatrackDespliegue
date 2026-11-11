@@ -1563,3 +1563,9 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
   - Una clase Usuario que conoce Strategias de mostrar información (es más extensible en relación a Usuario), pero es más compleja la configuración
 - La primera opción es muy parecida a la segunda en cuanto a la Simplicidad, pero no gasta la herencia; sin embargo, para ser plausible Donante, EntidadBeneficiaria y Administrador deberían heredar de la misma clase para poder ser tratados polimórficamente por una entidad que es persistida, con lo cual la herencia la terminarías gastando.
 - La tercera opción es más compleja (más cantidad de entidades), menos extensible; pero, a nivel persistencia, es mucho más simple porque no necesitas pensar en una clase que englobe a Donante, EntidadBeneficaria y Administrador (que no tienen nada en común). Además, te permite registrar donantes sin que tengan una cuenta (trazabilidad) y, luego, podes crearle la cuenta y asociarla al donante pre-existente (página especial + validación vía sms, wpp o mail)
+
+## Puesta a punto
+
+### Mapa
+- Se cambiaron las herramientas utilizadas para que diga "Islas malvinas" y no "Falkland islands".
+
