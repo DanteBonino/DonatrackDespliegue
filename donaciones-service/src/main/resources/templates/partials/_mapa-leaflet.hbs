@@ -3,11 +3,15 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
 
 <div id="{{mapaData.mapId}}" style="height: {{mapaData.mapHeight}};" class="rounded border"></div>
 
+<!-- 2. Scripts (el orden importa) -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
 
 <script>
     (function() {
@@ -23,12 +27,19 @@
             maxBoundsViscosity: 1.0
         });
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_577c_1_fabf08b3ff1c53d022f349b0&language=es', {
-            maxZoom: 19,
-            subdomains: 'abcd',
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        var base = L.maplibreGL({
+            style: 'https://tiles.openfreemap.org/styles/liberty'
         }).addTo(mapa);
 
+        var glMap = base.getMaplibreMap();
+        glMap.on('load', function () {
+            glMap.getStyle().layers.forEach(function (l) {
+                if (l.type === 'symbol' && l.layout && l.layout['text-field'] &&  JSON.stringify(l.layout['text-field']).indexOf('name') !== -1) {
+                    glMap.setLayoutProperty(l.id, 'text-field',
+                            ['coalesce', ['get', 'name:es'], ['get', 'name']]);
+                }
+            });
+        });
         var iconoDonacion = L.divIcon({
             className: 'custom-package-marker',
             html: '<div style="background-color: #0d6efd; color: white; border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 6px rgba(0,0,0,0.3); border: 2px solid white;"><i class="fas fa-box" style="font-size: 14px;"></i></div>',
