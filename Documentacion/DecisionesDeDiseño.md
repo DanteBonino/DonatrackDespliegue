@@ -1579,3 +1579,6 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
 
 ### Barra de donaciones
 - Se eliminó por falta de claridad y porque no tenía una razón de ser más que ocupar espacio
+
+### Accesos al sistema
+- Se eliminaro de la home porque "menos es más" y, además, es un término más asociado a los dashboards
