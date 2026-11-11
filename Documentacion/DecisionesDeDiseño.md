@@ -1568,4 +1568,4 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
 
 ### Mapa
 - Se cambiaron las herramientas utilizadas para que diga "Islas malvinas" y no "Falkland islands".
-
+- Se modificaron los íconos porque antes representaban ubicaciones y, en realidad, lo que se busca mostrar son las donaciones entregadas
