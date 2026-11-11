@@ -1,6 +1,17 @@
+<!-- 1. Estilos CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<div id="{{mapaData.mapId}}" style="height: {{mapaData.mapHeight}};" class="rounded border"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
 <script>
     (function() {
-        var southWest = L.latLng(-56.0, -75.0)
+        var southWest = L.latLng(-56.0, -75.0);
         var northEast = L.latLng(-21.0, -53.0);
         var bounds = L.latLngBounds(southWest, northEast);
 
@@ -31,10 +42,7 @@
         {{#each mapaData.marcadores}}
             grupo.addLayer(
                     L.marker([{{this.lat}}, {{this.lng}}], { icon: iconoDonacion })
-                            .bindPopup(
-                                    '<b>{{this.titulo}}</b><br>' +
-                                    '{{this.descripcion}}'
-                            )
+                            .bindPopup(`<b>{{this.titulo}}</b><br>{{this.descripcion}}`)
             );
         {{/each}}
 
