@@ -44,7 +44,7 @@
     <div class="row g-4 mb-5">
         <div class="col-md-4">
             <div class="card border-secondary shadow-sm h-100">
-                <div class="card-body text-center">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
                     <i class="bi bi-hourglass-split fs-2 text-secondary"></i>
                     <h3 class="fw-bold mt-2">{{asignadas}}</h3>
                     <p class="text-muted mb-0">Asignadas</p>
@@ -58,24 +58,23 @@
                         <i class="bi bi-bell me-2"></i>Últimas Notificaciones
                     </h5>
                     {{#if notificaciones}}
-                    <ul class="list-group list-group-flush">
-                        {{#each notificaciones}}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span><i class="bi bi-envelope me-2 text-primary"></i>{{this.mensaje}}</span>
-                            <span class="badge bg-{{#if this.fueEntregada}}success{{else}}warning{{/if}} rounded-pill">
-                                {{#if this.fueEntregada}}Entregada{{else}}Pendiente{{/if}}
-                            </span>
-                        </li>
-                        {{/each}}
-                    </ul>
+                        <ul class="list-group list-group-flush">
+                            {{#each notificaciones}}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-envelope me-2 text-primary"></i>{{this.mensaje}}</span>
+                                    <span class="badge bg-{{#if this.fueEntregada}}success{{else}}warning{{/if}} rounded-pill">
+                                        {{#if this.fueEntregada}}Entregada{{else}}Pendiente{{/if}}
+                                    </span>
+                                </li>
+                            {{/each}}
+                        </ul>
                     {{else}}
-                    <p class="text-muted mt-3">No tenés notificaciones todavía.</p>
+                        <p class="text-muted mt-3">No tenés notificaciones todavía.</p>
                     {{/if}}
                 </div>
             </div>
         </div>
     </div>
-</div>
     {{/partials/dashboard-layout}}
 {{/partial}}
 {{>layout}}
