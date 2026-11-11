@@ -1576,3 +1576,6 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
 
 ### Bienvenido/a en el dashboard
 - Es propenso a que alguien no se sienta incluido, entonces se lo modificó por **Hola**
+
+### Barra de donaciones
+- Se eliminó por falta de claridad y porque no tenía una razón de ser más que ocupar espacio

@@ -75,31 +75,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Barra de progreso general -->
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h5 class="card-title mb-3">
-                <i class="bi bi-graph-up me-2"></i>Resumen de Estado
-            </h5>
-            <div class="progress mb-2" style="height: 30px;">
-                {{#if totalDonaciones}}
-                <div class="progress-bar bg-warning" style="width: {{enDeposito}}%">
-                    Depósito
-                </div>
-                <div class="progress-bar bg-info" style="width: {{enTraslado}}%">
-                    Tránsito
-                </div>
-                <div class="progress-bar bg-success" style="width: {{entregadas}}%">
-                    Entregadas
-                </div>
-                {{/if}}
-            </div>
-            <small class="text-muted">
-                {{enDeposito}} en depósito · {{enTraslado}} en traslado · {{entregadas}} entregadas
-            </small>
-        </div>
-    </div>
 </div>
     {{/partials/dashboard-layout}}
 {{/partial}}
