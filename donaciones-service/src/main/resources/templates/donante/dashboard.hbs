@@ -1,10 +1,5 @@
 {{#partial "contenido"}}
-<div class="container py-5">
-    <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center gap-2 mb-4">
-        <h1 class="h2">Mi Panel de Donante</h1>
-        <span class="text-muted">Bienvenido/a, {{sesion.nombreMostrable}}</span>
-    </div>
-
+    {{#> partials/dashboard-layout tituloPanel="Mi Panel de Donante"}}
     <!-- Tarjetas de resumen -->
     <div class="row g-4 mb-5">
         <div class="col-md-3">
@@ -106,5 +101,6 @@
         </div>
     </div>
 </div>
+    {{/partials/dashboard-layout}}
 {{/partial}}
 {{>layout}}
