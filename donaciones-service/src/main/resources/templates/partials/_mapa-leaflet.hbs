@@ -1,32 +1,21 @@
-<!-- Archivos CSS de Leaflet y MarkerCluster -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-<!-- Opcional: FontAwesome para usar el ícono de caja/paquete -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-<div id="{{mapaData.mapId}}" style="height: {{mapaData.mapHeight}};" class="rounded border"></div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-
 <script>
     (function() {
-        var southWest = L.latLng(-56.0, -76.0);
+        var southWest = L.latLng(-56.0, -75.0)
         var northEast = L.latLng(-21.0, -53.0);
         var bounds = L.latLngBounds(southWest, northEast);
 
         var mapa = L.map('{{mapaData.mapId}}', {
             center: [{{mapaData.centerLat}}, {{mapaData.centerLng}}],
-            zoom: {{mapaData.zoom}},
-            minZoom: 4,                  // Evita que se alejen demasiado
-            maxBounds: bounds,           // Bloquea el paneo fuera de Argentina/región
-            maxBoundsViscosity: 1.0      // Hace que el rebote en los bordes sea firme
+            zoom: 5,
+            minZoom: 5,
+            maxBounds: bounds,
+            maxBoundsViscosity: 1.0
         });
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             maxZoom: 19,
-            attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+            subdomains: 'abcd',
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         }).addTo(mapa);
 
         var iconoDonacion = L.divIcon({
@@ -41,7 +30,7 @@
 
         {{#each mapaData.marcadores}}
             grupo.addLayer(
-                    L.marker([{{this.lat}}, {{this.lng}}], { icon: iconoDonacion }) // <--- Acá se asigna el ícono
+                    L.marker([{{this.lat}}, {{this.lng}}], { icon: iconoDonacion })
                             .bindPopup(
                                     '<b>{{this.titulo}}</b><br>' +
                                     '{{this.descripcion}}'
