@@ -2,7 +2,7 @@
 <div class="container py-5">
     <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center gap-2 mb-4">
         <h1 class="h2 mb-0"><i class="bi bi-basket me-2"></i>Necesidades Materiales</h1>
-        <span class="badge bg-danger fs-6">{{total}} necesidades</span>
+        {{>partials/volverAlPanel}}
     </div>
 
   {{#if necesidades}}
@@ -40,10 +40,6 @@
   {{else}}
     {{>partials/_alerta-vacia mensaje="No tenés necesidades registradas todavía."}}
   {{/if}}
-
-    <div class="mt-4 d-grid d-md-flex justify-content-md-end">
-        {{>partials/volverAlPanel}}
-    </div>
 </div>
 {{/partial}}
 {{>layout}}
