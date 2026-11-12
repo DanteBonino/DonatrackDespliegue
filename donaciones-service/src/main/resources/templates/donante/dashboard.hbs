@@ -1,42 +1,32 @@
 {{#partial "contenido"}}
     {{#> partials/dashboard-layout tituloPanel="Mi Panel de Donante"}}
     <!-- Tarjetas de resumen -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-3">
-            <div class="card border-primary shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-box-seam fs-1 text-primary"></i>
-                    <h2 class="display-6 fw-bold mt-2">{{totalDonaciones}}</h2>
-                    <p class="text-muted mb-0">Total Donaciones</p>
-                </div>
-            </div>
+    <!-- Resumen -->
+    <div class="row g-0 text-center bg-light rounded resumen mb-5">
+        <div class="col-12 col-md">
+            <i class="bi bi-box-seam fs-4 text-primary"></i>
+            <div class="display-6 fw-bold">{{totalDonaciones}}</div>
+            <div class="text-muted small">Total Donaciones</div>
         </div>
-        <div class="col-md-3">
-            <div class="card border-warning shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-building fs-1 text-warning"></i>
-                    <h2 class="display-6 fw-bold mt-2">{{enDeposito}}</h2>
-                    <p class="text-muted mb-0">En Depósito</p>
-                </div>
-            </div>
+        <div class="col-12 col-md">
+            <i class="bi bi-building fs-4 text-warning"></i>
+            <div class="display-6 fw-bold">{{enDeposito}}</div>
+            <div class="text-muted small">En Depósito</div>
         </div>
-        <div class="col-md-3">
-            <div class="card border-info shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-truck fs-1 text-info"></i>
-                    <h2 class="display-6 fw-bold mt-2">{{enTraslado}}</h2>
-                    <p class="text-muted mb-0">En Traslado</p>
-                </div>
-            </div>
+        <div class="col-12 col-md">
+            <i class="bi bi-hourglass-split fs-4 text-secondary"></i>
+            <div class="display-6 fw-bold">{{asignadas}}</div>
+            <div class="text-muted small">Asignadas</div>
         </div>
-        <div class="col-md-3">
-            <div class="card border-success shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-check-circle fs-1 text-success"></i>
-                    <h2 class="display-6 fw-bold mt-2">{{entregadas}}</h2>
-                    <p class="text-muted mb-0">Entregadas</p>
-                </div>
-            </div>
+        <div class="col-12 col-md">
+            <i class="bi bi-truck fs-4 text-info"></i>
+            <div class="display-6 fw-bold">{{enTraslado}}</div>
+            <div class="text-muted small">En Traslado</div>
+        </div>
+        <div class="col-12 col-md">
+            <i class="bi bi-check-circle fs-4 text-success"></i>
+            <div class="display-6 fw-bold">{{entregadas}}</div>
+            <div class="text-muted small">Entregadas</div>
         </div>
     </div>
 
@@ -53,10 +43,7 @@
         </div>
         <div class="col-md-8">
             <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="bi bi-bell me-2"></i>Últimas Notificaciones
-                    </h5>
+                <div class="card-body"> <h5 class="mb-3"><i class="bi bi-bell me-2"></i>Últimas Notificaciones</h5>
                     {{#if notificaciones}}
                         <ul class="list-group list-group-flush">
                             {{#each notificaciones}}
@@ -69,7 +56,7 @@
                             {{/each}}
                         </ul>
                     {{else}}
-                        <p class="text-muted mt-3">No tenés notificaciones todavía.</p>
+                        <p class="text-muted">No tenés notificaciones todavía.</p>
                     {{/if}}
                 </div>
             </div>

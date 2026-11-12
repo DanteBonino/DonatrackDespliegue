@@ -1,0 +1,20 @@
+.card-link {
+    transition: box-shadow .15s ease, transform .15s ease;
+}
+.card-link:hover {
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+    transform: translateY(-2px);
+}
+
+.resumen > div {
+    padding: 1rem .5rem;
+}
+.resumen > div + div {
+    border-top: 1px solid var(--bs-border-color, #dee2e6);   /* mobile: separador horizontal */
+}
+@media (min-width: 768px) {
+    .resumen > div + div {
+        border-top: 0;
+        border-left: 1px solid var(--bs-border-color, #dee2e6); /* desktop: separador vertical */
+    }
+}

@@ -30,6 +30,7 @@ import Servidor.Router.SubCategoriasRoutes;
 import inicializacion.ChequeadorInicializacionBaseDeDatos;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.EndpointGroup;
+import io.javalin.http.staticfiles.Location;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +51,7 @@ public class ServidorDonaciones {
       config.validation.register(LocalDate.class, LocalDate::parse);
       config.validation.register(Genero.class, Genero::valueOf);
       config.validation.register(TipoJuridica.class, TipoJuridica::valueOf);
+      config.staticFiles.add("/public", Location.CLASSPATH);
 
       ManejadorDeExcepciones.registrarExcepciones(config, logger);
       new FiltroGlobalDeTransacciones().aplicarTransaccion(config);
