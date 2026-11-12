@@ -14,10 +14,10 @@
         </button>
         <div class="collapse navbar-collapse" id="nav">
             <ul class="navbar-nav me-auto">
+            {{#if sesion}}
                 <li class="nav-item">
                     {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/entregadas" textLink="Donaciones entregadas"}}
                 </li>
-            {{#if sesion}}
                 {{#if (esDonante)}}
                     <li class="nav-item">
                         {{> partials/navbarLinks/linkConRegistroDeActividad destino="/mis-donaciones" textLink="Mis Donaciones"}}
