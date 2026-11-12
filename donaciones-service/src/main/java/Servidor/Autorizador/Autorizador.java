@@ -22,7 +22,7 @@ public class Autorizador {
     }
 
     if (permittedRoles.contains(Rol.SINSESIONACTIVA) && ManejadorDeSesion.haySesion(ctx)) {
-      ctx.redirect("/");
+      ctx.redirect("/dashboard");
       return;
     }
 

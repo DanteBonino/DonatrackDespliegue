@@ -4,7 +4,11 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="/">DonaTrack</a>
+        {{#if sesion}}
+            <a class="navbar-brand fw-bold" href="/dashboard">DonaTrack</a>
+        {{else}}
+            <a class="navbar-brand fw-bold" href="/">DonaTrack</a>
+        {{/if}}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
             <span class="navbar-toggler-icon"></span>
         </button>

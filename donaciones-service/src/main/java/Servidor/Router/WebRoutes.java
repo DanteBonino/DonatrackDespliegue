@@ -43,7 +43,7 @@ public class WebRoutes implements EndpointGroup {
   public void addEndpoints() {
     beforeMatched(Autorizador::autorizar);
     // ==== Area PUBLICA ====
-    get("/", homeController::index, CUALQUIERA);
+    get("/", homeController::index, SINSESIONACTIVA);
     get("/legal", homeController::legal, CUALQUIERA);
     get("/donaciones/entregadas", homeController::donacionesEntregadas, CUALQUIERA);
 
