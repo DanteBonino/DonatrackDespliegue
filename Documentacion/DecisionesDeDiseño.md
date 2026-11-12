@@ -1582,3 +1582,7 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
 
 ### Accesos al sistema
 - Se eliminaro de la home porque "menos es más" y, además, es un término más asociado a los dashboards
+
+### Volver al panel
+- Era un tanto ambiguó porque estaba en lugares a los que no se llegaba sí o sí desde el panel, entonces se los cambió por __Volver al panel__
+- Se cambió el tono gris por uno que respete la paleta de colores
