@@ -31,6 +31,7 @@
                 </table>
             </div>
             <p class="text-muted small mt-2">Mostrando {{donaciones.length}} donación(es).</p>
+            {{> partials/paginacion}}
         {{else}}
             {{>partials/_alerta-vacia mensaje="No se encontraron donaciones con los filtros seleccionados."}}
         {{/if}}

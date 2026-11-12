@@ -8,6 +8,7 @@ import Notificaciones.Notificacion;
 import Repositories.Beneficiarios.BeneficiariosRepository;
 import Repositories.Donaciones.DonacionesRepository;
 import Repositories.Donantes.DonantesRepository;
+import Repositories.Generales.paginacion.Pagina;
 import Repositories.Notificaciones.NotificacionesRepository;
 import Servidor.ManejadorDeSesiones.DatosSesion;
 import Servidor.ManejadorDeSesiones.ManejadorDeSesion;
@@ -20,7 +21,7 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 public class DonanteWebController {
-
+  private static final int DONACIONES_POR_PAGINA = 10;
   public void dashboard(Context ctx) {
     Donante donante = getDonante(ctx).get();
     validarDonante(ctx, donante);
@@ -54,15 +55,25 @@ public class DonanteWebController {
     Donante donante = getDonante(ctx).get();
     validarDonante(ctx, donante);
 
-    List<DonacionIndependiente> donaciones = donacionesRepository().getDonacionesDeDonante(donante);
+    Pagina<DonacionIndependiente> pagina = donacionesRepository()
+        .getDonacionesDeDonante(donante, numeroDePagina(ctx), DONACIONES_POR_PAGINA);
 
-    List<Map<String, Object>> filas = getMaps(donaciones);
+    List<Map<String, Object>> filas = getMaps(pagina.items());
 
     Map<String, Object> model = new HashMap<>();
     model.put("titulo", "Mis Donaciones");
     model.put("donaciones", filas);
     model.put("hayDonaciones", !filas.isEmpty());
+    model.put("paginas", pagina.aModelo());
     ctx.render("donante/mis-donaciones.hbs", model);
+  }
+
+  private int numeroDePagina(Context ctx) {
+    try {
+      return Integer.parseInt(ctx.queryParam("pagina"));
+    } catch (NumberFormatException e) {
+      return 1;
+    }
   }
 
   @NotNull

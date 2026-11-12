@@ -1,0 +1,17 @@
+{{#if paginas.totalPaginas}}
+    <nav aria-label="Paginación" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {{#unless paginas.tieneAnterior}}disabled{{/unless}}">
+                <a class="page-link" href="?pagina={{paginas.anterior}}">Anterior</a>
+            </li>
+            {{#each paginas.numeros}}
+                <li class="page-item {{#if activa}}active{{/if}}">
+                    <a class="page-link" href="?pagina={{numero}}">{{numero}}</a>
+                </li>
+            {{/each}}
+            <li class="page-item {{#unless paginas.tieneSiguiente}}disabled{{/unless}}">
+                <a class="page-link" href="?pagina={{paginas.siguiente}}">Siguiente</a>
+            </li>
+        </ul>
+    </nav>
+{{/if}}
