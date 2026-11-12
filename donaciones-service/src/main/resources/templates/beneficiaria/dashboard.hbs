@@ -13,72 +13,59 @@
   {{/if}}
 
   <!-- Tarjetas de resumen -->
-  <div class="row g-4 mb-5">
-    <div class="col-md-3">
-      <div class="card border-danger shadow-sm h-100">
-        <div class="card-body text-center">
-          <i class="bi bi-basket fs-1 text-danger"></i>
-          <h2 class="display-6 fw-bold mt-2">{{necesidades}}</h2>
-          <p class="text-muted mb-0">Necesidades</p>
-        </div>
+  <div class="row g-0 text-center bg-light rounded py-4 mb-5">
+      <div class="col border-end">
+          <i class="bi bi-basket fs-4 text-danger"></i>
+          <div class="display-6 fw-bold">{{necesidades}}</div>
+          <div class="text-muted small">Necesidades</div>
       </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-primary shadow-sm h-100">
-        <div class="card-body text-center">
-          <i class="bi bi-box-seam fs-1 text-primary"></i>
-          <h2 class="display-6 fw-bold mt-2">{{asignadas}}</h2>
-          <p class="text-muted mb-0">Asignadas</p>
-        </div>
+      <div class="col border-end">
+          <i class="bi bi-box-seam fs-4 text-primary"></i>
+          <div class="display-6 fw-bold">{{asignadas}}</div>
+          <div class="text-muted small">Asignadas</div>
       </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-info shadow-sm h-100">
-        <div class="card-body text-center">
-          <i class="bi bi-truck fs-1 text-info"></i>
-          <h2 class="display-6 fw-bold mt-2">{{enTraslado}}</h2>
-          <p class="text-muted mb-0">En Traslado</p>
-        </div>
+      <div class="col border-end">
+          <i class="bi bi-truck fs-4 text-info"></i>
+          <div class="display-6 fw-bold">{{enTraslado}}</div>
+          <div class="text-muted small">En Traslado</div>
       </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-success shadow-sm h-100">
-        <div class="card-body text-center">
-          <i class="bi bi-check-circle fs-1 text-success"></i>
-          <h2 class="display-6 fw-bold mt-2">{{entregadas}}</h2>
-          <p class="text-muted mb-0">Recibidas</p>
-        </div>
+      <div class="col">
+          <i class="bi bi-check-circle fs-4 text-success"></i>
+          <div class="display-6 fw-bold">{{entregadas}}</div>
+          <div class="text-muted small">Recibidas</div>
       </div>
-    </div>
   </div>
 
   <!-- Accesos rapidos -->
   <h5 class="mb-3"><i class="bi bi-lightning me-2"></i>Accesos rápidos</h5>
   <div class="row g-4">
-    <div class="col-md-6">
-      <a href="/donaciones/asignadas" class="text-decoration-none">
-        <div class="card border-primary shadow-sm h-100">
-          <div class="card-body text-center">
-            <i class="bi bi-boxes fs-1 text-primary"></i>
-            <h6 class="mt-2 text-dark">Donaciones Asignadas</h6>
-            <small class="text-muted">Ver estado de tus donaciones</small>
-          </div>
-        </div>
-      </a>
-    </div>
-    <div class="col-md-6">
-      <a href="/necesidades" class="text-decoration-none">
-        <div class="card border-danger shadow-sm h-100">
-          <div class="card-body text-center">
-            <i class="bi bi-basket fs-1 text-danger"></i>
-            <h6 class="mt-2 text-dark">Necesidades</h6>
-            <small class="text-muted">Ver necesidades materiales</small>
-          </div>
-        </div>
-      </a>
-    </div>
+      <div class="col-md-6">
+          <a href="/donaciones/asignadas"
+             class="card card-link border-primary text-decoration-none h-100">
+              <div class="card-body d-flex align-items-center">
+                  <i class="bi bi-boxes fs-1 text-primary me-3"></i>
+                  <div class="flex-grow-1">
+                      <h6 class="mb-1 text-dark">Donaciones Asignadas</h6>
+                      <small class="text-muted">Ver estado de tus donaciones</small>
+                  </div>
+                  <i class="bi bi-arrow-right fs-4 text-primary"></i>
+              </div>
+          </a>
+      </div>
+      <div class="col-md-6">
+          <a href="/necesidades"
+             class="card card-link border-danger text-decoration-none h-100">
+              <div class="card-body d-flex align-items-center">
+                  <i class="bi bi-basket fs-1 text-danger me-3"></i>
+                  <div class="flex-grow-1">
+                      <h6 class="mb-1 text-dark">Necesidades</h6>
+                      <small class="text-muted">Ver necesidades materiales</small>
+                  </div>
+                  <i class="bi bi-arrow-right fs-4 text-danger"></i>
+              </div>
+          </a>
+      </div>
   </div>
-</div>
   {{/partials/dashboard-layout}}
 {{/partial}}
 {{>layout}}
