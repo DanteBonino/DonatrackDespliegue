@@ -236,22 +236,33 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
         .getSingleResult();
   }
 
-  // admin/deposito
-  public List<DonacionIndependiente> getDonacionesEnDepositoConDetalles() {
-    String jpql = """
-        SELECT DISTINCT d FROM DonacionIndependiente d
-        JOIN FETCH d.item i
-        JOIN FETCH i.bien b
-        JOIN FETCH b.subCategoria sc
-        LEFT JOIN FETCH d.donante don
-        WHERE d.estadoActual = :estado
-          AND d.estaEliminado = false
-        ORDER BY d.id DESC
-        """;
+  private static final String EN_DEPOSITO_NO_ELIMINADAS =
+      "d.estadoActual = :estado AND d.estaEliminado = false";
 
-    return entityManager()
-        .createQuery(jpql, DonacionIndependiente.class)
+  public Pagina<DonacionIndependiente> getDonacionesEnDepositoConDetalles(int numero, int tamanio) {
+    EntityManager em = entityManager();
+
+    long total = em.createQuery(
+            "SELECT COUNT(d) FROM DonacionIndependiente d WHERE " + EN_DEPOSITO_NO_ELIMINADAS, Long.class)
         .setParameter("estado", EstadoDonacion.EN_DEPOSITO)
+        .getSingleResult();
+    int totalPaginas = (int) Math.max(1, Math.ceil(total / (double) tamanio));
+    int actual = Math.min(Math.max(numero, 1), totalPaginas);
+
+    List<DonacionIndependiente> items = em.createQuery("""
+          SELECT d FROM DonacionIndependiente d
+          JOIN FETCH d.item i
+          JOIN FETCH i.bien b
+          JOIN FETCH b.subCategoria sc
+          LEFT JOIN FETCH d.donante don
+          WHERE %s
+          ORDER BY d.id DESC
+          """.formatted(EN_DEPOSITO_NO_ELIMINADAS), DonacionIndependiente.class)
+        .setParameter("estado", EstadoDonacion.EN_DEPOSITO)
+        .setFirstResult((actual - 1) * tamanio)
+        .setMaxResults(tamanio)
         .getResultList();
+
+    return new Pagina<>(items, actual, totalPaginas);
   }
 }

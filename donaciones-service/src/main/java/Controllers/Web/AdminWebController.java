@@ -7,6 +7,7 @@ import Repositories.Administradores.AdministradoresRepository;
 import Repositories.Donaciones.DonacionesRepository;
 import Repositories.Donantes.DonantesRepository;
 import Repositories.Beneficiarios.BeneficiariosRepository;
+import Repositories.Generales.paginacion.Pagina;
 import Repositories.Notificaciones.NotificacionesRepository;
 import Servidor.ManejadorDeSesiones.ManejadorDeSesion;
 import Usuario.Administrador;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class AdminWebController {
+public class AdminWebController implements ConPaginacion {
 
   public void dashboard(Context ctx) {
     validarAdministrador(ctx);
@@ -52,10 +53,12 @@ public class AdminWebController {
 
   public void deposito(Context ctx) {
     validarAdministrador(ctx);
-    List<DonacionIndependiente> enDeposito = donacionesRepository().getDonacionesEnDepositoConDetalles();
+    Pagina<DonacionIndependiente> pagina = donacionesRepository()
+        .getDonacionesEnDepositoConDetalles(numeroDePagina(ctx), CANTIDAD_DE_ELEMENTOS_POR_PAGINA);
     boolean mostrarAlerta = "true".equals(ctx.queryParam("vencida"));
+
     List<Map<String, Object>> filas = new ArrayList<>();
-    for (DonacionIndependiente d : enDeposito) {
+    for (DonacionIndependiente d : pagina.items()) {
       Map<String, Object> fila = new HashMap<>();
       fila.put("id", d.getIdDominio());
       fila.put("bien", d.getBienDonado().getSubCategoria().getNombre());
@@ -71,6 +74,7 @@ public class AdminWebController {
     model.put("sesion", ctx.attribute("sesion"));
     model.put("donaciones", filas);
     model.put("hayDonaciones", !filas.isEmpty());
+    model.put("paginas", pagina.aModelo());
     model.put("vencidaExito", mostrarAlerta);
     ctx.render("admin/deposito.hbs", model);
   }
