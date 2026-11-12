@@ -90,19 +90,17 @@ public class DonanteWebController implements ConPaginacion {
     validarDonante(ctx, getDonante(ctx).get());
     BeneficiariosRepository beneficiariosRepo = BeneficiariosRepository.getInstance();
 
-    List<EntidadBeneficiaria> entidades = beneficiariosRepo.listarConDatosDeContacto();
+    Pagina<EntidadBeneficiaria> pagina = beneficiariosRepo.listarPagina(numeroDePagina(ctx), CANTIDAD_DE_ELEMENTOS_POR_PAGINA);
     Map<Long, Long> conteosNecesidades = beneficiariosRepo.contarNecesidadesPorEntidad();
 
     List<Map<String, Object>> filas = new ArrayList<>();
-    for (EntidadBeneficiaria e : entidades) {
+    for (EntidadBeneficiaria e : pagina.items()) {
       Map<String, Object> fila = new HashMap<>();
       fila.put("id", e.getIdDominio());
       fila.put("razonSocial", e.getRazonSocial());
       fila.put("direccion", e.getDireccion() != null
           ? e.getDireccion().getCalle().getFormatoLegible() : "—");
-      Long cantidadNecesidades = conteosNecesidades.getOrDefault(e.getId(), 0L);
-      fila.put("cantidadNecesidades", cantidadNecesidades);
-
+      fila.put("cantidadNecesidades", conteosNecesidades.getOrDefault(e.getId(), 0L));
       filas.add(fila);
     }
 
@@ -111,6 +109,7 @@ public class DonanteWebController implements ConPaginacion {
     model.put("sesion", ctx.attribute("sesion"));
     model.put("entidades", filas);
     model.put("hayEntidades", !filas.isEmpty());
+    model.put("paginas", pagina.aModelo());
     ctx.render("donante/entidades.hbs", model);
   }
 

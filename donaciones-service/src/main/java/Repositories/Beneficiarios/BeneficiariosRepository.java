@@ -6,9 +6,11 @@ import ExceptionHandler.EntidadYaExisteException;
 import Repositories.Generales.RepositorioConSoftDelete;
 import Repositories.Generales.RepositorioDeActualizable;
 
+import Repositories.Generales.paginacion.Pagina;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
 
 public class BeneficiariosRepository implements IBeneficiariosRepository, RepositorioConSoftDelete<EntidadBeneficiaria>, RepositorioDeActualizable<EntidadBeneficiaria, DatosEntidadesBeneficiarias> {
   private static BeneficiariosRepository INSTANCE = new BeneficiariosRepository();
@@ -133,5 +135,26 @@ public class BeneficiariosRepository implements IBeneficiariosRepository, Reposi
     return  entityManager()
         .createQuery(jpql, Long.class)
         .getSingleResult();
+  }
+
+  private static final String ENTIDADES_ACTIVAS = "e.estaEliminado = false";
+
+  public Pagina<EntidadBeneficiaria> listarPagina(int numero, int tamanio) {
+    EntityManager em = entityManager();
+
+    long total = em.createQuery(
+            "SELECT COUNT(e) FROM EntidadBeneficiaria e WHERE " + ENTIDADES_ACTIVAS, Long.class)
+        .getSingleResult();
+    int totalPaginas = (int) Math.max(1, Math.ceil(total / (double) tamanio));
+    int actual = Math.min(Math.max(numero, 1), totalPaginas);
+
+    List<EntidadBeneficiaria> items = em.createQuery(
+            "SELECT e FROM EntidadBeneficiaria e WHERE " + ENTIDADES_ACTIVAS +
+                " ORDER BY e.razonSocial ASC, e.id ASC", EntidadBeneficiaria.class)
+        .setFirstResult((actual - 1) * tamanio)
+        .setMaxResults(tamanio)
+        .getResultList();
+
+    return new Pagina<>(items, actual, totalPaginas);
   }
 }
