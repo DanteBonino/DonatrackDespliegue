@@ -25,7 +25,7 @@
           <td><i class="bi bi-tag me-1 text-primary"></i>{{this.subCategoria}}</td>
           <td>{{this.cantidad}}</td>
           <td><i class="bi bi-person me-1"></i>{{this.donante}}</td>
-          <td>{{this.fecha}}</td>
+          <td>{{fechaRelativa this.fecha}}</td>
           <td>{{>partials/_badge-estado estado=this.estado}}</td>
         </tr>
         {{/each}}

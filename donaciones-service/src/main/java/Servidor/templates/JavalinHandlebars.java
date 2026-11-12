@@ -10,14 +10,17 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.FileRenderer;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import utils.FechaRelativa;
 
 public class JavalinHandlebars implements FileRenderer {
-
+  private static final ZoneId ZONA = ZoneId.of("America/Argentina/Buenos_Aires");
   private Handlebars handlebars;
 
   private boolean esMismoPath(Options options, Object pathDestino) {
@@ -55,6 +58,14 @@ public class JavalinHandlebars implements FileRenderer {
 
     handlebars.registerHelper("estamosEnDestino", (destino, options) ->
         esMismoPath(options, destino));
+
+    handlebars.registerHelper("fechaRelativa", (LocalDate fecha, Options options) -> {
+      if (fecha == null) return "";
+      String texto = FechaRelativa.texto(fecha, LocalDate.now(ZONA));
+      return new Handlebars.SafeString(
+          "<time datetime=\"" + fecha + "\" title=\"" + FechaRelativa.absoluta(fecha) + "\">"
+              + texto + "</time>");
+    });
 
   }
 
