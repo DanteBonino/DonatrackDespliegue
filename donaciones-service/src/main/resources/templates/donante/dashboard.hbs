@@ -1,67 +1,52 @@
 {{#partial "contenido"}}
     {{#> partials/dashboard-layout tituloPanel="Mi Panel de Donante"}}
-    <!-- Tarjetas de resumen -->
-    <!-- Resumen -->
-    <div class="row g-0 text-center bg-light rounded resumen mb-5">
-        <div class="col-12 col-md">
-            <i class="bi bi-box-seam fs-4 text-primary"></i>
-            <div class="display-6 fw-bold">{{totalDonaciones}}</div>
-            <div class="text-muted small">Total Donaciones</div>
-        </div>
-        <div class="col-12 col-md">
-            <i class="bi bi-building fs-4 text-warning"></i>
-            <div class="display-6 fw-bold">{{enDeposito}}</div>
-            <div class="text-muted small">En Depósito</div>
-        </div>
-        <div class="col-12 col-md">
-            <i class="bi bi-hourglass-split fs-4 text-secondary"></i>
-            <div class="display-6 fw-bold">{{asignadas}}</div>
-            <div class="text-muted small">Asignadas</div>
-        </div>
-        <div class="col-12 col-md">
-            <i class="bi bi-truck fs-4 text-info"></i>
-            <div class="display-6 fw-bold">{{enTraslado}}</div>
-            <div class="text-muted small">En Traslado</div>
-        </div>
-        <div class="col-12 col-md">
-            <i class="bi bi-check-circle fs-4 text-success"></i>
-            <div class="display-6 fw-bold">{{entregadas}}</div>
-            <div class="text-muted small">Entregadas</div>
-        </div>
-    </div>
 
-    <!-- Segunda fila de tarjetas -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="card border-secondary shadow-sm h-100">
-                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
-                    <i class="bi bi-hourglass-split fs-2 text-secondary"></i>
-                    <h3 class="fw-bold mt-2">{{asignadas}}</h3>
-                    <p class="text-muted mb-0">Asignadas</p>
-                </div>
+        <!-- Resumen -->
+        <div class="row g-0 text-center bg-light rounded resumen mb-5">
+            <div class="col-12 col-md">
+                <i class="bi bi-box-seam fs-4 text-primary"></i>
+                <div class="display-6 fw-bold">{{totalDonaciones}}</div>
+                <div class="text-muted small">Total Donaciones</div>
+            </div>
+            <div class="col-12 col-md">
+                <i class="bi bi-building fs-4 text-warning"></i>
+                <div class="display-6 fw-bold">{{enDeposito}}</div>
+                <div class="text-muted small">En Depósito</div>
+            </div>
+            <div class="col-12 col-md">
+                <i class="bi bi-hourglass-split fs-4 text-secondary"></i>
+                <div class="display-6 fw-bold">{{asignadas}}</div>
+                <div class="text-muted small">Asignadas</div>
+            </div>
+            <div class="col-12 col-md">
+                <i class="bi bi-truck fs-4 text-info"></i>
+                <div class="display-6 fw-bold">{{enTraslado}}</div>
+                <div class="text-muted small">En Traslado</div>
+            </div>
+            <div class="col-12 col-md">
+                <i class="bi bi-check-circle fs-4 text-success"></i>
+                <div class="display-6 fw-bold">{{entregadas}}</div>
+                <div class="text-muted small">Entregadas</div>
             </div>
         </div>
-        <div class="col-md-8">
-            <div class="card shadow-sm h-100">
-                <div class="card-body"> <h5 class="mb-3"><i class="bi bi-bell me-2"></i>Últimas Notificaciones</h5>
-                    {{#if notificaciones}}
-                        <ul class="list-group list-group-flush">
-                            {{#each notificaciones}}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span><i class="bi bi-envelope me-2 text-primary"></i>{{this.mensaje}}</span>
-                                    <span class="badge bg-{{#if this.fueEntregada}}success{{else}}warning{{/if}} rounded-pill">
-                                        {{#if this.fueEntregada}}Entregada{{else}}Pendiente{{/if}}
-                                    </span>
-                                </li>
-                            {{/each}}
-                        </ul>
-                    {{else}}
-                        <p class="text-muted">No tenés notificaciones todavía.</p>
-                    {{/if}}
-                </div>
-            </div>
-        </div>
-    </div>
+
+        <!-- Notificaciones -->
+        <h5 class="mb-3"><i class="bi bi-bell me-2"></i>Últimas Notificaciones</h5>
+        {{#if notificaciones}}
+            <ul class="list-group list-group-flush">
+                {{#each notificaciones}}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-envelope me-2 text-primary"></i>{{this.mensaje}}</span>
+                        <span class="badge bg-{{#if this.fueEntregada}}success{{else}}warning{{/if}} rounded-pill">
+                            {{#if this.fueEntregada}}Entregada{{else}}Pendiente{{/if}}
+                        </span>
+                    </li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <p class="text-muted">No tenés notificaciones todavía.</p>
+        {{/if}}
+
     {{/partials/dashboard-layout}}
 {{/partial}}
 {{>layout}}
