@@ -6,35 +6,30 @@
     </div>
 
     {{#if hayEntidades}}
-    <div class="row g-4">
-        {{#each entidades}}
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm h-100 border-primary">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="bi bi-building me-2 text-primary"></i>{{this.razonSocial}}
-                    </h5>
-                    <ul class="list-unstyled small mb-0">
-                        <li class="mb-1">
-                            <i class="bi bi-geo-alt me-2 text-muted"></i>{{this.direccion}}
-                        </li>
-                        <li class="mb-1">
-                            <i class="bi bi-telephone me-2 text-muted"></i>{{this.telefono}}
-                        </li>
-                        <li class="mb-1">
-                            <i class="bi bi-envelope me-2 text-muted"></i>{{this.email}}
-                        </li>
-                        <li>
-                            <i class="bi bi-list-check me-2 text-muted"></i>
-                            {{this.cantidadNecesidades}} necesidad(es) activa(s)
-                        </li>
-                    </ul>
+        <div class="row g-4">
+            {{#each entidades}}
+                <!-- Cambiamos a col-12 para que ocupe todo el ancho -->
+                <div class="col-12">
+                    <div class="card shadow-sm h-100 border-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-building me-2 text-primary"></i>{{this.razonSocial}}
+                            </h5>
+                            <ul class="list-unstyled small mb-0">
+                                <li class="mb-1">
+                                    <i class="bi bi-geo-alt me-2 text-muted"></i>{{this.direccion}}
+                                </li>
+                                <li>
+                                    <i class="bi bi-list-check me-2 text-muted"></i>
+                                    {{this.cantidadNecesidades}} necesidad(es) activa(s)
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            {{/each}}
         </div>
-        {{/each}}
-    </div>
-    <p class="text-muted small mt-3">Mostrando {{entidades.length}} entidad(es).</p>
+        <p class="text-muted small mt-3">Mostrando {{entidades.length}} entidad(es).</p>
     {{else}}
     {{>partials/_alerta-vacia mensaje="No hay entidades beneficiarias registradas todavía."}}
     {{/if}}

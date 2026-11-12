@@ -100,9 +100,6 @@ public class DonanteWebController implements ConPaginacion {
       fila.put("razonSocial", e.getRazonSocial());
       fila.put("direccion", e.getDireccion() != null
           ? e.getDireccion().getCalle().getFormatoLegible() : "—");
-      fila.put("telefono", e.getTelefono());
-      fila.put("email", e.getMails().isEmpty() ? "—" : e.getMails().get(0));
-
       Long cantidadNecesidades = conteosNecesidades.getOrDefault(e.getId(), 0L);
       fila.put("cantidadNecesidades", cantidadNecesidades);
 
