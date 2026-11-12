@@ -60,7 +60,7 @@ public class AdminWebController {
       fila.put("id", d.getIdDominio());
       fila.put("bien", d.getBienDonado().getSubCategoria().getNombre());
       fila.put("cantidad", d.getCantidadDeUnidades());
-      fila.put("fecha", d.getFechaDeDonacion().toLocalDate().toString());
+      fila.put("fecha", d.getFechaDeDonacion());
       fila.put("donante", d.getDonante().getCaracteristicaDeDiferenciacion());
       fila.put("bienVencido", !d.sigueEnVigencia());
       filas.add(fila);

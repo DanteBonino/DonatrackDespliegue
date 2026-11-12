@@ -75,7 +75,7 @@ public class DonanteWebController {
       fila.put("colorEstado", colorPara(d.getEstado()));
       fila.put("cantidad", d.getCantidadDeUnidades());
       fila.put("bien", d.getBienDonado().getSubCategoria().getNombre());
-      fila.put("fecha", d.getFechaDeDonacion().toLocalDate().toString());
+      fila.put("fecha", d.getFechaDeDonacion());
       fila.put("entidad", d.getAsignado() != null ? d.getAsignado().getRazonSocial() : "—");
       filas.add(fila);
     }

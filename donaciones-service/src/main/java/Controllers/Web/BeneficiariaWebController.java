@@ -81,7 +81,7 @@ public class BeneficiariaWebController {
           m.put("estado", d.getEstado().name());
           m.put("cantidad", d.getCantidadDeUnidades());
           m.put("subCategoria", d.getSubCategoria() != null ? d.getSubCategoria().getNombre() : "-");
-          m.put("fecha", d.getFechaDeDonacion().format(FMT));
+          m.put("fecha", d.getFechaDeDonacion());
           m.put("donante", nombreDe(d.getDonante()));
           return m;
         })

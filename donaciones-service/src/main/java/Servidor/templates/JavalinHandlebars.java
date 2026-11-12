@@ -11,7 +11,9 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.rendering.FileRenderer;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -59,12 +61,12 @@ public class JavalinHandlebars implements FileRenderer {
     handlebars.registerHelper("estamosEnDestino", (destino, options) ->
         esMismoPath(options, destino));
 
-    handlebars.registerHelper("fechaRelativa", (LocalDate fecha, Options options) -> {
+    handlebars.registerHelper("fechaRelativa", (LocalDateTime fecha, Options options) -> {
       if (fecha == null) return "";
-      String texto = FechaRelativa.texto(fecha, LocalDate.now(ZONA));
+      String texto = FechaRelativa.texto(fecha.toLocalDate(), LocalDate.now(ZONA));
+      String completa = fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
       return new Handlebars.SafeString(
-          "<time datetime=\"" + fecha + "\" title=\"" + FechaRelativa.absoluta(fecha) + "\">"
-              + texto + "</time>");
+          "<time datetime=\"" + fecha + "\" title=\"" + completa + "\">" + texto + "</time>");
     });
 
   }
