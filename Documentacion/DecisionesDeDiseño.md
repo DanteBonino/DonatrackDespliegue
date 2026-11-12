@@ -1586,3 +1586,6 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
 ### Volver al panel
 - Era un tanto ambiguó porque estaba en lugares a los que no se llegaba sí o sí desde el panel, entonces se los cambió por __Volver al panel__
 - Se cambió el tono gris por uno que respete la paleta de colores
+
+### Fechas relativas
+- Se cambió el uso de fechas normales por relativas en las tablas para que les usuaries no tengan que pensar al ver la fecha y aparezca algo más expresivo y fácil de interpretar que la fecha cruda
