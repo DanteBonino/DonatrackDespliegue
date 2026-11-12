@@ -1,44 +1,42 @@
 {{#partial "contenido"}}
-<div class="container py-5">
-    <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center gap-2 mb-4">
-    <h1 class="h2"><i class="bi bi-box-seam me-2"></i>Donaciones Asignadas</h1>
-    <span class="badge bg-primary fs-6">{{total}} donaciones</span>
-  </div>
+    <div class="container py-5">
+        <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center gap-2 mb-4">
+            <h1 class="h2"><i class="bi bi-box-seam me-2"></i>Donaciones Asignadas</h1>
+            {{>partials/volverAlPanel}}
+        </div>
 
-  {{#if donaciones}}
-  <div class="table-responsive shadow-sm rounded">
-    <table class="table table-hover align-middle mb-0">
-      <thead class="table-light">
-        <tr>
-          <th>ID</th>
-          <th>Bien / Subcategoría</th>
-          <th>Cantidad</th>
-          <th>Donante</th>
-          <th>Fecha</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each donaciones}}
-        <tr>
-          <td><code>{{this.id}}</code></td>
-          <td><i class="bi bi-tag me-1 text-primary"></i>{{this.subCategoria}}</td>
-          <td>{{this.cantidad}}</td>
-          <td><i class="bi bi-person me-1"></i>{{this.donante}}</td>
-          <td>{{fechaRelativa this.fecha}}</td>
-          <td>{{>partials/_badge-estado estado=this.estado}}</td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
-  {{else}}
-    {{>partials/_alerta-vacia mensaje="Todavía no tenés donaciones asignadas."}}
-  {{/if}}
+        {{#if donaciones}}
+            <div class="table-responsive shadow-sm rounded">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Bien / Subcategoría</th>
+                        <th>Cantidad</th>
+                        <th>Donante</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each donaciones}}
+                        <tr>
+                            <td><code>{{this.id}}</code></td>
+                            <td><i class="bi bi-tag me-1 text-primary"></i>{{this.subCategoria}}</td>
+                            <td>{{this.cantidad}}</td>
+                            <td><i class="bi bi-person me-1"></i>{{this.donante}}</td>
+                            <td>{{fechaRelativa this.fecha}}</td>
+                            <td>{{>partials/_badge-estado estado=this.estado}}</td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
 
-    <div class="mt-4 d-grid d-md-flex justify-content-md-end">
-        {{>partials/volverAlPanel}}
+            {{>partials/paginacion}}
+        {{else}}
+            {{>partials/_alerta-vacia mensaje="Todavía no tenés donaciones asignadas."}}
+        {{/if}}
     </div>
-</div>
 {{/partial}}
 {{>layout}}

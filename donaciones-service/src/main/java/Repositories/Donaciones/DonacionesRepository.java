@@ -51,24 +51,47 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
     return obtenerTodosSegun("estadoActual", unEstado);
   }
 
-  public List<DonacionIndependiente> getDonacionesDe(EntidadBeneficiaria entidad) {
-    String jpql = "SELECT DISTINCT d FROM DonacionIndependiente d " +
-        "JOIN FETCH d.item i " +
-        "JOIN FETCH i.bien b " +
-        "JOIN FETCH b.subCategoria " +
-        "JOIN FETCH d.donante " +
-        "LEFT JOIN FETCH d.historialEstado " + // evita N+1
-        "WHERE d.id IN (" +
-        "    SELECT d2.id FROM DonacionIndependiente d2 " +
-        "    JOIN d2.historialEstado h " +
-        "    WHERE h.asignado = :entidad" +
-        ") " +
-        "ORDER BY d.id DESC";
+  private static final String DONACIONES_ASIGNADAS_A_ENTIDAD =
+      "d.id IN (SELECT d2.id FROM DonacionIndependiente d2 " +
+          "         JOIN d2.historialEstado h WHERE h.asignado = :entidad)";
 
-    return entityManager()
-        .createQuery(jpql, DonacionIndependiente.class)
+  public Pagina<DonacionIndependiente> getDonacionesDe(EntidadBeneficiaria entidad, int numero, int tamanio) {
+    EntityManager em = entityManager();
+
+    long total = em.createQuery(
+            "SELECT COUNT(d) FROM DonacionIndependiente d WHERE " + DONACIONES_ASIGNADAS_A_ENTIDAD, Long.class)
         .setParameter("entidad", entidad)
+        .getSingleResult();
+    int totalPaginas = (int) Math.max(1, Math.ceil(total / (double) tamanio));
+    int actual = Math.min(Math.max(numero, 1), totalPaginas);
+
+    // 1) Solo los ids de la página pedida
+    List<Long> ids = em.createQuery(
+            "SELECT d.id FROM DonacionIndependiente d WHERE " + DONACIONES_ASIGNADAS_A_ENTIDAD +
+                " ORDER BY d.id DESC", Long.class)
+        .setParameter("entidad", entidad)
+        .setFirstResult((actual - 1) * tamanio)
+        .setMaxResults(tamanio)
         .getResultList();
+
+    if (ids.isEmpty()) {
+      return new Pagina<>(List.of(), actual, totalPaginas);
+    }
+
+    // 2) Esas donaciones, con todos los fetches
+    List<DonacionIndependiente> items = em.createQuery(
+            "SELECT DISTINCT d FROM DonacionIndependiente d " +
+                "JOIN FETCH d.item i " +
+                "JOIN FETCH i.bien b " +
+                "JOIN FETCH b.subCategoria " +
+                "JOIN FETCH d.donante " +
+                "LEFT JOIN FETCH d.historialEstado " +
+                "WHERE d.id IN :ids " +
+                "ORDER BY d.id DESC", DonacionIndependiente.class)
+        .setParameter("ids", ids)
+        .getResultList();
+
+    return new Pagina<>(items, actual, totalPaginas);
   }
 
   public Map<EstadoDonacion, Long> contarDonacionesPorEstadoDe(EntidadBeneficiaria entidad) {

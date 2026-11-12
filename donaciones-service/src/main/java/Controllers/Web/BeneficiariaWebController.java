@@ -6,8 +6,10 @@ import Donantes.DonanteHumana.PersonaHumana;
 import Donantes.DonanteJuridico.PersonaJuridica;
 import EntidadesBeneficiarias.EntidadBeneficiaria;
 import EstadoDonacion.EstadoDonacion;
+import Necesidades.Necesidad;
 import Repositories.Beneficiarios.BeneficiariosRepository;
 import Repositories.Donaciones.DonacionesRepository;
+import Repositories.Generales.paginacion.Pagina;
 import Servidor.ManejadorDeSesiones.ManejadorDeSesion;
 import io.javalin.http.Context;
 
@@ -17,9 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class BeneficiariaWebController {
-
-  private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+public class BeneficiariaWebController implements ConPaginacion {
 
   public void dashboard(Context ctx) {
     EntidadBeneficiaria entidad = getBeneficiario(ctx).get();
@@ -51,7 +51,11 @@ public class BeneficiariaWebController {
     EntidadBeneficiaria entidad = getBeneficiario(ctx).get();
     validarBeneficiario(ctx, entidad);
 
-    List<Map<String, Object>> necesidades = entidad.getNecesidades().stream()
+    List<Necesidad> todas = entidad.getNecesidades();
+
+    Pagina<Necesidad> pagina = Pagina.de(todas, numeroDePagina(ctx), CANTIDAD_DE_ELEMENTOS_POR_PAGINA);
+
+    List<Map<String, Object>> filas = pagina.items().stream()
         .map(n -> {
           Map<String, Object> m = new HashMap<>();
           m.put("id", n.getIdDominio());
@@ -65,16 +69,17 @@ public class BeneficiariaWebController {
 
     Map<String, Object> model = new HashMap<>();
     model.put("titulo", "Necesidades");
-    model.put("necesidades", necesidades);
-    model.put("total", necesidades.size());
+    model.put("necesidades", filas);
+    model.put("total", todas.size());
+    model.put("paginas", pagina.aModelo());
     ctx.render("beneficiaria/necesidades.hbs", model);
   }
 
   public void donacionesAsignadas(Context ctx) {
     EntidadBeneficiaria entidad = getBeneficiario(ctx).get();
     validarBeneficiario(ctx, entidad);
-
-    List<Map<String, Object>> donaciones = donacionesDe(entidad).stream()
+    Pagina<DonacionIndependiente> pagina = DonacionesRepository.getInstance().getDonacionesDe(entidad, numeroDePagina(ctx), CANTIDAD_DE_ELEMENTOS_POR_PAGINA);
+    List<Map<String, Object>> donaciones = pagina.items().stream()
         .map(d -> {
           Map<String, Object> m = new HashMap<>();
           m.put("id", d.getIdDominio());
@@ -90,15 +95,11 @@ public class BeneficiariaWebController {
     Map<String, Object> model = new HashMap<>();
     model.put("titulo", "Donaciones Asignadas");
     model.put("donaciones", donaciones);
-    model.put("total", donaciones.size());
+    model.put("hayDonaciones", !donaciones.isEmpty());
+    model.put("paginas", pagina.aModelo());
     ctx.render("beneficiaria/donacionesAsignadas.hbs", model);
   }
 
-
-  private List<DonacionIndependiente> donacionesDe(EntidadBeneficiaria entidad) {
-    if (entidad == null) return List.of();
-    return DonacionesRepository.getInstance().getDonacionesDe(entidad);
-  }
 
   private String nombreDe(Donante donante) {
     if (donante == null) return "-";

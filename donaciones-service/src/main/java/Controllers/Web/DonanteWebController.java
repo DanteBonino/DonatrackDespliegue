@@ -20,8 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
-public class DonanteWebController {
-  private static final int DONACIONES_POR_PAGINA = 10;
+public class DonanteWebController implements ConPaginacion {
   public void dashboard(Context ctx) {
     Donante donante = getDonante(ctx).get();
     validarDonante(ctx, donante);
@@ -56,7 +55,7 @@ public class DonanteWebController {
     validarDonante(ctx, donante);
 
     Pagina<DonacionIndependiente> pagina = donacionesRepository()
-        .getDonacionesDeDonante(donante, numeroDePagina(ctx), DONACIONES_POR_PAGINA);
+        .getDonacionesDeDonante(donante, numeroDePagina(ctx), CANTIDAD_DE_ELEMENTOS_POR_PAGINA);
 
     List<Map<String, Object>> filas = getMaps(pagina.items());
 
@@ -68,13 +67,7 @@ public class DonanteWebController {
     ctx.render("donante/mis-donaciones.hbs", model);
   }
 
-  private int numeroDePagina(Context ctx) {
-    try {
-      return Integer.parseInt(ctx.queryParam("pagina"));
-    } catch (NumberFormatException e) {
-      return 1;
-    }
-  }
+
 
   @NotNull
   private List<Map<String, Object>> getMaps(List<DonacionIndependiente> donaciones) {
