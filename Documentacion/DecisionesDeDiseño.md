@@ -1589,3 +1589,10 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
 
 ### Fechas relativas
 - Se cambió el uso de fechas normales por relativas en las tablas para que les usuaries no tengan que pensar al ver la fecha y aparezca algo más expresivo y fácil de interpretar que la fecha cruda
+
+### Paginación
+- Mejora la usabilidad porque no presenta todos los datos si son miles
+- Mejora la perfomance porque no tiene que cargar millones de datos
+
+### Datos de contacto de las entidades beneficiarias
+- Se los eliminó de las cards porque fomentaba a que algún donante entienda que tenía que contactarse por fuera de la página
