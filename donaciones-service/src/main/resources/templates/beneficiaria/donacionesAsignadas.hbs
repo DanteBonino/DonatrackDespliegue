@@ -21,12 +21,12 @@
                     <tbody>
                     {{#each donaciones}}
                         <tr>
-                            <td><code>{{this.id}}</code></td>
+                            <td><code class="text-primary">{{this.id}}</code></td>
                             <td><i class="bi bi-tag me-1 text-primary"></i>{{this.subCategoria}}</td>
                             <td>{{this.cantidad}}</td>
                             <td><i class="bi bi-person me-1"></i>{{this.donante}}</td>
                             <td>{{fechaRelativa this.fecha}}</td>
-                            <td>{{>partials/_badge-estado estado=this.estado}}</td>
+                            <td>{{badgeEstado this.estado}}</td>
                         </tr>
                     {{/each}}
                     </tbody>
