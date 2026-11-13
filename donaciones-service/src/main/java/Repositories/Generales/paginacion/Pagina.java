@@ -16,26 +16,32 @@ public record Pagina<T>(List<T> items, int actual, int totalPaginas, long totalE
   public int desde() { return items.isEmpty() ? 0 : (actual - 1) * tamanio + 1; }
   public int hasta() { return items.isEmpty() ? 0 : desde() + items.size() - 1; }
 
-  public List<Map<String, Object>> numeros() {
-    int desde = Math.max(1, actual - 2);
-    int hasta = Math.min(totalPaginas, actual + 2);
-    return IntStream.rangeClosed(desde, hasta)
-        .mapToObj(n -> Map.<String, Object>of("numero", n, "activa", n == actual))
-        .toList();
-  }
+  public Map<String, Object> aModelo() { return aModelo(""); }
 
-  public Map<String, Object> aModelo() {
+  public Map<String, Object> aModelo(String filtrosQuery) {
     Map<String, Object> m = new HashMap<>();
     m.put("hayVarias", totalPaginas > 1);
     m.put("tieneAnterior", tieneAnterior());
     m.put("tieneSiguiente", tieneSiguiente());
-    m.put("anterior", anterior());
-    m.put("siguiente", siguiente());
-    m.put("numeros", numeros());
+    m.put("hrefAnterior", href(anterior(), filtrosQuery));
+    m.put("hrefSiguiente", href(siguiente(), filtrosQuery));
+    m.put("numeros", numeros(filtrosQuery));
     m.put("desde", desde());
     m.put("hasta", hasta());
     m.put("total", totalElementos);
     return m;
+  }
+
+  private static String href(int pagina, String filtrosQuery) {
+    return "?pagina=" + pagina + filtrosQuery;
+  }
+
+  public List<Map<String, Object>> numeros(String filtrosQuery) {
+    int desde = Math.max(1, actual - 2);
+    int hasta = Math.min(totalPaginas, actual + 2);
+    return IntStream.rangeClosed(desde, hasta)
+        .mapToObj(n -> Map.<String, Object>of("numero", n, "activa", n == actual, "href", href(n, filtrosQuery)))
+        .toList();
   }
 
   public static <T> Pagina<T> de(List<T> todos, int numero, int tamanio) {

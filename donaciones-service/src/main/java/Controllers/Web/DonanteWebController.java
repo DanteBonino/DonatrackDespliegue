@@ -1,5 +1,7 @@
 package Controllers.Web;
 
+import Bienes.Categoria.Categoria;
+import Bienes.SubCategoria.SubCategoria;
 import Donaciones.DonacionIndependiente;
 import Donantes.Donante;
 import EntidadesBeneficiarias.EntidadBeneficiaria;
@@ -10,14 +12,19 @@ import Repositories.Donaciones.DonacionesRepository;
 import Repositories.Donantes.DonantesRepository;
 import Repositories.Generales.paginacion.Pagina;
 import Repositories.Notificaciones.NotificacionesRepository;
+import Repositories.SubCategorias.SubCategoriasRepository;
 import Servidor.ManejadorDeSesiones.DatosSesion;
 import Servidor.ManejadorDeSesiones.ManejadorDeSesion;
 import io.javalin.http.Context;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 
 public class DonanteWebController implements ConPaginacion {
@@ -54,8 +61,9 @@ public class DonanteWebController implements ConPaginacion {
     Donante donante = getDonante(ctx).get();
     validarDonante(ctx, donante);
 
+    FiltroDonaciones filtro = filtroDe(ctx);
     Pagina<DonacionIndependiente> pagina = donacionesRepository()
-        .getDonacionesDeDonante(donante, numeroDePagina(ctx), CANTIDAD_DE_ELEMENTOS_POR_PAGINA);
+        .getDonacionesDeDonante(donante, filtro, numeroDePagina(ctx), CANTIDAD_DE_ELEMENTOS_POR_PAGINA);
 
     List<Map<String, Object>> filas = getMaps(pagina.items());
 
@@ -63,8 +71,33 @@ public class DonanteWebController implements ConPaginacion {
     model.put("titulo", "Mis Donaciones");
     model.put("donaciones", filas);
     model.put("hayDonaciones", !filas.isEmpty());
-    model.put("paginas", pagina.aModelo());
+    model.put("hayFiltros", filtro.hayFiltros());
+    model.put("filtros", opcionesDeFiltro(filtro));
+    model.put("paginas", pagina.aModelo(filtro.comoQuery()));
     ctx.render("donante/mis-donaciones.hbs", model);
+  }
+
+  private FiltroDonaciones filtroDe(Context ctx) {
+    return new FiltroDonaciones(
+        parsearEstado(ctx.queryParam("estado")),
+        parsearId(ctx.queryParam("categoria")),
+        parsearId(ctx.queryParam("subcategoria")));
+  }
+
+  private EstadoDonacion parsearEstado(String valor) {
+    try {
+      return valor == null || valor.isBlank() ? null : EstadoDonacion.valueOf(valor);
+    } catch (IllegalArgumentException e) {   // valor inventado en la URL: se ignora
+      return null;
+    }
+  }
+
+  private Long parsearId(String valor) {
+    try {
+      return valor == null || valor.isBlank() ? null : Long.valueOf(valor);
+    } catch (NumberFormatException e) {
+      return null;
+    }
   }
 
 
@@ -128,5 +161,32 @@ public class DonanteWebController implements ConPaginacion {
 
   private NotificacionesRepository notificacionesRepository() {
     return NotificacionesRepository.getInstance();
+  }
+
+  private Map<String, Object> opcionesDeFiltro(FiltroDonaciones filtro) {
+    List<Map<String, Object>> estados = Arrays.stream(EstadoDonacion.values())
+        .map(e -> Map.<String, Object>of(
+            "valor", e.name(),
+            "etiqueta", EstilosEstado.etiquetaDe(e.name()),
+            "seleccionado", e == filtro.estado()))
+        .toList();
+
+    Map<Categoria, List<SubCategoria>> porCategoria = SubCategoriasRepository.getInstance().getInstancias().stream()
+        .collect(Collectors.groupingBy(SubCategoria::getCategoria, LinkedHashMap::new, Collectors.toList()));
+
+    List<Map<String, Object>> categorias = porCategoria.entrySet().stream()
+        .map(en -> Map.<String, Object>of(
+            "id", en.getKey().getId(),
+            "nombre", en.getKey().getNombre(),
+            "seleccionada", Objects.equals(en.getKey().getId(), filtro.categoriaId()),
+            "subcategorias", en.getValue().stream()
+                .map(s -> Map.<String, Object>of(
+                    "id", s.getId(),
+                    "nombre", s.getNombre(),
+                    "seleccionada", Objects.equals(s.getId(), filtro.subCategoriaId())))
+                .toList()))
+        .toList();
+
+    return Map.of("estados", estados, "categorias", categorias);
   }
 }

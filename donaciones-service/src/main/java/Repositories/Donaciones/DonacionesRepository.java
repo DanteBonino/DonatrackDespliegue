@@ -1,5 +1,6 @@
 package Repositories.Donaciones;
 
+import Controllers.Web.FiltroDonaciones;
 import Donaciones.DonacionIndependiente;
 import Donantes.Donante;
 import EntidadesBeneficiarias.EntidadBeneficiaria;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 public class DonacionesRepository implements IDonacionesRepository, RepositorioConSoftDelete<DonacionIndependiente> {
   private static final DonacionesRepository INSTACE = new DonacionesRepository();
@@ -116,23 +118,40 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
     return conteos;
   }
 
-  public Pagina<DonacionIndependiente> getDonacionesDeDonante(Donante donante, int numero, int tamanio) {
+  private static final String DESDE_DONACIONES =
+      "FROM DonacionIndependiente d JOIN d.item i JOIN i.bien b JOIN b.subCategoria sc ";
+
+  @SuppressWarnings("JpaQlInspection")
+  public Pagina<DonacionIndependiente> getDonacionesDeDonante(
+      Donante donante, FiltroDonaciones filtro, int numero, int tamanio) {
     EntityManager em = entityManager();
 
-    long total = em.createQuery(
-            "SELECT COUNT(d) FROM DonacionIndependiente d " +
-                "WHERE d.donante = :donante AND d.estaEliminado = false", Long.class)
-        .setParameter("donante", donante)
-        .getSingleResult();
+    StringBuilder where = new StringBuilder("WHERE d.donante = :donante AND d.estaEliminado = false");
+    Map<String, Object> params = new HashMap<>();
+    params.put("donante", donante);
+    if (filtro.estado() != null) {
+      where.append(" AND d.estadoActual = :estado");
+      params.put("estado", filtro.estado());
+    }
+    if (filtro.categoriaId() != null) {
+      where.append(" AND sc.categoria.id = :categoriaId");
+      params.put("categoriaId", filtro.categoriaId());
+    }
+    if (filtro.subCategoriaId() != null) {
+      where.append(" AND sc.id = :subCategoriaId");
+      params.put("subCategoriaId", filtro.subCategoriaId());
+    }
+    String base = DESDE_DONACIONES + where;
+
+    TypedQuery<Long> conteo = em.createQuery("SELECT COUNT(d) " + base, Long.class);
+    params.forEach(conteo::setParameter);
+    long total = conteo.getSingleResult();
     int totalPaginas = (int) Math.max(1, Math.ceil(total / (double) tamanio));
     int actual = Math.min(Math.max(numero, 1), totalPaginas);
 
-    // 1) Solo los ids de la página pedida (sin joins: el LIMIT lo aplica la base)
-    List<Long> ids = em.createQuery(
-            "SELECT d.id FROM DonacionIndependiente d " +
-                "WHERE d.donante = :donante AND d.estaEliminado = false " +
-                "ORDER BY d.id DESC", Long.class)
-        .setParameter("donante", donante)
+    TypedQuery<Long> consultaIds = em.createQuery("SELECT d.id " + base + " ORDER BY d.id DESC", Long.class);
+    params.forEach(consultaIds::setParameter);
+    List<Long> ids = consultaIds
         .setFirstResult((actual - 1) * tamanio)
         .setMaxResults(tamanio)
         .getResultList();
@@ -141,14 +160,14 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
       return new Pagina<>(List.of(), actual, totalPaginas, total, tamanio);
     }
 
-    // 2) Esas donaciones, con todos los fetches
+    // 2) Esas donaciones, con todos los fetches: igual que antes
     List<DonacionIndependiente> items = em.createQuery(
             "SELECT DISTINCT d FROM DonacionIndependiente d " +
                 "JOIN FETCH d.item i " +
                 "JOIN FETCH i.bien b " +
                 "JOIN FETCH b.subCategoria " +
-                "LEFT JOIN FETCH d.historialEstado " +
                 "LEFT JOIN FETCH d.donante " +
+                "LEFT JOIN FETCH d.historialEstado " +
                 "WHERE d.id IN :ids " +
                 "ORDER BY d.id DESC", DonacionIndependiente.class)
         .setParameter("ids", ids)
