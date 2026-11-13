@@ -1604,3 +1604,10 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
 ### Íconos en los estados
 - Para no excluir a las personas con algún tipo de daltonismo se agregaron íconos que se asocian a los estados de la donación
 - Se logró hacerlo con un helper de handlerbars que genera la badge, lo que permite desacoplar al dominio de la interfaz
+
+### Formato para mostrar cuántos elementos se ven en la página actual
+- Se paso al formato 0-9 de 40 porque es más claro qué elementos se están mostrando
+- Se utilizó un partial para no repetir la lógica en cada lugar que se debía usar
+- No se puso en el partial de paginación por si en algún momento se quería usar paginación sin ese detalle
+- Se agregó a Pagina el total y el tamaño de página para poder generar páginas de distintos tamaños
+
