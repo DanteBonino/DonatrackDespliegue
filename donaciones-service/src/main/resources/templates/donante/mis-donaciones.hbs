@@ -20,7 +20,7 @@
                     <tbody>
                     {{#each donaciones}}
                         <tr>
-                            <td><span class="badge bg-{{this.colorEstado}}">{{this.estado}}</span></td>
+                            <td>{{badgeEstado this.estado}}</td>
                             <td class="text-capitalize">{{this.bien}}</td>
                             <td>{{this.cantidad}}</td>
                             <td>{{this.entidad}}</td>

@@ -24,6 +24,19 @@ import utils.FechaRelativa;
 public class JavalinHandlebars implements FileRenderer {
   private static final ZoneId ZONA = ZoneId.of("America/Argentina/Buenos_Aires");
   private Handlebars handlebars;
+  private record EstiloEstado(String etiqueta, String icono, String clases) {}
+
+  private static final Map<String, EstiloEstado> ESTILOS_ESTADO = Map.of(
+      "PENDIENTE_DE_CONFIRMACION_DE_ASIGNACION", new EstiloEstado("Pendiente de confirmación", "hourglass-split", "text-bg-secondary"),
+      "ASIGNACION_REALIZADA", new EstiloEstado("Asignada", "clipboard-check", "text-bg-primary"),
+      "LISTA_PARA_ENTREGAR", new EstiloEstado("Lista para entregar", "box-seam", "text-bg-warning"),
+      "EN_TRASLADO", new EstiloEstado("En traslado", "truck", "text-bg-info"),
+      "ENTREGADA", new EstiloEstado("Entregada", "check-circle", "text-bg-success"),
+      "EN_DEPOSITO", new EstiloEstado("En depósito", "archive", "text-bg-dark"),
+      "ENTREGA_FALLIDA", new EstiloEstado("Entrega fallida", "x-circle", "text-bg-danger"),
+      "VENCIDA", new EstiloEstado("Vencida", "calendar-x", "text-bg-danger")
+  );
+
 
   private boolean esMismoPath(Options options, Object pathDestino) {
     Object pathActual = options.get("pathActual");
@@ -67,6 +80,16 @@ public class JavalinHandlebars implements FileRenderer {
       String completa = fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
       return new Handlebars.SafeString(
           "<time datetime=\"" + fecha + "\" title=\"" + completa + "\">" + texto + "</time>");
+    });
+
+
+    handlebars.registerHelper("badgeEstado", (Object estado, Options options) -> {
+      String clave = String.valueOf(estado);
+      EstiloEstado e = ESTILOS_ESTADO.getOrDefault(clave,
+          new EstiloEstado(Handlebars.Utils.escapeExpression(clave).toString(), "question-circle", "text-bg-secondary"));
+      return new Handlebars.SafeString(
+          "<span class=\"badge " + e.clases() + "\"><i class=\"bi bi-" + e.icono()
+              + " me-1\" aria-hidden=\"true\"></i>" + e.etiqueta() + "</span>");
     });
 
   }

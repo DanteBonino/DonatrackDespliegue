@@ -76,7 +76,6 @@ public class DonanteWebController implements ConPaginacion {
       Map<String, Object> fila = new HashMap<>();
       fila.put("id", d.getIdDominio());
       fila.put("estado", d.getEstado().name());
-      fila.put("colorEstado", colorPara(d.getEstado()));
       fila.put("cantidad", d.getCantidadDeUnidades());
       fila.put("bien", d.getBienDonado().getSubCategoria().getNombre());
       fila.put("fecha", d.getFechaDeDonacion());
@@ -111,19 +110,6 @@ public class DonanteWebController implements ConPaginacion {
     model.put("hayEntidades", !filas.isEmpty());
     model.put("paginas", pagina.aModelo());
     ctx.render("donante/entidades.hbs", model);
-  }
-
-  private String colorPara(EstadoDonacion estado) {
-    return switch (estado) {
-      case ENTREGADA -> "success";
-      case EN_TRASLADO -> "info";
-      case ASIGNACION_REALIZADA -> "primary";
-      case LISTA_PARA_ENTREGAR -> "warning";
-      case EN_DEPOSITO -> "dark";
-      case ENTREGA_FALLIDA -> "danger";
-      case VENCIDA -> "secondary";
-      case PENDIENTE_DE_CONFIRMACION_DE_ASIGNACION -> "secondary";
-    };
   }
 
   private Optional<Donante> getDonante(Context context) {
