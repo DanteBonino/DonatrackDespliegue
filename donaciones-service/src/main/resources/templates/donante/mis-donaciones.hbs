@@ -48,7 +48,7 @@
                     <tr>
                         <th>Estado</th>
                         <th>Bien</th>
-                        <th>Cantidad</th>
+                        <th>Cantidad / Detalle</th>
                         <th>Entidad asignada</th>
                         <th>Fecha</th>
                     </tr>
@@ -58,7 +58,7 @@
                         <tr>
                             <td>{{badgeEstado this.estado}}</td>
                             <td class="text-capitalize">{{this.bien}}</td>
-                            <td>{{this.cantidad}}</td>
+                            <td>{{this.cantidad}} {{this.unidad}}</td>
                             <td>{{this.entidad}}</td>
                             <td>{{fechaRelativa this.fecha}}</td>
                         </tr>

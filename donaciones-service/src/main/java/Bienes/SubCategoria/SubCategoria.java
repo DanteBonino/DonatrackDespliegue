@@ -1,6 +1,7 @@
 package Bienes.SubCategoria;
 
 import Bienes.Categoria.Categoria;
+import Bienes.Categoria.Unidad;
 import Bienes.ConNombreUnico;
 import Persistible.Persistible;
 import javax.persistence.Column;
@@ -52,4 +53,9 @@ public class SubCategoria extends Persistible implements ConNombreUnico {
   public Boolean esLaMisma(SubCategoria otraSubCategoria) {
     return ConNombreUnico.super.esLaMisma(otraSubCategoria) && this.getCategoria().esLaMisma(otraSubCategoria.getCategoria());
   }
+
+  public Unidad getUnidad() {
+    return getCategoria().getUnidad();
+  }
+
 }

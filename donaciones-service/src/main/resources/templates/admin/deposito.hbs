@@ -19,7 +19,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Bien</th>
-                        <th>Cantidad</th>
+                        <th>Cantidad / Detalle</th>
                         <th>Donante</th>
                         <th>Fecha de donación</th>
                         <th>Vigencia del bien</th>
@@ -31,7 +31,7 @@
                         <tr>
                             <td><code class="text-primary">{{this.id}}</code></td>
                             <td class="text-capitalize">{{this.bien}}</td>
-                            <td>{{this.cantidad}}</td>
+                            <td>{{this.cantidad}} {{this.unidad}}</td>
                             <td>{{this.donante}}</td>
                             <td>{{fechaRelativa this.fecha}}</td>
                             <td>

@@ -1,6 +1,7 @@
 package Donaciones;
 
 import Bienes.Bien;
+import Bienes.Categoria.Unidad;
 import Bienes.SubCategoria.SubCategoria;
 import Persistible.Persistible;
 import java.math.BigDecimal;
@@ -64,5 +65,9 @@ public class Item extends Persistible {
 
   public List<String> getFotos() {
     return List.copyOf(fotos);
+  }
+
+  public Unidad getUnidad() {
+    return getSubCategoria().getUnidad();
   }
 }

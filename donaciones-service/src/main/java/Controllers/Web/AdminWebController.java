@@ -62,7 +62,8 @@ public class AdminWebController implements ConPaginacion {
       Map<String, Object> fila = new HashMap<>();
       fila.put("id", d.getIdDominio());
       fila.put("bien", d.getBienDonado().getSubCategoria().getNombre());
-      fila.put("cantidad", d.getCantidadDeUnidades());
+      fila.put("cantidad", d.getCantidadDeSatisfaccion());
+      fila.put("unidad", d.getUnidad().getAbreviatura());
       fila.put("fecha", d.getFechaDeDonacion());
       fila.put("donante", d.getDonante().getCaracteristicaDeDiferenciacion());
       fila.put("bienVencido", !d.sigueEnVigencia());

@@ -109,7 +109,8 @@ public class DonanteWebController implements ConPaginacion {
       Map<String, Object> fila = new HashMap<>();
       fila.put("id", d.getIdDominio());
       fila.put("estado", d.getEstado().name());
-      fila.put("cantidad", d.getCantidadDeUnidades());
+      fila.put("cantidad", d.getCantidadDeSatisfaccion());
+      fila.put("unidad", d.getUnidad().getAbreviatura());
       fila.put("bien", d.getBienDonado().getSubCategoria().getNombre());
       fila.put("fecha", d.getFechaDeDonacion());
       fila.put("entidad", d.getAsignado() != null ? d.getAsignado().getRazonSocial() : "—");

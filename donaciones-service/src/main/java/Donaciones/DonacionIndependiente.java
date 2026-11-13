@@ -13,6 +13,7 @@ import static EstadoDonacion.EstadoDonacion.VENCIDA;
 import Actualizable.Actualizable;
 
 import Bienes.Bien;
+import Bienes.Categoria.Unidad;
 import Bienes.EstadoDeUso;
 import Bienes.SubCategoria.SubCategoria;
 import Controllers.Donanciones.Update.DatosDonacion;
@@ -235,4 +236,7 @@ public class DonacionIndependiente extends Persistible implements Eliminable {
     return item;
   }
 
+  public Unidad getUnidad() {
+    return getItem().getUnidad();
+  }
 }
