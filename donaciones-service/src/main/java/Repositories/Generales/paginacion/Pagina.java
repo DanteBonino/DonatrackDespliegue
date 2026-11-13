@@ -28,7 +28,7 @@ public record Pagina<T>(List<T> items, int actual, int totalPaginas, long totalE
     m.put("anterior", anterior());
     m.put("siguiente", siguiente());
     m.put("numeros", numeros());
-    m.put("totalElementos", totalElementos);
+    m.put("total", totalElementos);
     return m;
   }
 
