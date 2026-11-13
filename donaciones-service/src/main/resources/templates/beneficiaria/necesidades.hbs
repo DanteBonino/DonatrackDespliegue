@@ -36,6 +36,7 @@
       </tbody>
     </table>
   </div>
+      {{> partials/indicador_de_elementos_mostrados elementos=necesidades total=paginas.total elementosNombre="necesidad"}}
       {{>partials/paginacion}}
   {{else}}
     {{>partials/_alerta-vacia mensaje="No tenés necesidades registradas todavía."}}

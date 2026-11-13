@@ -28,7 +28,7 @@
                 </div>
             {{/each}}
         </div>
-        <p class="text-muted small mt-3">Mostrando {{entidades.length}} entidad(es).</p>
+        {{> partials/indicador_de_elementos_mostrados elementos=entidades total=paginas.total elementosNombre="entidad"}}
         {{>partials/paginacion}}
     {{else}}
     {{>partials/_alerta-vacia mensaje="No hay entidades beneficiarias registradas todavía."}}

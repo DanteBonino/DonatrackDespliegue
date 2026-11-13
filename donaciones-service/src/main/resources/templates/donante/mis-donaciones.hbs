@@ -30,6 +30,7 @@
                     </tbody>
                 </table>
             </div>
+            {{> partials/indicador_de_elementos_mostrados elementos=donaciones total=paginas.total elementosNombre="donación"}}
             <p class="text-muted small mt-2">Mostrando {{donaciones.length}} donación(es).</p>
             {{> partials/paginacion}}
         {{else}}

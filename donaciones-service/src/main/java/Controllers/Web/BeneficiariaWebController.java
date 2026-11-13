@@ -53,7 +53,7 @@ public class BeneficiariaWebController implements ConPaginacion {
 
     List<Necesidad> todas = entidad.getNecesidades();
 
-    Pagina<Necesidad> pagina = Pagina.de(todas, numeroDePagina(ctx), CANTIDAD_DE_ELEMENTOS_POR_PAGINA);
+    Pagina<Necesidad> pagina = Pagina.de(todas, numeroDePagina(ctx), CANTIDAD_DE_ELEMENTOS_POR_PAGINA, todas.size());
 
     List<Map<String, Object>> filas = pagina.items().stream()
         .map(n -> {

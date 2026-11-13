@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public record Pagina<T>(List<T> items, int actual, int totalPaginas) {
+public record Pagina<T>(List<T> items, int actual, int totalPaginas, long totalElementos) {
 
   public boolean tieneAnterior() { return actual > 1; }
   public boolean tieneSiguiente() { return actual < totalPaginas; }
@@ -28,14 +28,15 @@ public record Pagina<T>(List<T> items, int actual, int totalPaginas) {
     m.put("anterior", anterior());
     m.put("siguiente", siguiente());
     m.put("numeros", numeros());
+    m.put("totalElementos", totalElementos);
     return m;
   }
 
-  public static <T> Pagina<T> de(List<T> todos, int numero, int tamanio) {
+  public static <T> Pagina<T> de(List<T> todos, int numero, int tamanio, long totalElementos) {
     int totalPaginas = Math.max(1, (int) Math.ceil(todos.size() / (double) tamanio));
     int actual = Math.min(Math.max(numero, 1), totalPaginas);
     int desde = (actual - 1) * tamanio;
     int hasta = Math.min(desde + tamanio, todos.size());
-    return new Pagina<>(todos.subList(desde, hasta), actual, totalPaginas);
+    return new Pagina<>(todos.subList(desde, hasta), actual, totalPaginas, totalElementos);
   }
 }
