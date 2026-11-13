@@ -75,7 +75,7 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
         .getResultList();
 
     if (ids.isEmpty()) {
-      return new Pagina<>(List.of(), actual, totalPaginas, total);
+      return new Pagina<>(List.of(), actual, totalPaginas, total, tamanio);
     }
 
     // 2) Esas donaciones, con todos los fetches
@@ -91,7 +91,7 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
         .setParameter("ids", ids)
         .getResultList();
 
-    return new Pagina<>(items, actual, totalPaginas, total);
+    return new Pagina<>(items, actual, totalPaginas, total, tamanio);
   }
 
   public Map<EstadoDonacion, Long> contarDonacionesPorEstadoDe(EntidadBeneficiaria entidad) {
@@ -138,7 +138,7 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
         .getResultList();
 
     if (ids.isEmpty()) {
-      return new Pagina<>(List.of(), actual, totalPaginas, total);
+      return new Pagina<>(List.of(), actual, totalPaginas, total, tamanio);
     }
 
     // 2) Esas donaciones, con todos los fetches
@@ -154,7 +154,7 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
         .setParameter("ids", ids)
         .getResultList();
 
-    return new Pagina<>(items, actual, totalPaginas, total);
+    return new Pagina<>(items, actual, totalPaginas, total, tamanio);
   }
 
   public Map<EstadoDonacion, Long> contarDonacionesPorEstadoDeDonante(Donante donante) {
@@ -263,6 +263,6 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
         .setMaxResults(tamanio)
         .getResultList();
 
-    return new Pagina<>(items, actual, totalPaginas, total);
+    return new Pagina<>(items, actual, totalPaginas, total, tamanio);
   }
 }

@@ -155,6 +155,6 @@ public class BeneficiariosRepository implements IBeneficiariosRepository, Reposi
         .setMaxResults(tamanio)
         .getResultList();
 
-    return new Pagina<>(items, actual, totalPaginas, total);
+    return new Pagina<>(items, actual, totalPaginas, total, tamanio);
   }
 }

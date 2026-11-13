@@ -1,16 +1,20 @@
 package Repositories.Generales.paginacion;
 
+import Controllers.Web.ConPaginacion;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public record Pagina<T>(List<T> items, int actual, int totalPaginas, long totalElementos) {
+public record Pagina<T>(List<T> items, int actual, int totalPaginas, long totalElementos, int tamanio) {
 
   public boolean tieneAnterior() { return actual > 1; }
   public boolean tieneSiguiente() { return actual < totalPaginas; }
   public int anterior() { return actual - 1; }
   public int siguiente() { return actual + 1; }
+
+  public int desde() { return items.isEmpty() ? 0 : (actual - 1) * tamanio + 1; }
+  public int hasta() { return items.isEmpty() ? 0 : desde() + items.size() - 1; }
 
   public List<Map<String, Object>> numeros() {
     int desde = Math.max(1, actual - 2);
@@ -28,15 +32,17 @@ public record Pagina<T>(List<T> items, int actual, int totalPaginas, long totalE
     m.put("anterior", anterior());
     m.put("siguiente", siguiente());
     m.put("numeros", numeros());
+    m.put("desde", desde());
+    m.put("hasta", hasta());
     m.put("total", totalElementos);
     return m;
   }
 
-  public static <T> Pagina<T> de(List<T> todos, int numero, int tamanio, long totalElementos) {
+  public static <T> Pagina<T> de(List<T> todos, int numero, int tamanio) {
     int totalPaginas = Math.max(1, (int) Math.ceil(todos.size() / (double) tamanio));
     int actual = Math.min(Math.max(numero, 1), totalPaginas);
     int desde = (actual - 1) * tamanio;
     int hasta = Math.min(desde + tamanio, todos.size());
-    return new Pagina<>(todos.subList(desde, hasta), actual, totalPaginas, totalElementos);
+    return new Pagina<>(todos.subList(desde, hasta), actual, totalPaginas, todos.size(), tamanio);
   }
 }

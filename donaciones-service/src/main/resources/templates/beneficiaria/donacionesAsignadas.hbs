@@ -32,7 +32,7 @@
                     </tbody>
                 </table>
             </div>
-            {{> partials/indicador_de_elementos_mostrados elementos=donaciones total=paginas.total elementosNombre="donación"}}
+            {{>partials/_contador-paginas nombre="donación"}}
             {{>partials/paginacion}}
         {{else}}
             {{>partials/_alerta-vacia mensaje="Todavía no tenés donaciones asignadas."}}
