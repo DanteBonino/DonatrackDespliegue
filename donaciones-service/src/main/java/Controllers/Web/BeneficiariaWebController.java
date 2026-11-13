@@ -59,7 +59,7 @@ public class BeneficiariaWebController implements ConPaginacion {
         .map(n -> {
           Map<String, Object> m = new HashMap<>();
           m.put("id", n.getIdDominio());
-          m.put("unidad", n.getSubCategoriaRequerida().getUnidad());
+          m.put("unidad", n.getSubCategoriaRequerida().getUnidad().getAbreviatura());
           m.put("subCategoria", n.getSubCategoriaRequerida() != null ? n.getSubCategoriaRequerida().getNombre() : "-");
           m.put("cantidadRequerida", n.cantidadRequerida() != null ? n.cantidadRequerida().toString() : "-");
           m.put("tipo", n.getTipo() != null ? n.getTipo().name() : "-");
