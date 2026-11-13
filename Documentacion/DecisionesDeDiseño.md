@@ -1596,3 +1596,11 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
 
 ### Datos de contacto de las entidades beneficiarias
 - Se los eliminó de las cards porque fomentaba a que algún donante entienda que tenía que contactarse por fuera de la página
+
+### Paleta de colores
+- Se redujo la paleta de colores a 3: blanco, negro y azul
+- Sólo se utilizaron otros colores para los estados de las donaciones porque visualmente permite diferenciarlos
+
+### Íconos en los estados
+- Para no excluir a las personas con algún tipo de daltonismo se agregaron íconos que se asocian a los estados de la donación
+- Se logró hacerlo con un helper de handlerbars que genera la badge, lo que permite desacoplar al dominio de la interfaz
