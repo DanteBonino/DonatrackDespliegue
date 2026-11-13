@@ -1611,3 +1611,8 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
 - No se puso en el partial de paginación por si en algún momento se quería usar paginación sin ese detalle
 - Se agregó a Pagina el total y el tamaño de página para poder generar páginas de distintos tamaños
 
+### Filtros de búsqueda en mis-donaciones
+- Se priorizó YAGNI por sobre extensibilidad
+- Se agregó a Pagina la idea de href, que busca armar la parte de la url asociada a los query params
+- Se agregó FiltroDonaciones que sabe armar la parte de la url asociada los query params de los filtros de las donacioens
+- No se específica una action en el form porque por defecto se manda a la misma url tomando lo que haya en los select como query params
