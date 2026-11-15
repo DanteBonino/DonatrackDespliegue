@@ -48,7 +48,7 @@ public class NotificacionesWebController implements ConPaginacion {
         .orElseThrow(NotFoundResponse::new);
 
     notificacion.marcarComoLeida();
-    ctx.redirect("/notificaciones?pagina=" + numeroDePagina(ctx) + "&leida=" + notificacion.getIdDominio());
+    ctx.redirect("/mis-notificaciones?pagina=" + numeroDePagina(ctx) + "&leida=" + notificacion.getIdDominio());
   }
 
   public void campana(Context ctx, DatosDeContacto contacto) {
