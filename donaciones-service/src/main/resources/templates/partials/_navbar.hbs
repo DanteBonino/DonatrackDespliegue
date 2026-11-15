@@ -11,19 +11,20 @@
             <a class="navbar-brand fw-bold" href="/">DonaTrack</a>
         {{/if}}
 
-        <!-- Controles para pantallas chicas (Campanita + Botón hamburguesa lado a lado) -->
         <div class="d-flex align-items-center gap-2 d-lg-none">
             {{#if sesion}}
-                <div hx-get="/notificaciones/campana" hx-trigger="load" hx-swap="outerHTML"></div>
+                <div hx-get="/notificaciones/campana" hx-trigger="load" hx-swap="outerHTML">
+                    <button class="btn btn-link nav-link text-white position-relative px-2 text-decoration-none" type="button" aria-hidden="true">
+                        <i class="bi bi-bell fs-5"></i>
+                    </button>
+                </div>
             {{/if}}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
 
-        <!-- Menú colapsable -->
         <div class="collapse navbar-collapse" id="nav">
-            <!-- Enlaces de navegación izquierdos -->
             <ul class="navbar-nav me-auto">
                 {{#if sesion}}
                     <li class="nav-item">
@@ -54,19 +55,21 @@
                 {{/if}}
             </ul>
 
-            <!-- Enlaces derechos (Panel, Campanita para escritorio y Logout/Login) -->
             <ul class="navbar-nav ms-auto align-items-lg-center">
                 {{#if sesion}}
                     <li class="nav-item">
                         {{> partials/navbarLinks/linkConRegistroDeActividad destino="/dashboard" textLink="Mi panel"}}
                     </li>
-                    <!-- Campanita exclusiva para pantallas grandes (Escritorio) -->
                     <li class="nav-item d-none d-lg-block">
-                        <div hx-get="/notificaciones/campana" hx-trigger="load" hx-swap="outerHTML"></div>
+                        <div hx-get="/notificaciones/campana" hx-trigger="load" hx-swap="outerHTML">
+                            <button class="btn btn-link nav-link text-white position-relative px-2 text-decoration-none" type="button" aria-hidden="true">
+                                <i class="bi bi-bell fs-5"></i>
+                            </button>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <form action="/logout" method="POST" class="d-inline">
-                            <button class="btn btn-outline-light btn-sm ms-2 mb-10n">
+                        <form action="/logout" method="POST" class="d-flex align-items-center mb-0 ms-lg-2">
+                            <button class="btn btn-outline-light btn-sm">
                                 Cerrar sesión ({{sesion.nombreMostrable}})
                             </button>
                         </form>

@@ -1,5 +1,4 @@
 <div class="dropdown">
-    <!-- Botón de la campanita con indicador de no leídas -->
     <button class="btn btn-link nav-link text-white position-relative px-2 text-decoration-none dropdown-toggle hide-arrow" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="bi bi-bell fs-5"></i>
         {{#if noLeidas}}
@@ -9,17 +8,13 @@
         {{/if}}
     </button>
 
-    <!-- Menú desplegable flotante -->
     <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 py-0" style="width: 320px; max-width: 90vw;">
-        <!-- Cabecera del desplegable -->
         <li class="px-3 py-2 bg-light border-bottom rounded-top d-flex justify-content-between align-items-center">
             <span class="fw-bold text-dark small">
                 <i class="bi bi-bell-fill text-primary me-1"></i> Notificaciones
             </span>
             <span class="badge bg-primary text-white rounded-pill">{{noLeidas}}</span>
         </li>
-
-        <!-- Lista de notificaciones recientes -->
         {{#each recientes}}
             <li>
                 <a class="dropdown-item py-2 px-3 border-bottom text-wrap small text-secondary d-flex align-items-start gap-2 text-decoration-none" href="/mis-notificaciones">
@@ -29,14 +24,11 @@
             </li>
         {{/each}}
 
-        <!-- Aviso si hay más notificaciones ocultas -->
         {{#if restantes}}
             <li class="px-3 py-2 text-center text-muted small bg-light">
                 y {{restantes}} más sin leer
             </li>
         {{/if}}
-
-        <!-- Pie del desplegable ("Ver todas") -->
         <li>
             <a class="dropdown-item text-center text-primary fw-bold py-2 small bg-white rounded-bottom" href="/mis-notificaciones">
                 Ver todas <i class="bi bi-arrow-right ms-1"></i>
