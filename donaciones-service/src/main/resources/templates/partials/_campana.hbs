@@ -1,23 +1,46 @@
 <div class="dropdown">
-    <button type="button" class="nav-link position-relative"
-            data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notificaciones">
-        <i class="bi bi-bell fs-5"></i><span class="d-lg-none ms-2">Notificaciones</span>
+    <!-- Botón de la campanita con indicador de no leídas -->
+    <button class="btn btn-link nav-link text-white position-relative px-2 text-decoration-none dropdown-toggle hide-arrow" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-bell fs-5"></i>
         {{#if noLeidas}}
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-light text-primary">
-      {{noLeidas}}<span class="visually-hidden"> sin leer</span>
-    </span>
+            <span class="position-absolute top-25 start-75 translate-middle p-1 bg-danger border border-light rounded-circle">
+                <span class="visually-hidden">Nuevas notificaciones</span>
+            </span>
         {{/if}}
     </button>
-    <ul class="dropdown-menu dropdown-menu-end" style="width: 22rem; max-width: 90vw;">
+
+    <!-- Menú desplegable flotante -->
+    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 py-0" style="width: 320px; max-width: 90vw;">
+        <!-- Cabecera del desplegable -->
+        <li class="px-3 py-2 bg-light border-bottom rounded-top d-flex justify-content-between align-items-center">
+            <span class="fw-bold text-dark small">
+                <i class="bi bi-bell-fill text-primary me-1"></i> Notificaciones
+            </span>
+            <span class="badge bg-primary text-white rounded-pill">{{noLeidas}}</span>
+        </li>
+
+        <!-- Lista de notificaciones recientes -->
         {{#each recientes}}
-            <li><span class="dropdown-item-text text-wrap fw-semibold">{{this.mensaje}}</span></li>
-        {{else}}
-            <li><span class="dropdown-item-text text-muted">Estás al día: no tenés notificaciones sin leer.</span></li>
+            <li>
+                <a class="dropdown-item py-2 px-3 border-bottom text-wrap small text-secondary d-flex align-items-start gap-2 text-decoration-none" href="/mis-notificaciones">
+                    <i class="bi bi-dot text-primary fs-3 lh-1 p-0 m-0"></i>
+                    <div class="lh-sm py-1">{{mensaje}}</div>
+                </a>
+            </li>
         {{/each}}
+
+        <!-- Aviso si hay más notificaciones ocultas -->
         {{#if restantes}}
-            <li><span class="dropdown-item-text small text-muted">y {{restantes}} más sin leer</span></li>
+            <li class="px-3 py-2 text-center text-muted small bg-light">
+                y {{restantes}} más sin leer
+            </li>
         {{/if}}
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item text-center" href="/mis-notificaciones">Ver todas</a></li>
+
+        <!-- Pie del desplegable ("Ver todas") -->
+        <li>
+            <a class="dropdown-item text-center text-primary fw-bold py-2 small bg-white rounded-bottom" href="/mis-notificaciones">
+                Ver todas <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </li>
     </ul>
 </div>

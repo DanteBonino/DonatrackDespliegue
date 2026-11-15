@@ -4,66 +4,80 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
+        <!-- Logo / Marca -->
         {{#if sesion}}
             <a class="navbar-brand fw-bold" href="/dashboard">DonaTrack</a>
         {{else}}
             <a class="navbar-brand fw-bold" href="/">DonaTrack</a>
         {{/if}}
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="nav">
-            <ul class="navbar-nav me-auto">
-            {{#if sesion}}
-                <li class="nav-item">
-                    {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/entregadas" textLink="Donaciones entregadas"}}
-                </li>
-                {{#if (esDonante)}}
-                    <li class="nav-item">
-                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/mis-donaciones" textLink="Mis Donaciones"}}
-                    </li>
-                    <li class="nav-item">
-                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/entidades-beneficiarias" textLink="Entidades Beneficiarias"}}
-                    </li>
-                {{/if}}
-                {{#if (esBeneficiaria)}}
-                    <li class="nav-item">
-                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/necesidades" textLink="Necesidades"}}
-                    </li>
-                    <li class="nav-item">
-                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/asignadas" textLink="Donaciones Asignadas"}}
-                    </li>
-                {{/if}}
 
-                {{#if (esAdmin)}}
-                    <li class="nav-item">
-                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/en-deposito" textLink="Donaciones en Depósito"}}
-                    </li>
-                {{/if}}
+        <!-- Controles para pantallas chicas (Campanita + Botón hamburguesa lado a lado) -->
+        <div class="d-flex align-items-center gap-2 d-lg-none">
+            {{#if sesion}}
+                <div hx-get="/notificaciones/campana" hx-trigger="load" hx-swap="outerHTML"></div>
             {{/if}}
-            </ul>
-            <ul class="navbar-nav ms-auto">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        <!-- Menú colapsable -->
+        <div class="collapse navbar-collapse" id="nav">
+            <!-- Enlaces de navegación izquierdos -->
+            <ul class="navbar-nav me-auto">
                 {{#if sesion}}
-                <li class="nav-item">
-                    {{> partials/navbarLinks/linkConRegistroDeActividad destino="/dashboard" textLink="Mi panel"}}
-                </li>
-                <li class="nav-item">
-                    <div hx-get="/notificaciones/campana" hx-trigger="load" hx-swap="outerHTML"></div>
-                </li>
-                <li class="nav-item">
-                    <form action="/logout" method="POST" class="d-inline">
-                        <button class="btn btn-outline-light btn-sm ms-2 mb-10n">
-                            Cerrar sesión ({{sesion.nombreMostrable}})
-                        </button>
-                    </form>
-                </li>
+                    <li class="nav-item">
+                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/entregadas" textLink="Donaciones entregadas"}}
+                    </li>
+                    {{#if (esDonante)}}
+                        <li class="nav-item">
+                            {{> partials/navbarLinks/linkConRegistroDeActividad destino="/mis-donaciones" textLink="Mis Donaciones"}}
+                        </li>
+                        <li class="nav-item">
+                            {{> partials/navbarLinks/linkConRegistroDeActividad destino="/entidades-beneficiarias" textLink="Entidades Beneficiarias"}}
+                        </li>
+                    {{/if}}
+                    {{#if (esBeneficiaria)}}
+                        <li class="nav-item">
+                            {{> partials/navbarLinks/linkConRegistroDeActividad destino="/necesidades" textLink="Necesidades"}}
+                        </li>
+                        <li class="nav-item">
+                            {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/asignadas" textLink="Donaciones Asignadas"}}
+                        </li>
+                    {{/if}}
+
+                    {{#if (esAdmin)}}
+                        <li class="nav-item">
+                            {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/en-deposito" textLink="Donaciones en Depósito"}}
+                        </li>
+                    {{/if}}
+                {{/if}}
+            </ul>
+
+            <!-- Enlaces derechos (Panel, Campanita para escritorio y Logout/Login) -->
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                {{#if sesion}}
+                    <li class="nav-item">
+                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/dashboard" textLink="Mi panel"}}
+                    </li>
+                    <!-- Campanita exclusiva para pantallas grandes (Escritorio) -->
+                    <li class="nav-item d-none d-lg-block">
+                        <div hx-get="/notificaciones/campana" hx-trigger="load" hx-swap="outerHTML"></div>
+                    </li>
+                    <li class="nav-item">
+                        <form action="/logout" method="POST" class="d-inline">
+                            <button class="btn btn-outline-light btn-sm ms-2 mb-10n">
+                                Cerrar sesión ({{sesion.nombreMostrable}})
+                            </button>
+                        </form>
+                    </li>
                 {{else}}
-                <li class="nav-item">
-                    {{> partials/navbarLinks/linkConRegistroDeActividad destino="/login" textLink="Iniciar Sesión"}}
-                </li>
-                <li class="nav-item">
-                    {{> partials/navbarLinks/linkConRegistroDeActividad destino="/registro" textLink="Registrarse"}}
-                </li>
+                    <li class="nav-item">
+                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/login" textLink="Iniciar Sesión"}}
+                    </li>
+                    <li class="nav-item">
+                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/registro" textLink="Registrarse"}}
+                    </li>
                 {{/if}}
             </ul>
         </div>
