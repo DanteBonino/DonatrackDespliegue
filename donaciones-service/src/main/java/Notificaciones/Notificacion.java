@@ -3,6 +3,7 @@ package Notificaciones;
 import Contacto.DatosDeContacto;
 import MedioDeNotificacion.TipoDeMedio;
 import Persistible.Persistible;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -35,6 +36,9 @@ abstract public class Notificacion extends Persistible {
 
   @Column(name = "fue_entregada")
   private boolean fueEntregada = false;
+
+  @Column(name = "fecha_de_lectura")
+  private LocalDateTime fechaDeLectura;
 
   protected Notificacion() {}
 
@@ -70,4 +74,14 @@ abstract public class Notificacion extends Persistible {
   abstract public TipoDeMedio getMedioDeNotificacion();
 
   abstract public boolean esEnviablePorElMedio(TipoDeMedio unMedioDeNotificacion);
+
+  public boolean estaLeida() {
+    return fechaDeLectura != null;
+  }
+
+  public void marcarComoLeida() {
+    if (!estaLeida()) {
+      fechaDeLectura = LocalDateTime.now();
+    }
+  }
 }

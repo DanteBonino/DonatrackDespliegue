@@ -2,6 +2,7 @@ package Repositories.Donantes;
 
 import DTOs.DatosDonante;
 import Donantes.Donante;
+import Repositories.Generales.RepositorioConDatosDeContacto;
 import Repositories.Generales.RepositorioConSoftDelete;
 import Repositories.Generales.RepositorioDeActualizable;
 import Repositories.Generales.filtros.Filtro;
@@ -9,7 +10,7 @@ import Usuario.ConSesion;
 import java.time.LocalDate;
 import java.util.List;
 
-public class DonantesRepository implements IDonantesRepository, RepositorioConSoftDelete<Donante>, RepositorioDeActualizable<Donante, DatosDonante> {
+public class DonantesRepository implements IDonantesRepository, RepositorioConSoftDelete<Donante>, RepositorioDeActualizable<Donante, DatosDonante>, RepositorioConDatosDeContacto<Donante> {
   private static DonantesRepository INSTACE = new DonantesRepository();
 
   public static DonantesRepository getInstance() {

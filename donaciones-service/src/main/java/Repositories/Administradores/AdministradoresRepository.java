@@ -1,10 +1,11 @@
 package Repositories.Administradores;
 
 import Repositories.Generales.RepositorioBasico;
+import Repositories.Generales.RepositorioConDatosDeContacto;
 import Usuario.Administrador;
 import java.util.List;
 
-public class AdministradoresRepository implements IAdministradoresRepository, RepositorioBasico<Administrador> {
+public class AdministradoresRepository implements IAdministradoresRepository, RepositorioConDatosDeContacto<Administrador> {
   private static final AdministradoresRepository INSTANCE = new AdministradoresRepository();
 
   public static AdministradoresRepository getInstance() {
@@ -16,7 +17,7 @@ public class AdministradoresRepository implements IAdministradoresRepository, Re
 
   @Override
   public List<Administrador> getInstancias() {
-    return RepositorioBasico.super.getInstancias();
+    return RepositorioConDatosDeContacto.super.getInstancias();
   }
 
   @Override

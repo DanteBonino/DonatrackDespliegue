@@ -9,15 +9,19 @@ import static io.javalin.apibuilder.ApiBuilder.beforeMatched;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.post;
 
+import Contacto.DatosDeContacto;
 import Controllers.Web.AuthController;
 import Controllers.Web.HomeController;
 import Controllers.Web.AdminWebController;
 import Controllers.Web.BeneficiariaWebController;
 import Controllers.Web.DonanteWebController;
+import Controllers.Web.NotificacionesWebController;
+import Repositories.DatosDeContacto.DatosDeContactoRepository;
 import Servidor.Autorizador.Autorizador;
 import Servidor.ManejadorDeSesiones.ManejadorDeSesion;
 import UsuarioFinal.Rol;
 import io.javalin.apibuilder.EndpointGroup;
+import java.util.Optional;
 
 public class WebRoutes implements EndpointGroup {
 
@@ -71,6 +75,18 @@ public class WebRoutes implements EndpointGroup {
     post("/donaciones/{id}/vencer", admin::vencerDonacion, ADMINISTRADOR);
     get("/necesidades", beneficiaria::necesidades, Rol.ENTIDADBENEFICIARIA);
     get("/donaciones/asignadas", beneficiaria::donacionesAsignadas, Rol.ENTIDADBENEFICIARIA);
+
+    get("mis-notificaciones", ctx ->  {
+      Rol rol = ManejadorDeSesion.obtenerRol(ctx).get();
+      Optional<DatosDeContacto> datosDeContacto = rol.obtenerDatosDeContacto(ctx);
+      datosDeContacto.ifPresentOrElse(
+          datosEncontrados -> new NotificacionesWebController().showNotificaciones(ctx, datosEncontrados),
+          () -> {
+            ManejadorDeSesion.cerrarSesion(ctx);
+            ctx.redirect("/");
+          }
+      );
+    }, CONSESIONACTIVA);
   }
 
 }

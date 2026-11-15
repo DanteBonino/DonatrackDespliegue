@@ -3,6 +3,7 @@ package Repositories.Beneficiarios;
 import Controllers.EntidadesBenefeciarias.DatosEntidadesBeneficiarias;
 import EntidadesBeneficiarias.EntidadBeneficiaria;
 import ExceptionHandler.EntidadYaExisteException;
+import Repositories.Generales.RepositorioConDatosDeContacto;
 import Repositories.Generales.RepositorioConSoftDelete;
 import Repositories.Generales.RepositorioDeActualizable;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
 
-public class BeneficiariosRepository implements IBeneficiariosRepository, RepositorioConSoftDelete<EntidadBeneficiaria>, RepositorioDeActualizable<EntidadBeneficiaria, DatosEntidadesBeneficiarias> {
+public class BeneficiariosRepository implements IBeneficiariosRepository, RepositorioConSoftDelete<EntidadBeneficiaria>, RepositorioDeActualizable<EntidadBeneficiaria, DatosEntidadesBeneficiarias>, RepositorioConDatosDeContacto<EntidadBeneficiaria> {
   private static BeneficiariosRepository INSTANCE = new BeneficiariosRepository();
 
   public static BeneficiariosRepository getInstance() {
