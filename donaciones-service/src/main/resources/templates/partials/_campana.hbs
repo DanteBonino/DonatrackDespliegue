@@ -1,0 +1,23 @@
+<div class="dropdown">
+    <button type="button" class="nav-link position-relative"
+            data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notificaciones">
+        <i class="bi bi-bell fs-5"></i><span class="d-lg-none ms-2">Notificaciones</span>
+        {{#if noLeidas}}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-light text-primary">
+      {{noLeidas}}<span class="visually-hidden"> sin leer</span>
+    </span>
+        {{/if}}
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" style="width: 22rem; max-width: 90vw;">
+        {{#each recientes}}
+            <li><span class="dropdown-item-text text-wrap fw-semibold">{{this.mensaje}}</span></li>
+        {{else}}
+            <li><span class="dropdown-item-text text-muted">Estás al día: no tenés notificaciones sin leer.</span></li>
+        {{/each}}
+        {{#if restantes}}
+            <li><span class="dropdown-item-text small text-muted">y {{restantes}} más sin leer</span></li>
+        {{/if}}
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-center" href="/notificaciones">Ver todas</a></li>
+    </ul>
+</div>

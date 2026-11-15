@@ -87,6 +87,30 @@ public class WebRoutes implements EndpointGroup {
           }
       );
     }, CONSESIONACTIVA);
+
+    get("/notificaciones/camapana", ctx -> {
+      Rol rol = ManejadorDeSesion.obtenerRol(ctx).get();
+      Optional<DatosDeContacto> datosDeContacto = rol.obtenerDatosDeContacto(ctx);
+      datosDeContacto.ifPresentOrElse(
+          datosEncontrados -> new NotificacionesWebController().campana(ctx, datosEncontrados),
+          () -> {
+            ManejadorDeSesion.cerrarSesion(ctx);
+            ctx.redirect("/");
+          }
+      );
+    }, CONSESIONACTIVA);
+
+    post("/notificaciones/{id}/leer", ctx -> {
+      Rol rol = ManejadorDeSesion.obtenerRol(ctx).get();
+      Optional<DatosDeContacto> datosDeContacto = rol.obtenerDatosDeContacto(ctx);
+      datosDeContacto.ifPresentOrElse(
+          datosEncontrados -> new NotificacionesWebController().marcarComoLeida(ctx, datosEncontrados),
+          () -> {
+            ManejadorDeSesion.cerrarSesion(ctx);
+            ctx.redirect("/");
+          }
+      );
+    }, CONSESIONACTIVA);
   }
 
 }

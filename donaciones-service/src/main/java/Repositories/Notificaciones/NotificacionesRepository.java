@@ -73,4 +73,23 @@ public class NotificacionesRepository implements INotificacionesRepository, Repo
 
     return new Pagina<>(items, actual, totalPaginas, total, tamanio);
   }
+
+  public List<Notificacion> getNoLeidasRecientesDe(DatosDeContacto contacto, int limite) {
+    return entityManager().createQuery("""
+          SELECT n FROM Notificacion n
+          WHERE n.contacto = :contacto AND n.fueEntregada = true AND n.fechaDeLectura IS NULL
+          ORDER BY n.id DESC
+          """, Notificacion.class)
+        .setParameter("contacto", contacto)
+        .setMaxResults(limite)
+        .getResultList();
+  }
+
+  public long contarNoLeidas(DatosDeContacto contacto) {
+    String jpql = "SELECT COUNT(n) FROM Notificacion n WHERE n.contacto = :contacto AND n.fechaDeLectura IS NULL";
+
+    return entityManager().createQuery(jpql, Long.class)
+        .setParameter("contacto", contacto)
+        .getSingleResult();
+  }
 }

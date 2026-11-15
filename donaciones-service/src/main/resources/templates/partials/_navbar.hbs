@@ -26,14 +26,19 @@
                         {{> partials/navbarLinks/linkConRegistroDeActividad destino="/entidades-beneficiarias" textLink="Entidades Beneficiarias"}}
                     </li>
                 {{/if}}
-
                 {{#if (esBeneficiaria)}}
-                    {{> partials/navbarLinks/linkConRegistroDeActividad destino="/necesidades" textLink="Necesidades"}}
-                    {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/asignadas" textLink="Donaciones Asignadas"}}
+                    <li class="nav-item">
+                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/necesidades" textLink="Necesidades"}}
+                    </li>
+                    <li class="nav-item">
+                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/asignadas" textLink="Donaciones Asignadas"}}
+                    </li>
                 {{/if}}
 
                 {{#if (esAdmin)}}
-                    {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/en-deposito" textLink="Donaciones en Deposito"}}
+                    <li class="nav-item">
+                        {{> partials/navbarLinks/linkConRegistroDeActividad destino="/donaciones/en-deposito" textLink="Donaciones en Depósito"}}
+                    </li>
                 {{/if}}
             {{/if}}
             </ul>
@@ -41,6 +46,9 @@
                 {{#if sesion}}
                 <li class="nav-item">
                     {{> partials/navbarLinks/linkConRegistroDeActividad destino="/dashboard" textLink="Mi panel"}}
+                </li>
+                <li class="nav-item">
+                    <div hx-get="/notificaciones/campana" hx-trigger="load" hx-swap="outerHTML"></div>
                 </li>
                 <li class="nav-item">
                     <form action="/logout" method="POST" class="d-inline">

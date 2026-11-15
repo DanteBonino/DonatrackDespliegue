@@ -50,6 +50,21 @@ public class NotificacionesWebController implements ConPaginacion {
     notificacion.marcarComoLeida();
     ctx.redirect("/notificaciones?pagina=" + numeroDePagina(ctx) + "&leida=" + notificacion.getIdDominio());
   }
+
+  public void campana(Context ctx, DatosDeContacto contacto) {
+    List<Map<String, Object>> recientes = notificacionesRepository()
+        .getNoLeidasRecientesDe(contacto, 3).stream()
+        .map(n -> Map.<String, Object>of("mensaje", n.getMensaje()))
+        .toList();
+
+    long noLeidas = notificacionesRepository().contarNoLeidas(contacto);
+
+    ctx.render("partials/_campana.hbs", Map.of(
+        "recientes", recientes,
+        "noLeidas", noLeidas,
+        "restantes", Math.max(0, noLeidas - recientes.size())));
+  }
+
   private NotificacionesRepository notificacionesRepository() {
     return NotificacionesRepository.getInstance();
   }
