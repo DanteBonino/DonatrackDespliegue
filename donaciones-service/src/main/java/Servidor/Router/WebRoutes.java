@@ -88,7 +88,7 @@ public class WebRoutes implements EndpointGroup {
       );
     }, CONSESIONACTIVA);
 
-    get("/notificaciones/camapana", ctx -> {
+    get("/notificaciones/campana", ctx -> {
       Rol rol = ManejadorDeSesion.obtenerRol(ctx).get();
       Optional<DatosDeContacto> datosDeContacto = rol.obtenerDatosDeContacto(ctx);
       datosDeContacto.ifPresentOrElse(
