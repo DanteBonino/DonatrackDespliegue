@@ -1,9 +1,8 @@
 {{#partial "contenido"}}
     <div class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
+            <div class="col-lg-8 col-md-10">
 
-                <!-- Cabecera -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 mb-0"><i class="bi bi-basket me-2"></i>Registrar Necesidad</h1>
                     <a href="/necesidades" class="btn btn-outline-primary btn-sm">
@@ -11,34 +10,48 @@
                     </a>
                 </div>
 
-                <!-- Formulario Principal -->
+                <div class="card border-0 shadow-sm bg-light mb-4">
+                    <div class="card-header bg-transparent border-0 py-3 d-flex justify-content-between align-items-center"
+                         data-bs-toggle="collapse" data-bs-target="#collapseGuia" role="button" aria-expanded="false" aria-controls="collapseGuia">
+                    <span class="fw-semibold text-primary small">
+                        <i class="bi bi-question-circle me-1"></i> ¿Cómo funciona el registro de necesidades? (Guía rápida)
+                    </span>
+                        <i class="bi bi-chevron-down small text-muted"></i>
+                    </div>
+                    <div class="collapse" id="collapseGuia">
+                        <div class="card-body pt-0 text-muted small">
+                            <p class="mb-2"><strong>1. Material y Cantidad:</strong> Seleccioná qué tipo de insumo necesita el espacio comunitario y cuántas unidades, kilos o litros requiere.</p>
+                            <p class="mb-2"><strong>2. Condición de aceptación:</strong> Podés pedir que el producto sea exclusivamente <em>nuevo</em>, aceptar productos <em>usados en buen estado</em>, o dejarlo <em>indiferente (vigente)</em>. (Los alimentos y perecederos se asumen aptos automáticamente).</p>
+                            <p class="mb-0"><strong>3. Tipo (Puntual o Recurrente):</strong> Elegí si es un pedido por única vez (Extraordinaria) o si se repite de forma periódica (Recurrente, indicando cada cuánto tiempo).</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card border-0 shadow-sm">
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 p-md-5">
                         <form action="/necesidades" method="POST">
 
-                            <!-- 1. Subcategoría -->
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label for="subcategoria" class="form-label fw-bold">¿Qué material necesitan? <span class="text-danger">*</span></label>
                                 <select id="subcategoria" name="subcategoriaId" class="form-select" required>
                                     <option value="" selected disabled>Seleccioná una subcategoría...</option>
                                     {{#each subcategorias}}
                                         <option value="{{this.id}}" data-perecedera="{{this.esPerecedera}}">
-                                            {{this.nombre}} ({{this.unidad}} )
+                                            {{this.nombre}} ({{this.unidad}})
                                         </option>
                                     {{/each}}
                                 </select>
                             </div>
 
-                            <!-- 2. Cantidad -->
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label for="cantidad" class="form-label fw-bold">Cantidad requerida <span class="text-danger">*</span></label>
                                 <input type="number" step="0.01" id="cantidad" name="cantidad" class="form-control" placeholder="Ej: 100" required>
                             </div>
 
-                            <!-- 3. Condición de Aceptación / Estado de uso -->
-                            <div class="mb-3" id="seccion-estado">
+                            <div class="mb-4" id="seccion-estado">
                                 <label class="form-label fw-bold">Condición de aceptación</label>
-                                <div class="d-flex gap-3">
+
+                                <div class="d-flex flex-column flex-md-row gap-3 mt-2">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="condicion" id="condicionVigente" value="VIGENTE" checked>
                                         <label class="form-check-label" for="condicionVigente">
@@ -54,35 +67,37 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="condicion" id="condicionUsado" value="USADO">
                                         <label class="form-check-label" for="condicionUsado">
-                                            Acepta Usado en buen estado
+                                            Acepta Usado
                                         </label>
                                     </div>
                                 </div>
-                                <div class="form-text" id="aviso-perecedero" style="display: none;">
-                                    <i class="bi bi-info-circle text-primary"></i> Los productos perecederos no admiten distinción de uso (se asumen aptos para consumo).
+                                <div class="form-text mt-2 text-primary" id="aviso-perecedero" style="display: none;">
+                                    <i class="bi bi-info-circle me-1"></i> Los productos perecederos no admiten distinción de uso.
                                 </div>
                             </div>
 
-                            <!-- 4. Tipo de Necesidad (Extraordinaria vs Recurrente) -->
                             <div class="mb-4">
                                 <label class="form-label fw-bold">Tipo de necesidad</label>
                                 <select id="tipoNecesidad" name="tipo" class="form-select">
-                                    <option value="EXTRAORDINARIA" selected>Puntual (Extraordinaria)</option>
+                                    <option value="EXTRAORDINARIA" selected>Puntual (Por esta vez)</option>
                                     <option value="RECURRENTE">Recurrente (Se repite periódicamente)</option>
                                 </select>
                             </div>
 
-                            <!-- Campo condicional para Recurrente (Oculto por defecto) -->
                             <div class="mb-4 p-3 bg-light rounded border" id="bloque-periodo" style="display: none;">
-                                <label for="periodo" class="form-label fw-bold small">Frecuencia de repetición</label>
-                                <input type="text" id="periodo" name="periodo" class="form-control form-control-sm" placeholder="Ej: Cada 1 semana / Mensual">
-                                <div class="form-text">Indica cada cuánto tiempo se renueva esta necesidad.</div>
+                                <label for="periodo" class="form-label fw-bold small">Frecuencia de repetición <span class="text-danger">*</span></label>
+                                <select id="periodo" name="periodo" class="form-select form-select-sm">
+                                    <option value="SEMANAL">Semanal</option>
+                                    <option value="MENSUAL" selected>Mensual</option>
+                                    <option value="BIMESTRAL">Bimestral</option>
+                                    <option value="TRIMESTRAL">Trimestral</option>
+                                </select>
+                                <div class="form-text mt-1">Define cada cuánto tiempo se renovará esta necesidad en el sistema.</div>
                             </div>
 
-                            <!-- Botón de envío -->
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary py-2">
-                                    <i class="bi bi-check-circle me-1"></i> Registrar Necesidad
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="p-3 btn btn-primary d-inline-flex justify-content-center align-items-center shadow-sm">
+                                    <i class="bi bi-check-circle me-2"></i> Registrar Necesidad
                                 </button>
                             </div>
 
@@ -94,23 +109,25 @@
         </div>
     </div>
 
+    <!-- Script de comportamiento adaptativo -->
     <script>
         document.getElementById('subcategoria').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
             const esPerecedera = selectedOption.getAttribute('data-perecedera') === 'true';
 
-            const seccionEstado = document.getElementById('seccion-estado');
             const avisoPerecedero = document.getElementById('aviso-perecedero');
             const radioVigente = document.getElementById('condicionVigente');
+            const radioNuevo = document.getElementById('condicionNuevo');
+            const radioUsado = document.getElementById('condicionUsado');
 
             if (esPerecedera) {
                 radioVigente.checked = true;
-                document.getElementById('condicionNuevo').disabled = true;
-                document.getElementById('condicionUsado').disabled = true;
+                radioNuevo.disabled = true;
+                radioUsado.disabled = true;
                 avisoPerecedero.style.display = 'block';
             } else {
-                document.getElementById('condicionNuevo').disabled = false;
-                document.getElementById('condicionUsado').disabled = false;
+                radioNuevo.disabled = false;
+                radioUsado.disabled = false;
                 avisoPerecedero.style.display = 'none';
             }
         });
