@@ -1,5 +1,6 @@
 <a class="nav-link {{isActive destino}}"
    href="{{destino}}"
    {{#if (estamosEnDestino destino)}}aria-current="page"{{/if}}>
+    {{#if icono}}<i class="bi bi-{{icono}} me-1"></i>{{/if}}
     {{textLink}}
 </a>
