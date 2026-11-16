@@ -2,11 +2,13 @@
     <div class="container py-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 mb-0"><i class="bi bi-basket me-2"></i>Necesidades Materiales</h1>
-            {{>partials/volverAlPanel}}
+            <a href="/necesidades/nueva" class="btn btn-primary d-inline-flex align-items-center shadow-sm">
+                <i class="bi bi-plus-lg me-1"></i> Nueva necesidad
+            </a>
         </div>
 
         {{#if necesidades}}
-            <div class="table-responsive shadow-sm rounded mb-3">
+            <div class="table-responsive shadow-sm rounded">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                     <tr>
@@ -38,22 +40,8 @@
                     </tbody>
                 </table>
             </div>
-
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-3">
-                <div>
-                    {{>partials/_contador-paginas nombre="necesidad"}}
-                </div>
-                <div>
-                    <a href="/necesidades/nueva" class="btn btn-primary d-inline-flex align-items-center shadow-sm">
-                        <i class="bi bi-plus-lg me-1"></i> Nueva necesidad
-                    </a>
-                </div>
-            </div>
-
-            <div class="mt-2">
-                {{>partials/paginacion}}
-            </div>
-
+            {{>partials/_contador-paginas nombre="necesidad"}}
+            {{>partials/paginacion}}
         {{else}}
             {{>partials/_alerta-vacia mensaje="No tenés necesidades registradas todavía."}}
         {{/if}}
