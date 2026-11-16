@@ -16,30 +16,18 @@
         {{#if hayNotificaciones}}
             <div class="d-flex flex-column gap-2 mb-4">
                 {{#each notificaciones}}
-                    <div class="card border-0 shadow-sm {{#if nueva}}bg-white border-start border-primary border-4{{else}}bg-light opacity-75{{/if}}">
-                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
-
-                            <!-- Icono y Mensaje -->
-                            <div class="d-flex align-items-start gap-3 me-3">
-                                <i class="bi {{#if nueva}}bi-bell-fill text-primary{{else}}bi-bell text-muted{{/if}} fs-5 mt-1"></i>
-                                <div>
-                                    <p class="mb-0 {{#if nueva}}fw-semibold text-dark{{else}}text-muted{{/if}}">
-                                        {{this.mensaje}}
-                                    </p>
-                                </div>
+                    <div class="card border-0 shadow-sm bg-white border-start border-primary border-4">
+                        <div class="card-body d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between py-3 px-4 gap-3">
+                            <div class="d-flex align-items-start gap-3">
+                                <i class="bi bi-bell-fill text-primary fs-5 mt-1 flex-shrink-0"></i>
+                                <div><p class="mb-0 fw-semibold text-dark">{{this.mensaje}}</p></div>
                             </div>
-                            <div class="flex-shrink-0">
-                                {{#if nueva}}
-                                    <form method="post" action="{{this.hrefLeer}}" class="mb-0">
-                                        <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">
-                                            <i class="bi bi-check2 me-1"></i> Marcar como leída
-                                        </button>
-                                    </form>
-                                {{else}}
-                                    <span class="badge bg-secondary bg-opacity-10 text-secondary fw-normal px-2 py-1">
-                                Leída
-                            </span>
-                                {{/if}}
+                            <div class="flex-shrink-0 align-self-end align-self-md-center">
+                                <form method="post" action="{{this.hrefLeer}}" class="mb-0">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">
+                                        <i class="bi bi-check2 me-1"></i> Marcar como leída
+                                    </button>
+                                </form>
                             </div>
 
                         </div>
