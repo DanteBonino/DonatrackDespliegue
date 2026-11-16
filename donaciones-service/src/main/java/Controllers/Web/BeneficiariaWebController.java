@@ -128,6 +128,12 @@ public class BeneficiariaWebController implements ConPaginacion {
     ctx.render("nueva-necesidad.hbs", model);
   }
 
+  public void showGuiaNecesidades(Context context) {
+    EntidadBeneficiaria entidad = getBeneficiario(context).get();
+    validarBeneficiario(context, entidad);
+    context.render("guia-necesidades.hbs");
+  }
+
   private String nombreDe(Donante donante) {
     if (donante == null) return "-";
     if (donante instanceof PersonaHumana ph) return ph.getNombre() + " " + ph.getApellido();

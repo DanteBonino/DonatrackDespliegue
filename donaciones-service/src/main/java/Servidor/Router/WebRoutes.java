@@ -113,6 +113,7 @@ public class WebRoutes implements EndpointGroup {
     }, CONSESIONACTIVA);
 
     get("necesidades/nueva", beneficiaria::showCrearNecesidad, Rol.ENTIDADBENEFICIARIA);
+    get("/guia-necesidades", beneficiaria::showGuiaNecesidades, Rol.ENTIDADBENEFICIARIA);
   }
 
 }
