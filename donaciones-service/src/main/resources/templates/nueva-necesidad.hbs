@@ -1,10 +1,11 @@
 {{#partial "contenido"}}
     <div class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
+            <!-- Acotado el ancho en pantallas grandes con col-xl-6 -->
+            <div class="col-md-10 col-lg-8 col-xl-6">
 
-                <!-- Cabecera -->
-                <div class="flex-column d-flex flex-md-row justify-content-between align-items-center mb-4">
+                <!-- Cabecera con gap para evitar que se amontonen en pantallas chicas -->
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-2">
                     <h1 class="h3 mb-0"><i class="bi bi-basket me-2"></i>Registrar Necesidad</h1>
                     <a href="/necesidades" class="btn btn-outline-primary btn-sm">
                         <i class="bi bi-arrow-left me-1"></i> Ver necesidades
@@ -28,7 +29,6 @@
                             <p class="mb-2"><strong>4. Registrar Necesidad:</strong> Si nada falla en el proceso, ya vas a poder seguir de cerca la necesidad creada en <a href="/necesidades">/necesidades</a>, gestionarla o eliminarla si deja de ser frecuente.</p>
                             <p class="mb-0">Si sentís que <strong>necesitas más información</strong> la podés obtener <a href="/guia-necesidades">acá</a>.</p>
                         </div>
-                    </div>
                     </div>
                 </div>
 
@@ -93,7 +93,7 @@
 
                             <!-- 4. Tipo de Necesidad -->
                             <div class="mb-4">
-                                <label class="form-label fw-bold">Tipo de necesidad</label>
+                                <label for="tipoNecesidad" class="form-label fw-bold">Tipo de necesidad</label>
                                 <select id="tipoNecesidad" name="tipo" class="form-select">
                                     <option value="EXTRAORDINARIA" selected>Puntual (Por esta vez)</option>
                                     <option value="RECURRENTE">Recurrente (Se repite periódicamente)</option>
