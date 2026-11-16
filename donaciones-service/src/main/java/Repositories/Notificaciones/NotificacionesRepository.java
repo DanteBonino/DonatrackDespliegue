@@ -92,4 +92,34 @@ public class NotificacionesRepository implements INotificacionesRepository, Repo
         .setParameter("contacto", contacto)
         .getSingleResult();
   }
+
+  @SuppressWarnings("JpaQlInspection")
+  public List<Notificacion> getNoLeidasEntregadasDe(DatosDeContacto contacto) {
+    EntityManager em = entityManager();
+    return em.createQuery(
+            "SELECT n FROM Notificacion n WHERE n.contacto = :contacto AND n.fueEntregada = true AND n.fechaDeLectura IS NULL ORDER BY n.id DESC",
+            Notificacion.class)
+        .setParameter("contacto", contacto)
+        .getResultList();
+  }
+
+  @SuppressWarnings("JpaQlInspection")
+  public Pagina<Notificacion> getLeidasEntregadasPaginadasDe(DatosDeContacto contacto, int numero, int tamanio) {
+    EntityManager em = entityManager();
+    String desde = "FROM Notificacion n WHERE n.contacto = :contacto AND n.fueEntregada = true AND n.fechaDeLectura IS NOT NULL";
+
+    long total = em.createQuery("SELECT COUNT(n) " + desde, Long.class)
+        .setParameter("contacto", contacto)
+        .getSingleResult();
+    int totalPaginas = (int) Math.max(1, Math.ceil(total / (double) tamanio));
+    int actual = Math.min(Math.max(numero, 1), totalPaginas);
+
+    List<Notificacion> items = em.createQuery("SELECT n " + desde + " ORDER BY n.id DESC", Notificacion.class)
+        .setParameter("contacto", contacto)
+        .setFirstResult((actual - 1) * tamanio)
+        .setMaxResults(tamanio)
+        .getResultList();
+
+    return new Pagina<>(items, actual, totalPaginas, total, tamanio);
+  }
 }

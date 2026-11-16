@@ -14,21 +14,39 @@ import java.util.Optional;
 public class NotificacionesWebController implements ConPaginacion {
 
   public void showNotificaciones(Context context, DatosDeContacto contacto) {
-    Pagina<Notificacion> pagina = notificacionesRepository()
-        .getEntregadasDe(contacto, numeroDePagina(context), CANTIDAD_DE_ELEMENTOS_POR_PAGINA);
+    int paginaActual = numeroDePagina(context);
+    int tamanioPagina = CANTIDAD_DE_ELEMENTOS_POR_PAGINA;
 
-    List<Map<String, Object>> filas = pagina.items().stream()
-        .map(n -> Map.<String, Object>of(
-            "mensaje", n.getMensaje(),
-            "nueva", !n.estaLeida(),
-            "hrefLeer", "/notificaciones/" + n.getIdDominio() + "/leer?pagina=" + pagina.actual()))
+    List<Map<String, Object>> noLeidas = notificacionesRepository()
+        .getNoLeidasEntregadasDe(contacto).stream()
+        .map(n -> {
+          Map<String, Object> map = new HashMap<>();
+          map.put("mensaje", n.getMensaje());
+          map.put("hrefLeer", "/notificaciones/" + n.getIdDominio() + "/leer?pagina=" + paginaActual);
+          return map;
+        })
+        .toList();
+
+    Pagina<Notificacion> paginaLeidas = notificacionesRepository()
+        .getLeidasEntregadasPaginadasDe(contacto, paginaActual, tamanioPagina);
+
+    List<Map<String, Object>> leidas = paginaLeidas.items().stream()
+        .map(n -> {
+          Map<String, Object> map = new HashMap<>();
+          map.put("mensaje", n.getMensaje());
+          return map;
+        })
         .toList();
 
     Map<String, Object> model = new HashMap<>();
     model.put("titulo", "Notificaciones");
-    model.put("notificaciones", filas);
-    model.put("hayNotificaciones", !filas.isEmpty());
-    model.put("paginas", pagina.aModelo());
+    model.put("noLeidas", noLeidas);
+    model.put("leidas", leidas);
+    model.put("hayNoLeidas", !noLeidas.isEmpty());
+    model.put("hayLeidas", !leidas.isEmpty());
+    model.put("hayNotificaciones", !noLeidas.isEmpty() || !leidas.isEmpty());
+    model.put("paginas", paginaLeidas.aModelo());
+
     mensajeDeLaNotificacionLeida(context, contacto).ifPresent(m -> model.put("mensajeLeida", m));
 
     context.render("notificaciones.hbs", model);
