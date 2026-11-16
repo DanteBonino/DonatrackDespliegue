@@ -40,10 +40,6 @@ public class DonanteWebController implements ConPaginacion {
     long asignadas = conteos.getOrDefault(EstadoDonacion.ASIGNACION_REALIZADA, 0L);
     long total = conteos.values().stream().mapToLong(Long::longValue).sum();
 
-    List<Notificacion> recientes = notificacionesRepository().getUltimasDe(
-        donante.getDatosDeContacto(), 5
-    );
-
     Map<String, Object> model = new HashMap<>();
     model.put("titulo", "Mi Panel - Donante");
     model.put("nombreMostrable", ManejadorDeSesion.obtenerNombreMostrable(ctx).get());
@@ -52,7 +48,6 @@ public class DonanteWebController implements ConPaginacion {
     model.put("enTraslado", enTraslado);
     model.put("entregadas", entregadas);
     model.put("asignadas", asignadas);
-    model.put("notificaciones", recientes);
 
     ctx.render("donante/dashboard.hbs", model);
   }

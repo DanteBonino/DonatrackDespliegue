@@ -54,15 +54,10 @@
             </div>
         </div>
 
-        <h5 class="mb-3"><i class="bi bi-lightning me-2"></i>Acciones Rápidas</h5>
-        <div class="d-grid gap-3 d-md-flex">
-            <a href="/donaciones/en-deposito" class="btn btn-outline-primary">
-                <i class="bi bi-archive me-2"></i>Gestionar Depósito
-            </a>
-            <a href="/donaciones/entregadas" class="btn btn-primary px-4 py-2 shadow-sm">
-                <i class="bi bi-map me-2"></i>Mapa de donaciones entregadas
-            </a>
-        </div>
+        {{#> partials/_accesos-rapidos}}
+            {{>partials/_acceso-rapido href="/donaciones/en-deposito" icono="archive"
+                    titulo="Gestionar Depósito" descripcion="Donaciones en depósito"}}
+        {{/partials/_accesos-rapidos}}
 
     {{/partials/dashboard-layout}}
 {{/partial}}

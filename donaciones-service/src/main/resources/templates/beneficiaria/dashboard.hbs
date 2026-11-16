@@ -38,35 +38,12 @@
   </div>
 
   <!-- Accesos rapidos -->
-  <h5 class="mb-3"><i class="bi bi-lightning me-2"></i>Accesos rápidos</h5>
-  <div class="row g-4">
-      <div class="col-md-6">
-          <a href="/donaciones/asignadas"
-             class="card card-link border-primary text-decoration-none h-100">
-              <div class="card-body d-flex align-items-center">
-                  <i class="bi bi-clipboard-check fs-1 text-primary me-3"></i>
-                  <div class="flex-grow-1">
-                      <h6 class="mb-1 text-dark">Donaciones Asignadas</h6>
-                      <small class="text-muted">Ver estado de tus donaciones</small>
-                  </div>
-                  <i class="bi bi-arrow-right fs-4 text-primary"></i>
-              </div>
-          </a>
-      </div>
-      <div class="col-md-6">
-          <a href="/necesidades"
-             class="card card-link border-primary text-decoration-none h-100">
-              <div class="card-body d-flex align-items-center">
-                  <i class="bi bi-basket fs-1 text-primary me-3"></i>
-                  <div class="flex-grow-1">
-                      <h6 class="mb-1 text-dark">Necesidades</h6>
-                      <small class="text-muted">Ver necesidades materiales</small>
-                  </div>
-                  <i class="bi bi-arrow-right fs-4 text-primary"></i>
-              </div>
-          </a>
-      </div>
-  </div>
+  {{#> partials/_accesos-rapidos}}
+      {{>partials/_acceso-rapido href="/donaciones/asignadas" icono="clipboard"
+              titulo="Donaciones Asignadas" descripcion="Ver estado de tus donaciones"}}
+      {{>partials/_acceso-rapido href="/necesidades" icono="basket"
+              titulo="Necesidades" descripcion="Ver necesidades materiales"}}
+  {{/partials/_accesos-rapidos}}
   {{/partials/dashboard-layout}}
 {{/partial}}
 {{>layout}}
