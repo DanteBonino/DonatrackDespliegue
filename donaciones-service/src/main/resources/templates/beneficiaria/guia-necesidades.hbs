@@ -1,9 +1,9 @@
 {{#partial "contenido"}}
     <div class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-9">
+            <div class="col-lg-9 col-xl-8">
 
-                <!-- Cabecera de la Guía (sin botón de volver) -->
+                <!-- Cabecera de la Guía -->
                 <div class="mb-4">
                 <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill mb-2">
                     <i class="bi bi-book me-1"></i> Documentación y Ayuda
@@ -11,7 +11,7 @@
                     <h1 class="h2 fw-bold text-dark mb-0">Guía completa sobre Necesidades</h1>
                 </div>
 
-                <!-- 1. ¿Qué es una necesidad? -->
+                <!-- 1. ¿Qué es una necesidad? (Mantiene recuadro destacado) -->
                 <div class="card border-0 shadow-sm bg-primary bg-opacity-10 mb-5">
                     <div class="card-body p-4 p-md-5">
                         <div class="row align-items-center">
@@ -28,15 +28,15 @@
                     </div>
                 </div>
 
-                <!-- 2. Tipos de Necesidades (Paleta unificada en azules) -->
-                <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-diagram-3 me-2 text-primary"></i>Tipos de necesidades</h3>
-                <div class="row g-4 mb-5">
-                    <!-- Extraordinarias -->
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100 border-top border-primary border-4">
-                            <div class="card-body p-4">
-                                <div class="d-flex align-items-center gap-2 mb-3">
-                                    <span class="badge bg-primary text-white p-2 rounded-3"><i class="bi bi-lightning-fill fs-5"></i></span>
+                <!-- 2. Tipos de Necesidades (Sin recuadros, con borde lateral limpio) -->
+                <section class="mb-5 pb-4 border-bottom">
+                    <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-diagram-3 me-2 text-primary"></i>Tipos de necesidades</h3>
+                    <div class="row g-4">
+                        <!-- Extraordinarias -->
+                        <div class="col-md-6">
+                            <div class="border-start border-primary border-3 ps-3 h-100">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-lightning-fill text-primary fs-5"></i>
                                     <h4 class="h5 fw-bold mb-0">Extraordinarias</h4>
                                 </div>
                                 <p class="text-muted mb-0">
@@ -44,13 +44,11 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
-                    <!-- Recurrentes -->
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100 border-top border-info border-4">
-                            <div class="card-body p-4">
-                                <div class="d-flex align-items-center gap-2 mb-3">
-                                    <span class="badge bg-primary bg-opacity-10 text-primary p-2 rounded-3"><i class="bi bi-arrow-repeat fs-5"></i></span>
+                        <!-- Recurrentes -->
+                        <div class="col-md-6">
+                            <div class="border-start border-info border-3 ps-3 h-100">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-arrow-repeat text-primary fs-5"></i>
                                     <h4 class="h5 fw-bold mb-0">Recurrentes</h4>
                                 </div>
                                 <p class="text-muted mb-0">
@@ -59,38 +57,34 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- 3. Paso a Paso para la Creación -->
-                <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-list-check me-2 text-primary"></i>¿Cómo se crean? (Paso a paso)</h3>
+                <!-- 3. Paso a Paso para la Creación (Sin recuadros, flujo vertical limpio) -->
+                <section class="mb-5 pb-4 border-bottom">
+                    <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-list-check me-2 text-primary"></i>¿Cómo se crean? (Paso a paso)</h3>
 
-                <div class="d-flex flex-column gap-3 mb-5">
-                    <!-- Paso 1 -->
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body p-4 d-flex gap-4 align-items-start">
-                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">1</div>
+                    <div class="d-flex flex-column gap-4">
+                        <!-- Paso 1 -->
+                        <div class="d-flex gap-3 gap-md-4 align-items-start">
+                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">1</div>
                             <div>
                                 <h5 class="fw-bold mb-1">Seleccionás el bien</h5>
                                 <p class="text-muted mb-0">Contamos con un catálogo de bienes precargados en el sistema. Si precisas un bien que todavía no existe, podés comunicarte con nosotros a <a href="mailto:donatrack-grupo1@gmail.com" class="text-primary fw-semibold">donatrack-grupo1@gmail.com</a> y lo crearemos a la brevedad.</p>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Paso 2 -->
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body p-4 d-flex gap-4 align-items-start">
-                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">2</div>
+                        <!-- Paso 2 -->
+                        <div class="d-flex gap-3 gap-md-4 align-items-start">
+                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">2</div>
                             <div>
                                 <h5 class="fw-bold mb-1">Elegís la cantidad</h5>
                                 <p class="text-muted mb-0">Definís cuántas unidades, kilogramos o litros precisás. <span class="text-dark fw-semibold">Acordate que el bien que elijas determina automáticamente la unidad de medida.</span></p>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Paso 3 -->
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body p-4 d-flex gap-4 align-items-start">
-                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">3</div>
+                        <!-- Paso 3 -->
+                        <div class="d-flex gap-3 gap-md-4 align-items-start">
+                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">3</div>
                             <div>
                                 <h5 class="fw-bold mb-1">Definís la condición de aceptación</h5>
                                 <p class="text-muted mb-2">Como mínimo, la donación tiene que ser del bien requerido. <span class="text-dark fw-medium">No tenés que preocuparte por saber si el bien seleccionado es perecedero o no:</span> el sistema ya lo sabe y, en consecuencia, no te va a ofrecer crear una necesidad con un bien perecedero y una condición por estado de uso.</p>
@@ -100,21 +94,19 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Paso 4 -->
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body p-4 d-flex gap-4 align-items-start">
-                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">4</div>
+                        <!-- Paso 4 -->
+                        <div class="d-flex gap-3 gap-md-4 align-items-start">
+                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">4</div>
                             <div>
                                 <h5 class="fw-bold mb-1">Definís el período (si es recurrente)</h5>
                                 <p class="text-muted mb-0">Si elegiste una necesidad recurrente, indicás la frecuencia (semanal, mensual, bimestral o trimestral). Al finalizar el plazo, se renueva sola sin que tengas que volver a cargarla.</p>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- Call To Action Intermedio (Fondo claro acorde a la paleta) -->
+                <!-- Call To Action Intermedio (Mantiene recuadro para destacar el botón) -->
                 <div class="card border border-primary border-opacity-25 shadow-sm bg-light text-center p-4 p-md-5 mb-5 rounded-4">
                     <div class="card-body">
                         <h3 class="h4 fw-bold text-dark mb-2">¿Ya entendiste cómo funciona y te sentís listo?</h3>
@@ -125,36 +117,31 @@
                     </div>
                 </div>
 
-                <!-- 4. Administración y Seguimiento posterior -->
-                <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-gear-fill me-2 text-primary"></i>Administración y seguimiento</h3>
-                <div class="row g-4 mb-4">
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body p-4">
-                                <h5 class="fw-bold text-dark mb-2"><i class="bi bi-table text-primary me-2"></i>Panel de Necesidades</h5>
-                                <p class="text-muted small mb-0">
-                                    Desde <a href="/necesidades" class="text-primary fw-semibold">/necesidades</a> podés administrar todo: crear nuevas solicitudes, verificar cuáles ya se completaron y eliminarlas si eventualmente dejan de ser frecuentes.
-                                </p>
-                            </div>
+                <!-- 4. Administración y Seguimiento posterior (Sin recuadros) -->
+                <section class="mb-4">
+                    <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-gear-fill me-2 text-primary"></i>Administración y seguimiento</h3>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-dark mb-2"><i class="bi bi-table text-primary me-2"></i>Panel de Necesidades</h5>
+                            <p class="text-muted small mb-0">
+                                Desde <a href="/necesidades" class="text-primary fw-semibold">/necesidades</a> podés administrar todo: crear nuevas solicitudes, verificar cuáles ya se completaron y eliminarlas si eventualmente dejan de ser frecuentes.
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-dark mb-2"><i class="bi bi-box-seam text-primary me-2"></i>Control de Donaciones</h5>
+                            <p class="text-muted small mb-2">
+                                Una vez creada la necesidad, vas a empezar a recibir donaciones. Desde <a href="/donaciones" class="text-primary fw-semibold">/donaciones</a> (o en tu panel principal) vas a poder ver qué donaciones te fueron asignadas y seguir su estado en tiempo real:
+                            </p>
+                            <ul class="text-muted small mb-0 ps-3">
+                                <li class="mb-1"><strong>Asignada:</strong> Una donación del depósito cumplió con las condiciones de aceptación de la necesidad y fuiste designado como su receptor.</li>
+                                <li class="mb-1"><strong>Lista para entregar:</strong> Hay una ruta planificada que incluye la donación.</li>
+                                <li class="mb-1"><strong>En traslado:</strong> El camión que tiene la ruta planificada que incluye la donación inicia el recorrido o está realizando el recorrido.</li>
+                                <li class="mb-1"><strong>Entregada:</strong> Ya recibiste la donación y lo confirmaste.</li>
+                                <li><strong>Entrega Fallida:</strong> No se pudo entregar la donación.</li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body p-4">
-                                <h5 class="fw-bold text-dark mb-2"><i class="bi bi-box-seam text-primary me-2"></i>Control de Donaciones</h5>
-                                <p class="text-muted small mb-2">
-                                    Una vez creada la necesidad, vas a empezar a recibir donaciones. Desde <a href="/donaciones" class="text-primary fw-semibold">/donaciones</a> (o en tu panel principal) vas a poder ver qué donaciones te fueron asignadas y seguir su estado:
-                                </p>
-                                <ul class="text-muted small mb-0 ps-3">
-                                    <li class="mb-1"><strong>Asignada / Pendiente:</strong> Un donante ya comprometió el envío para cubrir tu necesidad.</li>
-                                    <li class="mb-1"><strong>En camino:</strong> La donación está siendo trasladada hacia tu establecimiento.</li>
-                                    <li class="mb-1"><strong>Entregada / Recibida:</strong> El bien llegó y fue confirmado, descontándose de la cantidad requerida.</li>
-                                    <li><strong>No recibida / Cancelada:</strong> El envío no pudo concretarse y la cantidad vuelve a quedar disponible para otros donantes.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </section>
 
             </div>
         </div>
