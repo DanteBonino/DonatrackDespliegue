@@ -3,27 +3,22 @@
         <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-9">
 
-                <!-- Cabecera de la Guía -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                    <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill mb-2">
-                        <i class="bi bi-book me-1"></i> Documentación y Ayuda
-                    </span>
-                        <h1 class="h2 fw-bold text-dark mb-0">Guía completa sobre Necesidades</h1>
-                    </div>
-                    <a href="/necesidades" class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center">
-                        <i class="bi bi-arrow-left me-1"></i> Volver a necesidades
-                    </a>
+                <!-- Cabecera de la Guía (sin botón de volver) -->
+                <div class="mb-4">
+                <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill mb-2">
+                    <i class="bi bi-book me-1"></i> Documentación y Ayuda
+                </span>
+                    <h1 class="h2 fw-bold text-dark mb-0">Guía completa sobre Necesidades</h1>
                 </div>
 
-                <!-- 1. ¿Qué es una necesidad? (Hero Card) -->
+                <!-- 1. ¿Qué es una necesidad? -->
                 <div class="card border-0 shadow-sm bg-primary bg-opacity-10 mb-5">
                     <div class="card-body p-4 p-md-5">
                         <div class="row align-items-center">
                             <div class="col-md-9">
                                 <h3 class="h4 text-primary fw-bold mb-3"><i class="bi bi-lightbulb me-2"></i>¿Qué es una necesidad?</h3>
                                 <p class="text-secondary lead fs-6 mb-0">
-                                    Una necesidad es la forma en que le podés hacer saber al otro lo que precisas en este momento o en un futuro. Es el puente entre el espacio comunitario y los donantes.
+                                    Una necesidad es la forma en que le podés hacer saber al otro lo que precisas en este momento o en un futuro. Es el puente entre tu organización y los donantes.
                                 </p>
                             </div>
                             <div class="col-md-3 text-center d-none d-md-block">
@@ -33,7 +28,7 @@
                     </div>
                 </div>
 
-                <!-- 2. Tipos de Necesidades (Dos columnas) -->
+                <!-- 2. Tipos de Necesidades (Paleta unificada en azules) -->
                 <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-diagram-3 me-2 text-primary"></i>Tipos de necesidades</h3>
                 <div class="row g-4 mb-5">
                     <!-- Extraordinarias -->
@@ -45,17 +40,17 @@
                                     <h4 class="h5 fw-bold mb-0">Extraordinarias</h4>
                                 </div>
                                 <p class="text-muted mb-0">
-                                    Son pedidos puntuales creados para una ocasión específica. Las creas para resolver un faltante por única vez y el sistema la da por cumplida al recibir la donación correspondiente.
+                                    Son pedidos puntuales creados para una ocasión específica. Las creas para resolver un faltante por única vez y el sistema la da por cumplida cuando la donación o las distintas donaciones recibidas satisfacen la cantidad requerida.
                                 </p>
                             </div>
                         </div>
                     </div>
                     <!-- Recurrentes -->
                     <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100 border-top border-success border-4">
+                        <div class="card border-0 shadow-sm h-100 border-top border-info border-4">
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center gap-2 mb-3">
-                                    <span class="badge bg-success text-white p-2 rounded-3"><i class="bi bi-arrow-repeat fs-5"></i></span>
+                                    <span class="badge bg-primary bg-opacity-10 text-primary p-2 rounded-3"><i class="bi bi-arrow-repeat fs-5"></i></span>
                                     <h4 class="h5 fw-bold mb-0">Recurrentes</h4>
                                 </div>
                                 <p class="text-muted mb-0">
@@ -66,7 +61,7 @@
                     </div>
                 </div>
 
-                <!-- 3. Paso a Paso para la Creación (Timeline / Steps) -->
+                <!-- 3. Paso a Paso para la Creación -->
                 <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-list-check me-2 text-primary"></i>¿Cómo se crean? (Paso a paso)</h3>
 
                 <div class="d-flex flex-column gap-3 mb-5">
@@ -76,7 +71,7 @@
                             <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">1</div>
                             <div>
                                 <h5 class="fw-bold mb-1">Seleccionás el bien</h5>
-                                <p class="text-muted mb-2">Contamos con un catálogo de bienes precargados en el sistema. Si precisas un bien que todavía no existe, podés comunicarte con nosotros a <a href="mailto:donatrack-grupo1@gmail.com" class="text-primary fw-semibold">donatrack-grupo1@gmail.com</a> y lo crearemos a la brevedad.</p>
+                                <p class="text-muted mb-0">Contamos con un catálogo de bienes precargados en el sistema. Si precisas un bien que todavía no existe, podés comunicarte con nosotros a <a href="mailto:donatrack-grupo1@gmail.com" class="text-primary fw-semibold">donatrack-grupo1@gmail.com</a> y lo crearemos a la brevedad.</p>
                             </div>
                         </div>
                     </div>
@@ -98,9 +93,9 @@
                             <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">3</div>
                             <div>
                                 <h5 class="fw-bold mb-1">Definís la condición de aceptación</h5>
-                                <p class="text-muted mb-2">Como mínimo, la donación tiene que ser del bien requerido. Actualmente contamos con dos criterios principales:</p>
+                                <p class="text-muted mb-2">Como mínimo, la donación tiene que ser del bien requerido. <span class="text-dark fw-medium">No tenés que preocuparte por saber si el bien seleccionado es perecedero o no:</span> el sistema ya lo sabe y, en consecuencia, no te va a ofrecer crear una necesidad con un bien perecedero y una condición por estado de uso.</p>
                                 <ul class="text-muted small mb-0 ps-3">
-                                    <li class="mb-1"><strong>Por vigencia:</strong> Aplica a todo tipo de bien. Para perecederos (alimentos), se acepta todo lo que no esté vencido.</li>
+                                    <li class="mb-1"><strong>Por vigencia:</strong> Aplica a todo tipo de bien. Para perecederos (alimentos), se acepta todo lo que no esté vencido; para no perecederos, significa que se aceptan tanto productos nuevos como usados indistintamente.</li>
                                     <li><strong>Por estado de uso:</strong> Exclusivo para bienes <em>no perecederos</em>. Te permite exigir que el producto sea <strong>exclusivamente nuevo</strong> o aceptar <strong>usados en buen estado</strong>.</li>
                                 </ul>
                             </div>
@@ -119,12 +114,12 @@
                     </div>
                 </div>
 
-                <!-- Call To Action Intermedio -->
-                <div class="card border-0 shadow-sm bg-dark text-white text-center p-4 p-md-5 mb-5 rounded-4">
+                <!-- Call To Action Intermedio (Fondo claro acorde a la paleta) -->
+                <div class="card border border-primary border-opacity-25 shadow-sm bg-light text-center p-4 p-md-5 mb-5 rounded-4">
                     <div class="card-body">
-                        <h3 class="h4 fw-bold mb-2">¿Ya entendiste cómo funciona y te sentís listo?</h3>
-                        <p class="text-white-50 mb-4">No pierdas tiempo y registrá tu primer pedido de insumos ahora mismo.</p>
-                        <a href="/necesidades/nueva" class="btn btn-primary btn-lg px-4 shadow">
+                        <h3 class="h4 fw-bold text-dark mb-2">¿Ya entendiste cómo funciona y te sentís listo?</h3>
+                        <p class="text-muted mb-4">No pierdas tiempo y registrá tu pedido de insumos ahora mismo.</p>
+                        <a href="/necesidades/nueva" class="btn btn-primary btn-lg px-4 shadow-sm">
                             <i class="bi bi-plus-lg me-2"></i> Crear necesidad
                         </a>
                     </div>
@@ -147,9 +142,15 @@
                         <div class="card border-0 shadow-sm h-100">
                             <div class="card-body p-4">
                                 <h5 class="fw-bold text-dark mb-2"><i class="bi bi-box-seam text-primary me-2"></i>Control de Donaciones</h5>
-                                <p class="text-muted small mb-0">
-                                    Una vez creada la necesidad, vas a empezar a recibir donaciones. En el sistema vas a poder ver qué donaciones te fueron asignadas y en qué estado de entrega se encuentran en tiempo real.
+                                <p class="text-muted small mb-2">
+                                    Una vez creada la necesidad, vas a empezar a recibir donaciones. Desde <a href="/donaciones" class="text-primary fw-semibold">/donaciones</a> (o en tu panel principal) vas a poder ver qué donaciones te fueron asignadas y seguir su estado:
                                 </p>
+                                <ul class="text-muted small mb-0 ps-3">
+                                    <li class="mb-1"><strong>Asignada / Pendiente:</strong> Un donante ya comprometió el envío para cubrir tu necesidad.</li>
+                                    <li class="mb-1"><strong>En camino:</strong> La donación está siendo trasladada hacia tu establecimiento.</li>
+                                    <li class="mb-1"><strong>Entregada / Recibida:</strong> El bien llegó y fue confirmado, descontándose de la cantidad requerida.</li>
+                                    <li><strong>No recibida / Cancelada:</strong> El envío no pudo concretarse y la cantidad vuelve a quedar disponible para otros donantes.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
