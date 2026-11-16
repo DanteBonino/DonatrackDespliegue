@@ -15,7 +15,7 @@ public class NotificacionesWebController implements ConPaginacion {
 
   public void showNotificaciones(Context context, DatosDeContacto contacto) {
     int paginaActual = numeroDePagina(context);
-    int tamanioPagina = CANTIDAD_DE_ELEMENTOS_POR_PAGINA;
+    int tamanioPagina = 5;
 
     List<Map<String, Object>> noLeidas = notificacionesRepository()
         .getNoLeidasEntregadasDe(contacto).stream()

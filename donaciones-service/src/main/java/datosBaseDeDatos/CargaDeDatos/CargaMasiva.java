@@ -339,29 +339,56 @@ public class CargaMasiva extends ModificadorBaseDeDatos {
 
     List<Notificacion> notifs = new ArrayList<>();
 
-    // ── D01 (Ana Gómez) ─────────────────────────────────────────
-    Notificacion d1 = FabricaDeNotificaciones.notificacionViaMail(
+    // ── NOTIFICACIONES DE PRUEBA (Para testear UX y Paginación) ──
+
+// 1. NUEVAS / NO LEÍDAS (Aparecerán siempre arriba, sin paginación)
+    Notificacion n1 = FabricaDeNotificaciones.notificacionViaMail(
+        "¡Atención! Se registró una nueva necesidad urgente de sillas en tu zona.", contactoDonante);
+    n1.pasarAEntregada();
+    notifs.add(n1);
+
+    Notificacion n2 = FabricaDeNotificaciones.notificacionViaMail(
+        "Hay un nuevo centro de distribución habilitado para recibir donaciones.", contactoDonante);
+    n2.pasarAEntregada();
+    notifs.add(n2);
+
+
+// 2. ANTERIORES / LEÍDAS (Ideal para probar la paginación si superan el límite por página)
+    Notificacion r1 = FabricaDeNotificaciones.notificacionViaMail(
         "¡Bienvenida a DonaTrack, Ana! Tu cuenta fue creada con éxito.", contactoDonante);
-    d1.pasarAEntregada();
-    notifs.add(d1);
+    r1.pasarAEntregada();
+    r1.marcarComoLeida();
+    notifs.add(r1);
 
-    Notificacion d2 = FabricaDeNotificaciones.notificacionViaMail(
+    Notificacion r2 = FabricaDeNotificaciones.notificacionViaMail(
         "Tu donación de 2 mesas fue recibida por Comedor Los Pibes. ¡Gracias!", contactoDonante);
-    d2.pasarAEntregada();
-    notifs.add(d2);
+    r2.pasarAEntregada();
+    r2.marcarComoLeida();
+    notifs.add(r2);
 
-    Notificacion d3 = FabricaDeNotificaciones.notificacionViaMail(
+    Notificacion r3 = FabricaDeNotificaciones.notificacionViaMail(
         "Tu donación de camperas está en camino a Comedor Los Pibes.", contactoDonante);
-    d3.pasarAEntregada();
-    notifs.add(d3);
+    r3.pasarAEntregada();
+    r3.marcarComoLeida();
+    notifs.add(r3);
 
-    Notificacion d4 = FabricaDeNotificaciones.notificacionViaMail(
+    Notificacion r4 = FabricaDeNotificaciones.notificacionViaMail(
         "Tu donación de arroz fue asignada a Comedor Los Pibes.", contactoDonante);
-    notifs.add(d4);
+    r4.pasarAEntregada();
+    r4.marcarComoLeida();
+    notifs.add(r4);
 
-    Notificacion d5 = FabricaDeNotificaciones.notificacionViaMail(
+    Notificacion r5 = FabricaDeNotificaciones.notificacionViaMail(
         "Tu donación de 1 silla no pudo ser recibida por Comedor Los Pibes.", contactoDonante);
-    notifs.add(d5);
+    r5.pasarAEntregada();
+    r5.marcarComoLeida();
+    notifs.add(r5);
+
+    Notificacion r6 = FabricaDeNotificaciones.notificacionViaMail(
+        "Se confirmó la entrega exitosa de útiles escolares en el merendero.", contactoDonante);
+    r6.pasarAEntregada();
+    r6.marcarComoLeida();
+    notifs.add(r6);
 
     // ── E01 (Comedor Los Pibes) ─────────────────────────────────
     Notificacion e1 = FabricaDeNotificaciones.notificacionViaMail(
