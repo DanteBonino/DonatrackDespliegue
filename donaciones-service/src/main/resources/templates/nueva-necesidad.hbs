@@ -7,7 +7,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 mb-0"><i class="bi bi-basket me-2"></i>Registrar Necesidad</h1>
                     <a href="/necesidades" class="btn btn-outline-primary btn-sm">
-                        <i class="bi bi-arrow-left me-1"></i> Ir a necesidades
+                        <i class="bi bi-arrow-left me-1"></i> Ver necesidades
                     </a>
                 </div>
 
@@ -22,9 +22,10 @@
                     </div>
                     <div class="collapse" id="collapseGuia">
                         <div class="card-body pt-0 text-muted small">
-                            <p class="mb-2"><strong>1. Material y Cantidad:</strong> Seleccioná el insumo (la unidad de medida aparecerá automáticamente) e indicá cuánto precisan.</p>
-                            <p class="mb-2"><strong>2. Condición de aceptación:</strong> Podés pedir que el producto sea exclusivamente <em>nuevo</em>, aceptar <em>usados en buen estado</em>, o dejarlo <em>indiferente (vigente)</em>.</p>
-                            <p class="mb-0"><strong>3. Tipo:</strong> Elegí si es un pedido por única vez (Extraordinaria) o si se repite periódicamente (Recurrente).</p>
+                            <p class="mb-2"><strong>1. Bien y Cantidad:</strong> Seleccioná qué bien necesitas e indicá cuánto precisan (el bien seleccionado determina la unidad).</p>
+                            <p class="mb-2"><strong>2. Condición de aceptación:</strong> En caso de que necesites un bien no perecedero, podés pedir que el producto sea exclusivamente <em>nuevo</em>, aceptar <em>usados en buen estado</em>, o ambos estados a la vez <em>(indiferente)</em>. Si lo que necesitas es un bien perecedero, por ejemplo algún alimento, entonces no hay distinción de estado de uso; se aceptan todos los que no estén vencidos.</p>
+                            <p class="mb-2"><strong>3. Tipo:</strong> Elegí si es un pedido por única vez (Extraordinaria) o si es una necesidad que se repite con cierta frecuencia o periodicidad (Recurrente).</p>
+                            <p class="mb-0"><strong>4. Registrar Necesidad:</strong> Si nada falla en el proceso, ya vas a poder seguir de cerca la necesidad creada en <a href="/necesidades">/necesidades</a>, gestionarla o eliminarla si deja de ser frecuente.</p>
                         </div>
                     </div>
                 </div>
@@ -34,11 +35,10 @@
                     <div class="card-body p-4 p-md-5">
                         <form action="/necesidades" method="POST">
 
-                            <!-- 1. Subcategoría (Limpiamos la unidad del texto y la pasamos a data-unidad) -->
                             <div class="mb-4">
-                                <label for="subcategoria" class="form-label fw-bold">¿Qué necesitan? <span class="text-danger">*</span></label>
+                                <label for="subcategoria" class="form-label fw-bold">¿Qué bien necesitan? <span class="text-danger">*</span></label>
                                 <select id="subcategoria" name="subcategoriaId" class="form-select" required>
-                                    <option value="" selected disabled data-unidad="">Seleccioná lo que necesitas...</option>
+                                    <option value="" selected disabled data-unidad="">Seleccioná el bien que necesitas...</option>
                                     {{#each subcategorias}}
                                         <option value="{{this.id}}" data-perecedera="{{this.esPerecedera}}" data-unidad="{{this.unidad}}">
                                             {{this.nombre}}
@@ -47,38 +47,42 @@
                                 </select>
                             </div>
 
-                            <!-- 2. Cantidad con unidad dinámica al lado (Input Group de Bootstrap) -->
+                            <!-- 2. Cantidad con unidad dinámica y restricción de negativos (min="0.01") -->
                             <div class="mb-4">
                                 <label for="cantidad" class="form-label fw-bold">Cantidad requerida <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <input type="number" step="0.01" id="cantidad" name="cantidad" class="form-control" placeholder="Ej: 100" required>
+                                    <input type="number" step="0.01" min="0.01" id="cantidad" name="cantidad" class="form-control" placeholder="Ej: 100" required>
                                     <span class="input-group-text bg-light text-muted fw-semibold" id="unidad-badge" style="min-width: 70px; justify-content: center;">-</span>
                                 </div>
                                 <div class="form-text">La unidad de medida se ajusta según el material seleccionado.</div>
                             </div>
 
-                            <!-- 3. Condición de Aceptación / Estado de uso -->
+                            <!-- 3. Condición de Aceptación / Estado de uso con descripción dinámica -->
                             <div class="mb-4" id="seccion-estado">
                                 <label class="form-label fw-bold">Condición de aceptación</label>
                                 <div class="d-flex flex-column flex-md-row gap-3 mt-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="condicion" id="condicionVigente" value="VIGENTE" checked>
+                                        <input class="form-check-input condicion-radio" type="radio" name="condicion" id="condicionVigente" value="VIGENTE" data-desc="Acepta cualquier estado de uso disponible (nuevo o usado)." checked>
                                         <label class="form-check-label" for="condicionVigente">
                                             Indiferente / Vigente
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="condicion" id="condicionNuevo" value="NUEVO">
+                                        <input class="form-check-input condicion-radio" type="radio" name="condicion" id="condicionNuevo" value="NUEVO" data-desc="Exige que el producto sea totalmente nuevo y sin uso previo.">
                                         <label class="form-check-label" for="condicionNuevo">
                                             Exclusivamente Nuevo
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="condicion" id="condicionUsado" value="USADO">
+                                        <input class="form-check-input condicion-radio" type="radio" name="condicion" id="condicionUsado" value="USADO" data-desc="Acepta productos usados siempre que se encuentren en buen estado.">
                                         <label class="form-check-label" for="condicionUsado">
                                             Acepta Usado
                                         </label>
                                     </div>
+                                </div>
+                                <!-- Texto descriptivo dinámico de la condición seleccionada -->
+                                <div class="form-text text-muted mt-2 fst-italic" id="texto-descripcion-condicion">
+                                    Acepta cualquier estado de uso disponible (nuevo o usado).
                                 </div>
                                 <div class="form-text mt-2 text-primary" id="aviso-perecedero" style="display: none;">
                                     <i class="bi bi-info-circle me-1"></i> Los productos perecederos no admiten distinción de uso.
@@ -94,7 +98,7 @@
                                 </select>
                             </div>
 
-                            <!-- Bloque Período -->
+                            <!-- Bloque Período con aclaración de eliminación -->
                             <div class="mb-4 p-3 bg-light rounded border" id="bloque-periodo" style="display: none;">
                                 <label for="periodo" class="form-label fw-bold small">Frecuencia de repetición <span class="text-danger">*</span></label>
                                 <select id="periodo" name="periodo" class="form-select form-select-sm">
@@ -103,7 +107,10 @@
                                     <option value="BIMESTRAL">Bimestral</option>
                                     <option value="TRIMESTRAL">Trimestral</option>
                                 </select>
-                                <div class="form-text mt-1">Define cada cuánto tiempo se renovará esta necesidad en el sistema.</div>
+                                <div class="form-text mt-2">
+                                    Define cada cuánto tiempo se renovará esta necesidad en el sistema.
+                                    <span class="text-dark fw-semibold">Recordá que si eventualmente deja de ser una necesidad frecuente, podés eliminarla directamente desde <a href="/necesidades">/necesidades</a>.</span>
+                                </div>
                             </div>
 
                             <!-- Botón de envío -->
@@ -121,28 +128,29 @@
         </div>
     </div>
 
-    <!-- Script de comportamiento dinámico (Unidades, Perecederos y Período) -->
+    <!-- Script de comportamiento dinámico -->
     <script>
+        // 1. Cambio de subcategoría (unidades y perecederos)
         document.getElementById('subcategoria').addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
 
-            // 1. Actualizar unidad dinámica al lado de la cantidad
             const unidad = selectedOption.getAttribute('data-unidad');
             const unidadBadge = document.getElementById('unidad-badge');
             unidadBadge.textContent = unidad ? unidad : '-';
 
-            // 2. Gestionar lógica de productos perecederos
             const esPerecedera = selectedOption.getAttribute('data-perecedera') === 'true';
             const avisoPerecedero = document.getElementById('aviso-perecedero');
             const radioVigente = document.getElementById('condicionVigente');
             const radioNuevo = document.getElementById('condicionNuevo');
             const radioUsado = document.getElementById('condicionUsado');
+            const descCondicion = document.getElementById('texto-descripcion-condicion');
 
             if (esPerecedera) {
                 radioVigente.checked = true;
                 radioNuevo.disabled = true;
                 radioUsado.disabled = true;
                 avisoPerecedero.style.display = 'block';
+                descCondicion.textContent = radioVigente.getAttribute('data-desc');
             } else {
                 radioNuevo.disabled = false;
                 radioUsado.disabled = false;
@@ -150,6 +158,15 @@
             }
         });
 
+        // 2. Descripción dinámica según la condición elegida
+        document.querySelectorAll('.condicion-radio').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const desc = this.getAttribute('data-desc');
+                document.getElementById('texto-descripcion-condicion').textContent = desc;
+            });
+        });
+
+        // 3. Mostrar/Ocultar bloque de periodo según tipo de necesidad
         document.getElementById('tipoNecesidad').addEventListener('change', function() {
             const bloquePeriodo = document.getElementById('bloque-periodo');
             if (this.value === 'RECURRENTE') {
