@@ -1,5 +1,6 @@
 package Controllers.Web;
 
+import Bienes.SubCategoria.SubCategoria;
 import Donaciones.DonacionIndependiente;
 import Donantes.Donante;
 import Donantes.DonanteHumana.PersonaHumana;
@@ -10,7 +11,9 @@ import Necesidades.Necesidad;
 import Repositories.Beneficiarios.BeneficiariosRepository;
 import Repositories.Donaciones.DonacionesRepository;
 import Repositories.Generales.paginacion.Pagina;
+import Repositories.SubCategorias.SubCategoriasRepository;
 import Servidor.ManejadorDeSesiones.ManejadorDeSesion;
+import UsuarioFinal.Rol;
 import io.javalin.http.Context;
 
 import java.time.format.DateTimeFormatter;
@@ -102,6 +105,28 @@ public class BeneficiariaWebController implements ConPaginacion {
     ctx.render("beneficiaria/donacionesAsignadas.hbs", model);
   }
 
+  public void showCrearNecesidad(Context ctx) {
+    EntidadBeneficiaria entidad = getBeneficiario(ctx).get();
+    validarBeneficiario(ctx, entidad);
+
+    List<SubCategoria> subCategorias = subCategoriasRepository().getInstancias();
+
+    List<Map<String, Object>> subcategoriasDto = subCategorias.stream()
+        .map(sc -> {
+          Map<String, Object> map = new HashMap<>();
+          map.put("id", sc.getIdDominio());
+          map.put("nombre", sc.getNombre());
+          map.put("unidad", sc.getUnidad().getAbreviatura());
+          map.put("esPerecedera", sc.esPerecedera());
+          return map;
+        })
+        .toList();
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("subcategorias", subcategoriasDto);
+
+    ctx.render("nueva-necesidad.hbs", model);
+  }
 
   private String nombreDe(Donante donante) {
     if (donante == null) return "-";
@@ -122,5 +147,9 @@ public class BeneficiariaWebController implements ConPaginacion {
 
   private DonacionesRepository donacionesRepository() {
     return DonacionesRepository.getInstance();
+  }
+
+  private SubCategoriasRepository subCategoriasRepository() {
+    return SubCategoriasRepository.getInstance();
   }
 }
