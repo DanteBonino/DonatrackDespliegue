@@ -131,7 +131,7 @@ public class BeneficiariaWebController implements ConPaginacion {
   public void showGuiaNecesidades(Context context) {
     EntidadBeneficiaria entidad = getBeneficiario(context).get();
     validarBeneficiario(context, entidad);
-    context.render("guia-necesidades.hbs");
+    context.render("beneficiaria/guia-necesidades.hbs");
   }
 
   private String nombreDe(Donante donante) {
