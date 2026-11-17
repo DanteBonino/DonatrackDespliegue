@@ -131,6 +131,11 @@ public class PersonaHumana extends Donante {
         return this.getNombreCompleto();
     }
 
+    @Override
+    public boolean esHumano() {
+        return true;
+    }
+
     public String getNombreCompleto() {
         return getNombre() + " " + getApellido();
     }

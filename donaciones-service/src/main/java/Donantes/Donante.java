@@ -114,5 +114,7 @@ abstract public class Donante extends Persistible implements Actualizable <Datos
     }
 
     public abstract String getNombreAMostrar();
+
+    public abstract boolean esHumano();
 }
 

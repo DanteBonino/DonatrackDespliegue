@@ -97,6 +97,11 @@ public class PersonaJuridica extends Donante {
     public String getNombreAMostrar() {
         return getRazonSocial();
     }
+
+    @Override
+    public boolean esHumano() {
+        return false;
+    }
 }
 
 

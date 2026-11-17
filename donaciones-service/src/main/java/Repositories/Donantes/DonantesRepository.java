@@ -9,6 +9,7 @@ import Repositories.Generales.filtros.Filtro;
 import Usuario.ConSesion;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class DonantesRepository implements IDonantesRepository, RepositorioConSoftDelete<Donante>, RepositorioDeActualizable<Donante, DatosDonante>, RepositorioConDatosDeContacto<Donante> {
   private static DonantesRepository INSTACE = new DonantesRepository();
@@ -81,5 +82,13 @@ public class DonantesRepository implements IDonantesRepository, RepositorioConSo
     return entityManager()
         .createQuery(jpql, Long.class)
         .getSingleResult();
+  }
+
+  public Optional<Donante> buscarPorDocumentoOCuit(String termino) {
+      return entityManager().createQuery(
+              "SELECT d FROM Donante d WHERE d.documento = :termino OR d.cuit = :termino", Donante.class)
+          .setParameter("termino", termino)
+          .getResultStream()
+          .findFirst();
   }
 }

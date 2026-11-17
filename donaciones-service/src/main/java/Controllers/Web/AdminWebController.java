@@ -87,6 +87,22 @@ public class AdminWebController implements ConPaginacion {
     ctx.redirect("/donaciones/en-deposito?vencida=true");
   }
 
+  public void showCrearLote(Context ctx) {
+
+  }
+
+  public void buscarDonanteFragmento(Context ctx) {
+    String legajoODni = ctx.queryParam("q");
+    Optional<Donante> donanteOpt = donantesRepository().buscarPorDocumentoOCuit(legajoODni);
+
+    if (donanteOpt.isPresent()) {
+      ctx.attribute("donante", donanteOpt.get());
+      ctx.render("/partials/donante-encontrado.hbs");
+    } else {
+      ctx.render("/partials/donante-no-encontrado.hbs");
+    }
+  }
+
   private Optional<Administrador> getAdministrador(Context context) {
     return administradoresRepository().obtenerSiExistePorIdDominio(ManejadorDeSesion.obtenerIdAsoaciado(context).get());
   }
