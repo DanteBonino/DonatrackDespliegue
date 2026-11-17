@@ -116,6 +116,7 @@ public class WebRoutes implements EndpointGroup {
     post("necesidades/nueva", beneficiaria::crearNecesidad, Rol.ENTIDADBENEFICIARIA);
     get("/guia-necesidades", beneficiaria::showGuiaNecesidades, Rol.ENTIDADBENEFICIARIA);
     post("/necesidades/{id}/eliminar", beneficiaria::eliminarNecesidad, Rol.ENTIDADBENEFICIARIA);
+    get("/guia-de-uso", donanteWebController::showGuiaDeUso, DONANTE);
   }
 
 }

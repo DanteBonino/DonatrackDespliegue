@@ -185,4 +185,9 @@ public class DonanteWebController implements ConPaginacion {
 
     return Map.of("estados", estados, "categorias", categorias);
   }
+
+  public void showGuiaDeUso(Context ctx) {
+    validarDonante(ctx, getDonante(ctx).get());
+    ctx.render("donante/guia-donantes.hbs");
+  }
 }
