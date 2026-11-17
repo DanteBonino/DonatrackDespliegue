@@ -4,20 +4,20 @@
         <div>
             <div class="fw-bold mb-1">Donante verificado:</div>
 
-            {{#if donante.esHumano}}
+            {{#if esHumano}}
                 <div>
                     <span class="badge bg-primary me-1">Persona Física</span>
-                    <strong>{{donante.nombre}} {{donante.apellido}}</strong>
-                    <span class="text-muted ms-1">| DNI: {{donante.documento}}</span>
+                    <strong>{{nombre}} {{apellido}}</strong>
+                    <span class="text-muted ms-1">| DNI: {{documento}}</span>
                 </div>
             {{else}}
                 <div>
-                    <span class="badge bg-dark me-1">{{donante.tipo}}</span>
-                    <strong>{{donante.razonSocial}}</strong>
-                    <span class="text-muted ms-1">| CUIT: {{donante.cuit}}</span>
+                    <span class="badge bg-dark me-1">{{tipo}}</span>
+                    <strong>{{razonSocial}}</strong>
+                    <span class="text-muted ms-1">| CUIT: {{cuit}}</span>
                 </div>
                 <div class="small text-muted mt-1">
-                    <strong>Rubro:</strong> {{donante.rubro}}
+                    <strong>Rubro:</strong> {{rubro}}
                 </div>
             {{/if}}
         </div>
@@ -25,4 +25,4 @@
 </div>
 
 <!-- Input oculto que viaja dentro del formulario principal al hacer submit -->
-<input type="hidden" name="idDonante" value="{{donante.id}}" required>
+<input type="hidden" name="idDonante" value="{{id}}" required>
