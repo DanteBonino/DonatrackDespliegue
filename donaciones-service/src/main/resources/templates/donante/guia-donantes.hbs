@@ -1,151 +1,210 @@
 {{#partial "contenido"}}
+    <style>
+        .sidebar-nav .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-radius: 0.375rem;
+        }
+        .sidebar-nav .nav-link:hover {
+            background-color: rgba(var(--bs-primary-rgb), 0.08);
+            color: var(--bs-primary) !important;
+            transform: translateX(3px);
+        }
+    </style>
+
     <div class="container py-5">
-
-        <!-- Cabecera de la Guía -->
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 pb-3 border-bottom">
-            <div>
-                <h1 class="h2 mb-1"><i class="bi bi-book me-2"></i>Guía para Donantes</h1>
-                <p class="text-muted mb-0">Todo lo que necesitás saber sobre cómo donar, el proceso en nuestra sede y el seguimiento de tus aportes.</p>
-            </div>
-            <div class="mt-3 mt-md-0">
-                <a href="/mis-donaciones" class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-box-seam me-1"></i> Ir a Mis Donaciones
-                </a>
-            </div>
-        </div>
-
         <div class="row">
-            <!-- Sidebar de Navegación Rápida (Sticky) -->
+
+            <!-- Sidebar de Navegación Rápida (Sticky con efectos de hover) -->
             <div class="col-lg-3 d-none d-lg-block">
                 <div class="position-sticky" style="top: 2rem;">
-                    <div class="card border-0 shadow-sm p-3 bg-light">
-                        <h6 class="fw-bold text-uppercase small text-muted mb-3">Contenido de la guía</h6>
-                        <nav class="nav flex-column nav-pills small gap-1">
-                            <a class="nav-link text-dark py-1 px-2" href="#que-es">¿Qué es una donación?</a>
-                            <a class="nav-link text-dark py-1 px-2" href="#que-donar">¿Qué podés donar?</a>
-                            <a class="nav-link text-dark py-1 px-2" href="#como-donar">El paso a paso</a>
-                            <a class="nav-link text-dark py-1 px-2" href="#seguimiento">Seguimiento y Estados</a>
-                        </nav>
+                    <div class="mb-4">
+                        <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill mb-2">
+                            <i class="bi bi-book me-1"></i> Documentación
+                        </span>
+                        <h1 class="h4 fw-bold text-dark">Guía de Donantes</h1>
                     </div>
+                    <nav class="nav flex-column sidebar-nav gap-1 small">
+                        <a class="nav-link text-secondary fw-medium py-2 px-3" href="#que-es">¿Qué es una donación?</a>
+                        <a class="nav-link text-secondary fw-medium py-2 px-3" href="#que-donar">¿Qué podés donar?</a>
+                        <a class="nav-link text-secondary fw-medium py-2 px-3" href="#como-donar">El paso a paso</a>
+                        <a class="nav-link text-secondary fw-medium py-2 px-3" href="#seguimiento">Seguimiento y Estados</a>
+                    </nav>
                 </div>
             </div>
 
             <!-- Contenido Principal -->
             <div class="col-lg-9">
 
-                <!-- Sección 1: Qué es -->
-                <section id="que-es" class="mb-5">
-                    <h3 class="h4 text-primary fw-bold mb-3"><i class="bi bi-question-circle me-2"></i>¿Qué es una donación?</h3>
-                    <p class="text-muted">
-                        Una donación es la forma en que <strong>Donatrack</strong> posibilita ayudar a las entidades beneficiarias (podes ver las que se registraron hasta el momento en <a href="/entidades-beneficiarias">/entidades-beneficiarias</a>) que tienen necesidades activas y precisan ayuda de la comunidad.
-                    </p>
-                </section>
+                <!-- Cabecera para dispositivos móviles -->
+                <div class="d-lg-none mb-4">
+                    <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill mb-2">
+                        <i class="bi bi-book me-1"></i> Documentación y Ayuda
+                    </span>
+                    <h1 class="h2 fw-bold text-dark mb-0">Guía para Donantes</h1>
+                </div>
 
-                <!-- Sección 2: Qué podés donar -->
-                <section id="que-donar" class="mb-5">
-                    <h3 class="h4 text-primary fw-bold mb-3"><i class="bi bi-basket me-2"></i>¿Qué podés donar?</h3>
-                    <p class="text-muted">En principio, cualquier cosa que la red esté necesitando. Contamos con bienes precargados, pero si precisas donar uno que no existe te podés comunicar a <a href="mailto:donatrack-grupo1@gmail.com">donatrack-grupo1@gmail.com</a> y lo crearemos.</p>
-
-                    <div class="row g-3 mt-2">
-                        <div class="col-md-6">
-                            <div class="card border-0 shadow-sm h-100 bg-light">
-                                <div class="card-body">
-                                    <h5 class="fw-bold text-dark"><i class="bi bi-apple me-2 text-success"></i>Bienes Perecederos</h5>
-                                    <p class="small text-muted mb-0">Alimentos u otros elementos con fecha de caducidad. Se aceptan siempre y cuando se encuentren vigentes y aptos para el consumo.</p>
-                                </div>
+                <!-- 1. ¿Qué es una donación? (Mantiene el recuadro destacado principal) -->
+                <div class="card border-0 shadow-sm bg-primary bg-opacity-10 mb-5 rounded-4">
+                    <div class="card-body p-4 p-md-5">
+                        <div class="row align-items-center">
+                            <div class="col-md-9">
+                                <h3 class="h4 text-primary fw-bold mb-3"><i class="bi bi-heart-fill me-2"></i>¿Qué es una donación?</h3>
+                                <p class="text-secondary lead fs-6 mb-0">
+                                    Una donación es la forma en que podés colaborar con las entidades beneficiarias que tienen necesidades activas en la plataforma, aportando los insumos que están precisando.
+                                </p>
+                            </div>
+                            <div class="col-md-3 text-center d-none d-md-block">
+                                <i class="bi bi-gift text-primary display-3 opacity-50"></i>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- 2. Qué podés donar (Estilo limpio con borde lateral, sin tarjetas innecesarias) -->
+                <section id="que-donar" class="mb-5 pb-4 border-bottom">
+                    <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-basket me-2 text-primary"></i>¿Qué podés donar?</h3>
+                    <p class="text-muted mb-4">Podés acercar cualquier elemento que esté dentro de las categorías aceptadas por el sistema.</p>
+
+                    <div class="row g-4">
+                        <!-- Perecederos -->
                         <div class="col-md-6">
-                            <div class="card border-0 shadow-sm h-100 bg-light">
-                                <div class="card-body">
-                                    <h5 class="fw-bold text-dark"><i class="bi bi-tools me-2 text-primary"></i>Bienes No Perecederos</h5>
-                                    <p class="small text-muted mb-0">Artículos de hogar, ropa, muebles, etc. Estos admiten criterios según su estado de uso (nuevos, usados en buen estado o indistinto según pida la necesidad).</p>
+                            <div class="border-start border-primary border-3 ps-3 h-100">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-apple text-primary fs-5"></i>
+                                    <h4 class="h5 fw-bold mb-0">Bienes Perecederos</h4>
                                 </div>
+                                <p class="text-muted mb-0">
+                                    Alimentos u otros elementos con fecha de caducidad. Se aceptan siempre y cuando se encuentren vigentes y aptos para el consumo.
+                                </p>
+                            </div>
+                        </div>
+                        <!-- No Perecederos -->
+                        <div class="col-md-6">
+                            <div class="border-start border-primary border-3 ps-3 h-100">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <i class="bi bi-box-seam text-primary fs-5"></i>
+                                    <h4 class="h5 fw-bold mb-0">Bienes No Perecederos</h4>
+                                </div>
+                                <p class="text-muted mb-0">
+                                    Artículos de hogar, ropa, muebles, etc. Estos admiten criterios según su estado de uso (nuevos, usados en buen estado o indistinto según pida la necesidad).
+                                </p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Sección 3: Cómo podés donar (Paso a paso) -->
-                <section id="como-donar" class="mb-5">
-                    <h3 class="h4 text-primary fw-bold mb-3"><i class="bi bi-123 me-2"></i>¿Cómo podés donar? (Paso a paso)</h3>
+                <!-- 3. Cómo podés donar (Paso a paso con círculos perfectos) -->
+                <section id="como-donar" class="mb-5 pb-4 border-bottom">
+                    <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-list-check me-2 text-primary"></i>¿Cómo podés donar? (Paso a paso)</h3>
 
-                    <div class="alert alert-info small mb-4">
-                        <i class="bi bi-info-circle me-1"></i> <strong>Nota importante:</strong> Todavía no existe la posibilidad de registrar una donación de forma digital directamente desde tu casa, pero es una funcionalidad que existirá en el futuro. Actualmente el circuito se realiza de forma presencial en nuestra sede.
+                    <div class="d-flex flex-column gap-4">
+                        <!-- Paso 1 -->
+                        <div class="d-flex gap-3 gap-md-4 align-items-start">
+                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">1</div>
+                            <div>
+                                <h5 class="fw-bold mb-1">Preparás lo que vas a donar</h5>
+                                <p class="text-muted mb-0">Seleccionás los bienes en tu hogar teniendo en cuenta las categorías y condiciones requeridas.</p>
+                            </div>
+                        </div>
+
+                        <!-- Paso 2 -->
+                        <div class="d-flex gap-3 gap-md-4 align-items-start">
+                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">2</div>
+                            <div>
+                                <h5 class="fw-bold mb-1">Te acercás a nuestra sede</h5>
+                                <p class="text-muted mb-0">Llevás los bienes físicos hasta el depósito central de recepción de la organización.</p>
+                            </div>
+                        </div>
+
+                        <!-- Paso 3 -->
+                        <div class="d-flex gap-3 gap-md-4 align-items-start">
+                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">3</div>
+                            <div>
+                                <h5 class="fw-bold mb-1">Recepción y registro</h5>
+                                <p class="text-muted mb-0">Un administrador te atiende, valida los artículos y se encarga de registrar formalmente la donación en el sistema.</p>
+                            </div>
+                        </div>
+
+                        <!-- Paso 4 -->
+                        <div class="d-flex gap-3 gap-md-4 align-items-start">
+                            <div class="bg-primary text-white rounded-circle fw-bold d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">4</div>
+                            <div>
+                                <h5 class="fw-bold mb-1">Generación de registros</h5>
+                                <p class="text-muted mb-0">Se generan tantas donaciones independientes en el sistema como tipos de bienes distintos hayas acercado.</p>
+                            </div>
+                        </div>
                     </div>
-
-                    <ul class="list-group list-group-flush shadow-sm rounded border">
-                        <li class="list-group-item p-3">
-                            <div class="d-flex align-items-start">
-                                <span class="badge bg-primary rounded-circle p-2 me-3">1</span>
-                                <div>
-                                    <h6 class="fw-bold mb-1">Preparás lo que vas a donar en tu casa</h6>
-                                    <p class="text-muted small mb-0">Seleccionás los bienes teniendo en cuenta las categorías disponibles.</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item p-3">
-                            <div class="d-flex align-items-start">
-                                <span class="badge bg-primary rounded-circle p-2 me-3">2</span>
-                                <div>
-                                    <h6 class="fw-bold mb-1">Te acercás a nuestra sede</h6>
-                                    <p class="text-muted small mb-0">Llevás los bienes físicos hasta el depósito central de recepción.</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item p-3">
-                            <div class="d-flex align-items-start">
-                                <span class="badge bg-primary rounded-circle p-2 me-3">3</span>
-                                <div>
-                                    <h6 class="fw-bold mb-1">Atención y carga inicial</h6>
-                                    <p class="text-muted small mb-0">Un administrador te va a atender, solicitar algunos datos básicos y registrar la recepción de los artículos.</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="list-group-item p-3">
-                            <div class="d-flex align-items-start">
-                                <span class="badge bg-primary rounded-circle p-2 me-3">4</span>
-                                <div>
-                                    <h6 class="fw-bold mb-1">Generación de registros</h6>
-                                    <p class="text-muted small mb-0">Se generan tantas donaciones independientes en el sistema como tipos de bienes distintos hayas acercado.</p>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
                 </section>
 
-                <!-- Sección 4: Seguimiento y Estados -->
+                <!-- Tarjeta de llamada a la acción -->
+                <div class="card border border-primary border-opacity-25 shadow-sm bg-light text-center p-4 p-md-5 mb-5 rounded-4">
+                    <div class="card-body">
+                        <h3 class="h4 fw-bold text-dark mb-2">¿Querés consultar el estado de tus aportes?</h3>
+                        <p class="text-muted mb-4">Ingresá a tu panel para ver el seguimiento en tiempo real.</p>
+                        <a href="/mis-donaciones" class="btn btn-primary px-4 py-3 shadow-sm">
+                            <i class="bi bi-box-seam me-2"></i> Ir a Mis Donaciones
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 4. Seguimiento y Estados (Con badges oficiales y descripciones claras) -->
                 <section id="seguimiento" class="mb-4">
-                    <h3 class="h4 text-primary fw-bold mb-3"><i class="bi bi-shield-check me-2"></i>Seguimiento y Transparencia</h3>
-                    <p class="text-muted">
-                        No te preocupes: podés hacer un seguimiento completo de tus aportes ingresando a <a href="/mis-donaciones">/mis-donaciones</a>[cite: 4]. Ahí vas a poder ver el estado actual, qué se donó, a qué entidad fue asignada y la fecha de la operación[cite: 4]. Además, vas a recibir notificaciones en momentos clave.
-                    </p>
-                    <p class="text-muted">
-                        También podés consultar un registro público de todas las donaciones que ya llegaron a destino en <a href="/donaciones/entregadas">/donaciones/entregadas</a>[cite: 4].
-                    </p>
+                    <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-shield-check me-2 text-primary"></i>Seguimiento y Transparencia</h3>
+
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-dark mb-2"><i class="bi bi-table text-primary me-2"></i>Panel de Mis Donaciones</h5>
+                            <p class="text-muted small mb-0">
+                                Desde <a href="/mis-donaciones" class="text-primary fw-semibold">/mis-donaciones</a> podés hacer un seguimiento completo de tus aportes, ver a qué entidad fueron asignados y la fecha de la operación.
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bold text-dark mb-2"><i class="bi bi-check2-all text-primary me-2"></i>Donaciones Entregadas</h5>
+                            <p class="text-muted small mb-0">
+                                También podés consultar el registro público de todas las donaciones que ya llegaron a destino ingresando en <a href="/donaciones/entregadas" class="text-primary fw-semibold">/donaciones/entregadas</a>.
+                            </p>
+                        </div>
+                    </div>
 
                     <!-- Explicación de Estados -->
-                    <h5 class="fw-bold text-dark mt-4 mb-3">¿Qué significa cada estado de tu donación?</h5>
-                    <div class="card border-0 shadow-sm bg-light">
-                        <div class="card-body">
-                            <ul class="list-unstyled mb-0 small">
-                                <li class="mb-2"><strong>EN_DEPÓSITO:</strong> La donación se encuentra almacenada, todavía no fue asignada[cite: 4].</li>
-                                <li class="mb-2"><strong>PENDIENTE_DE_CONFIRMACION_DE_ASIGNACION:</strong> Fue seleccionada para ser asignada, pero todavía no se eligió la entidad beneficiaria candidata[cite: 4].</li>
-                                <li class="mb-2"><strong>VENCIDA:</strong> Se quitó la donación del sistema porque se venció[cite: 4].</li>
-                                <li class="mb-2"><strong>ASIGNACION_REALIZADA:</strong> Una donación del depósito cumplió con las condiciones de aceptación de alguna necesidad y se designó una entidad beneficiaria como su receptor[cite: 4].</li>
-                                <li class="mb-2"><strong>LISTA_PARA_ENTREGAR:</strong> Hay una ruta planificada que incluye la donación[cite: 4].</li>
-                                <li class="mb-2"><strong>EN_TRASLADO:</strong> El camión que tiene la ruta planificada que incluye la donación inicia el recorrido o está realizando el recorrido[cite: 4].</li>
-                                <li class="mb-2"><strong>ENTREGADA:</strong> La donación fue recibida por una entidad beneficiaria[cite: 4].</li>
-                                <li class="mb-0"><strong>ENTREGA_FALLIDA:</strong> No se pudo entregar la donación (porque no escondemos nada y nos importa la total transparencia)[cite: 4].</li>
-                            </ul>
+                    <h5 class="fw-bold text-dark mb-3">¿Qué significa cada estado de tu donación?</h5>
+                    <p class="text-muted small mb-3">Cada etapa del proceso cuenta con un identificador visual transparente:</p>
+
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
+                            <span class="badge text-bg-dark" title="La donación se encuentra almacenada, todavía no fue asignada" style="cursor: help;"><i class="bi bi-archive me-1" aria-hidden="true"></i>En depósito</span>
+                            <div class="small text-muted">La donación se encuentra almacenada en el depósito central y todavía no fue asignada.</div>
+                        </div>
+                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
+                            <span class="badge text-bg-secondary" title="Fue seleccionada para ser asignada, pero todavía no se eligió la entidad beneficiaria candidata" style="cursor: help;"><i class="bi bi-hourglass-split me-1" aria-hidden="true"></i>Pendiente de confirmación</span>
+                            <div class="small text-muted">Fue seleccionada para ser asignada, pero todavía no se eligió la entidad beneficiaria candidata.</div>
+                        </div>
+                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
+                            <span class="badge text-bg-primary" title="Una donación del depósito cumplió con las condiciones de aceptación alguna necesidad y se designó una entidad beneficiaria como su receptor." style="cursor: help;"><i class="bi bi-clipboard-check me-1" aria-hidden="true"></i>Asignada</span>
+                            <div class="small text-muted">Una donación del depósito cumplió con las condiciones de aceptación de una necesidad y se designó una entidad beneficiaria como su receptor.</div>
+                        </div>
+                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
+                            <span class="badge text-bg-warning" title="Hay una ruta planificada que incluye la donación." style="cursor: help;"><i class="bi bi-box-seam me-1" aria-hidden="true"></i>Lista para entregar</span>
+                            <div class="small text-muted">Hay una ruta logística planificada que incluye la donación para su próximo traslado.</div>
+                        </div>
+                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
+                            <span class="badge text-bg-info" title="El camión que tiene la ruta planificada que incluye la donación inicia el recorrido o está realizando el recorrido." style="cursor: help;"><i class="bi bi-truck me-1" aria-hidden="true"></i>En traslado</span>
+                            <div class="small text-muted">El vehículo asignado a la ruta planificada inició el recorrido o se encuentra realizándolo hacia la entidad.</div>
+                        </div>
+                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
+                            <span class="badge text-bg-success" title="La donación fue recibida por una entidad beneficiaria." style="cursor: help;"><i class="bi bi-check-circle me-1" aria-hidden="true"></i>Entregada</span>
+                            <div class="small text-muted">La donación fue recibida con éxito por la entidad beneficiaria correspondiente.</div>
+                        </div>
+                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
+                            <span class="badge text-bg-danger" title="No se pudo entregar la donación." style="cursor: help;"><i class="bi bi-x-circle me-1" aria-hidden="true"></i>Entrega fallida</span>
+                            <div class="small text-muted">No se pudo concretar la entrega de la donación debido a un inconveniente imprevisto.</div>
+                        </div>
+                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
+                            <span class="badge text-bg-danger" title="Se quitó la donación del sistema porque se venció" style="cursor: help;"><i class="bi bi-calendar-x me-1" aria-hidden="true"></i>Vencida</span>
+                            <div class="small text-muted">Se dio de baja la donación del sistema debido a que superó su fecha de vencimiento.</div>
                         </div>
                     </div>
                 </section>
-
-                <div class="text-center py-4 border-top mt-5">
-                    <p class="text-muted mb-2">Gracias por ser parte de Donatrack y por pensar en comunidad ❤️</p>
-                    <a href="/mis-donaciones" class="btn btn-primary shadow-sm">Ver mis donaciones</a>
-                </div>
 
             </div>
         </div>
