@@ -2,6 +2,8 @@ package Controllers.Web;
 
 import Donaciones.DonacionIndependiente;
 import Donantes.Donante;
+import Donantes.DonanteHumana.PersonaHumana;
+import Donantes.DonanteJuridico.PersonaJuridica;
 import EstadoDonacion.EstadoDonacion;
 import Repositories.Administradores.AdministradoresRepository;
 import Repositories.Donaciones.DonacionesRepository;
@@ -96,7 +98,26 @@ public class AdminWebController implements ConPaginacion {
     Optional<Donante> donanteOpt = donantesRepository().buscarPorDocumentoOCuit(legajoODni);
 
     if (donanteOpt.isPresent()) {
-      ctx.attribute("donante", donanteOpt.get());
+      Donante donante = donanteOpt.get();
+
+      Map<String, Object> modeloDonante = new HashMap<>();
+      modeloDonante.put("id", donante.getId());
+      modeloDonante.put("esHumano", donante.esHumano());
+
+      if (donante.esHumano()) {
+        PersonaHumana humano = (PersonaHumana) donante;
+        modeloDonante.put("nombre", humano.getNombre());
+        modeloDonante.put("apellido", humano.getApellido());
+        modeloDonante.put("documento", humano.getDocumento());
+      } else {
+        PersonaJuridica juridica = (PersonaJuridica) donante;
+        modeloDonante.put("razonSocial", juridica.getRazonSocial());
+        modeloDonante.put("cuit", juridica.getCuit());
+        modeloDonante.put("rubro", juridica.getRubro());
+        modeloDonante.put("tipo", juridica.getTipo());
+      }
+
+      ctx.attribute("donante", modeloDonante);
       ctx.render("/partials/donante-encontrado.hbs");
     } else {
       ctx.render("/partials/donante-no-encontrado.hbs");
