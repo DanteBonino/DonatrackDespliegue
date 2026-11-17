@@ -80,10 +80,10 @@ public class JavalinHandlebars implements FileRenderer {
         case "EN_DEPOSITO" -> "La donación se encuentra almacenada, todavía no fue asignada";
         case "PENDIENTE_DE_CONFIRMACION_DE_ASIGNACION" -> "Fue seleccionada para ser asignada, pero todavía no se eligió la entidad beneficiaria candidata";
         case "VENCIDA" -> "Se quitó la donación del sistema porque se venció";
-        case "ASIGNACION_REALIZADA" -> "Una donación del depósito cumplió con las condiciones de aceptación de la necesidad y fuiste designado como su receptor.";
+        case "ASIGNACION_REALIZADA" -> "Una donación del depósito cumplió con las condiciones de aceptación alguna necesidad y se designó una entidad beneficiaria como su receptor.";
         case "LISTA_PARA_ENTREGAR" -> "Hay una ruta planificada que incluye la donación.";
         case "EN_TRASLADO" -> "El camión que tiene la ruta planificada que incluye la donación inicia el recorrido o está realizando el recorrido.";
-        case "ENTREGADA" -> "Ya recibiste la donación y lo confirmaste.";
+        case "ENTREGADA" -> "La donación fue recibida por una entidad beneficiaria.";
         case "ENTREGA_FALLIDA" -> "No se pudo entregar la donación.";
         default -> "Estado de la donación.";
       };
