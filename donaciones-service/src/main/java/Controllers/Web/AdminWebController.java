@@ -116,9 +116,7 @@ public class AdminWebController implements ConPaginacion {
         modeloDonante.put("rubro", juridica.getRubro());
         modeloDonante.put("tipo", juridica.getTipo());
       }
-
-      ctx.attribute("donante", modeloDonante);
-      ctx.render("/partials/donante-encontrado.hbs");
+      ctx.render("/partials/donante-encontrado.hbs", modeloDonante);
     } else {
       ctx.render("/partials/donante-no-encontrado.hbs");
     }
