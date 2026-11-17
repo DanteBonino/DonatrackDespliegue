@@ -44,4 +44,8 @@ public class CambioDeEstado {
   public EntidadBeneficiaria getAsignado() {
     return asignado;
   }
+
+  public Boolean esDeAsignacion() {
+    return estadoDonacion.equals(EstadoDonacion.ASIGNACION_REALIZADA);
+  }
 }

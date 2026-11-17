@@ -73,10 +73,23 @@ public class JavalinHandlebars implements FileRenderer {
 
 
     handlebars.registerHelper("badgeEstado", (Object estado, Options options) -> {
-      EstilosEstado.Estilo e = EstilosEstado.de(String.valueOf(estado));
+      String estadoStr = String.valueOf(estado);
+      EstilosEstado.Estilo e = EstilosEstado.de(estadoStr);
+
+      String tooltip = switch (estadoStr.toUpperCase()) {
+        case "ASIGNADA" -> "Una donación del depósito cumplió con las condiciones de aceptación de la necesidad y fuiste designado como su receptor.";
+        case "LISTA_PARA_ENTREGAR" -> "Hay una ruta planificada que incluye la donación.";
+        case "EN_TRASLADO" -> "El camión que tiene la ruta planificada que incluye la donación inicia el recorrido o está realizando el recorrido.";
+        case "ENTREGADA" -> "Ya recibiste la donación y lo confirmaste.";
+        case "ENTREGA_FALLIDA" -> "No se pudo entregar la donación.";
+        default -> "Estado de la donación.";
+      };
+
       return new Handlebars.SafeString(
-          "<span class=\"badge " + e.clases() + "\"><i class=\"bi bi-" + e.icono()
-              + " me-1\" aria-hidden=\"true\"></i>" + Handlebars.Utils.escapeExpression(e.etiqueta()) + "</span>");
+          "<span class=\"badge " + e.clases() + "\" title=\"" + Handlebars.Utils.escapeExpression(tooltip) + "\" style=\"cursor: help;\">" +
+              "<i class=\"bi bi-" + e.icono() + " me-1\" aria-hidden=\"true\"></i>" +
+              Handlebars.Utils.escapeExpression(e.etiqueta()) +
+              "</span>");
     });
 
   }

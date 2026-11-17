@@ -6,34 +6,44 @@
         </div>
 
         {{#if donaciones}}
-            <div class="table-responsive shadow-sm rounded">
+            <div class="table-responsive shadow-sm rounded bg-white">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                     <tr>
-                        <th>ID</th>
-                        <th>Bien / Subcategoría</th>
-                        <th>Cantidad / Detalle</th>
+                        <th class="ps-4">Bien</th>
+                        <th>Cantidad</th>
                         <th>Donante</th>
-                        <th>Fecha</th>
+                        <th>Asignación</th>
                         <th>Estado</th>
                     </tr>
                     </thead>
                     <tbody>
                     {{#each donaciones}}
                         <tr>
-                            <td><code class="text-primary">{{this.id}}</code></td>
-                            <td><i class="bi bi-tag me-1 text-primary"></i>{{this.subCategoria}}</td>
+                            <td class="ps-4 fw-semibold">
+                                <i class="bi bi-tag me-1 text-primary"></i>{{this.subCategoria}}
+                            </td>
+
                             <td>{{this.cantidad}} {{this.unidad}}</td>
-                            <td><i class="bi bi-person me-1"></i>{{this.donante}}</td>
-                            <td>{{fechaRelativa this.fecha}}</td>
-                            <td>{{badgeEstado this.estado}}</td>
+
+                            <td>
+                                <i class="bi bi-person me-1 text-muted"></i>{{this.donante}}
+                            </td>
+
+                            <td class="text-muted small">{{fechaRelativa this.fechaAsignacion}}</td>
+
+                            <td>
+                                {{{badgeEstado this.estado}}}
+                            </td>
                         </tr>
                     {{/each}}
                     </tbody>
                 </table>
             </div>
-            {{>partials/_contador-paginas nombre="donación"}}
-            {{>partials/paginacion}}
+            <div class="mt-4">
+                {{>partials/_contador-paginas nombre="donación"}}
+                {{>partials/paginacion}}
+            </div>
         {{else}}
             {{>partials/_alerta-vacia mensaje="Todavía no tenés donaciones asignadas."}}
         {{/if}}

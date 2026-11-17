@@ -239,4 +239,11 @@ public class DonacionIndependiente extends Persistible implements Eliminable {
   public Unidad getUnidad() {
     return getItem().getUnidad();
   }
+
+  public Optional<LocalDateTime> getFechaDeUltimaAsignacion() {
+    return getHistorialEstados().stream()
+        .filter(CambioDeEstado::esDeAsignacion)
+        .reduce((primero, ultimo) -> ultimo)
+        .map(CambioDeEstado::getFecha);
+  }
 }
