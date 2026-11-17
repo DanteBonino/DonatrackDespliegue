@@ -77,7 +77,10 @@ public class JavalinHandlebars implements FileRenderer {
       EstilosEstado.Estilo e = EstilosEstado.de(estadoStr);
 
       String tooltip = switch (estadoStr.toUpperCase()) {
-        case "ASIGNADA" -> "Una donación del depósito cumplió con las condiciones de aceptación de la necesidad y fuiste designado como su receptor.";
+        case "EN_DEPOSITO" -> "La donación se encuentra almacenada, todavía no fue asignada";
+        case "PENDIENTE_DE_CONFIRMACION_DE_ASIGNACION" -> "Fue seleccionada para ser asignada, pero todavía no se eligió la entidad beneficiaria candidata";
+        case "VENCIDA" -> "Se quitó la donación del sistema porque se venció";
+        case "ASIGNACION_REALIZADA" -> "Una donación del depósito cumplió con las condiciones de aceptación de la necesidad y fuiste designado como su receptor.";
         case "LISTA_PARA_ENTREGAR" -> "Hay una ruta planificada que incluye la donación.";
         case "EN_TRASLADO" -> "El camión que tiene la ruta planificada que incluye la donación inicia el recorrido o está realizando el recorrido.";
         case "ENTREGADA" -> "Ya recibiste la donación y lo confirmaste.";
