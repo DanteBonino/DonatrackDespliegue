@@ -117,6 +117,7 @@ public class BeneficiariaWebController implements ConPaginacion {
           map.put("id", sc.getIdDominio());
           map.put("nombre", sc.getNombre());
           map.put("unidad", sc.getUnidad().getAbreviatura());
+          map.put("admiteDecimales", sc.getUnidad().admiteDecimales());
           map.put("esPerecedera", sc.esPerecedera());
           return map;
         })
