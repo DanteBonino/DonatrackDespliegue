@@ -93,13 +93,16 @@ public class BeneficiariaWebController implements ConPaginacion, ConValidacionDe
             .findFirst()
             .map(n -> "Se registró exitosamente la necesidad de " +
                 (n.getSubCategoriaRequerida() != null ? n.getSubCategoriaRequerida().getNombre() : "bien")));
-
+    boolean fueEliminada = ctx.queryParam("eliminada") != null;
     Map<String, Object> model = new HashMap<>();
     model.put("titulo", "Necesidades");
     model.put("necesidades", filas);
     model.put("total", todas.size());
     model.put("paginas", pagina.aModelo());
     mensajeCreada.ifPresent(msg -> model.put("mensajeCreada", msg));
+    if (fueEliminada) {
+      model.put("mensajeEliminada", "La necesidad fue eliminada exitosamente.");
+    }
     ctx.render("beneficiaria/necesidades.hbs", model);
   }
 
@@ -231,6 +234,17 @@ public class BeneficiariaWebController implements ConPaginacion, ConValidacionDe
     entidad.agregarNecesidad(nuevaNecesidad);
 
     ctx.redirect("/necesidades?creada=" + nuevaNecesidad.getIdDominio());
+  }
+
+  public void eliminarNecesidad(Context ctx) {
+    EntidadBeneficiaria entidad = getBeneficiario(ctx).get();
+    validarBeneficiario(ctx, entidad);
+
+    String idNecesidad = ctx.pathParam("id");
+
+    entidad.eliminarNecesidad(idNecesidad);
+
+    ctx.redirect("/necesidades?eliminada=true");
   }
 
   private String nombreDe(Donante donante) {
