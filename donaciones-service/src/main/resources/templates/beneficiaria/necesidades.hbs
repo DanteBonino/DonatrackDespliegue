@@ -16,6 +16,13 @@
         </div>
 
         {{#if necesidades}}
+            {{#if mensajeCreada}}
+                <div class="alert alert-success alert-dismissible fade show" role="status">
+                    <i class="bi bi-check2-circle me-2"></i>
+                    <strong>{{mensajeCreada}}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+            {{/if}}
             <div class="table-responsive shadow-sm rounded">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
