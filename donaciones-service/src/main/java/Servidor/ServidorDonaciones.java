@@ -1,5 +1,6 @@
 package Servidor;
 import Controllers.Categorias.CategoriasController;
+import Controllers.DTOsSinController.CondicionDeAceptacion.TipoCondicion;
 import Controllers.Donanciones.DonacionesController;
 import Controllers.Donantes.DonantesController;
 import Controllers.EntidadesBenefeciarias.EntidadesBeneficiariasController;
@@ -13,6 +14,7 @@ import Controllers.SubCategorias.SubCategoriasController;
 import Donantes.DonanteHumana.Genero;
 import Donantes.DonanteJuridico.TipoJuridica;
 import Injector.Injector;
+import Necesidades.TipoNecesidad;
 import Servidor.ManejadorDeExcepciones.ManejadorDeExcepciones;
 import Servidor.ManejadorDeSesiones.DatosSesion;
 import Servidor.ManejadorDeSesiones.ManejadorDeSesion;
@@ -31,6 +33,7 @@ import inicializacion.ChequeadorInicializacionBaseDeDatos;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.EndpointGroup;
 import io.javalin.http.staticfiles.Location;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +54,10 @@ public class ServidorDonaciones {
       config.validation.register(LocalDate.class, LocalDate::parse);
       config.validation.register(Genero.class, Genero::valueOf);
       config.validation.register(TipoJuridica.class, TipoJuridica::valueOf);
+      config.validation.register(BigDecimal.class, BigDecimal::new);
+      config.validation.register(TipoNecesidad.class, TipoNecesidad::valueOf);
+      config.validation.register(TipoCondicion.class, TipoCondicion::valueOf);
+      config.validation.register(FrecuenciaPeriodo.class, FrecuenciaPeriodo::valueOf);
       config.staticFiles.add("/public", Location.CLASSPATH);
 
       ManejadorDeExcepciones.registrarExcepciones(config, logger);

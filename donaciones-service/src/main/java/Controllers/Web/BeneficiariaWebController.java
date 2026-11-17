@@ -190,10 +190,10 @@ public class BeneficiariaWebController implements ConPaginacion, ConValidacionDe
         subcategoriaValidator, cantidadValidator, tipoCondicionValidator, tipoValidator
     ));
 
-    Validator<Period> periodoValidator = null;
+    Validator<FrecuenciaPeriodo> frecuenciaValidator = null;
     if (requierePeriodo) {
-      periodoValidator = ctx.formParamAsClass("periodo", Period.class).required();
-      validadoresAProcesar.add(periodoValidator);
+      frecuenciaValidator = ctx.formParamAsClass("periodo", FrecuenciaPeriodo.class).required();
+      validadoresAProcesar.add(frecuenciaValidator);
     }
 
     Map<String, List<ValidationError<Object>>> errors = Validation.collectErrors(
@@ -218,7 +218,7 @@ public class BeneficiariaWebController implements ConPaginacion, ConValidacionDe
 
     CondicionDeAceptacion condicion = tipoCondicion.crearInstancia(subCategoria);
 
-    Period periodo = (periodoValidator != null) ? periodoValidator.get() : null;
+    Period periodo = (frecuenciaValidator != null) ? frecuenciaValidator.get().getPeriodJava() : null;
 
     Necesidad nuevaNecesidad = tipoValidator.get().crearInstancia(condicion, cantidad, periodo);
     entidad.agregarNecesidad(nuevaNecesidad);
