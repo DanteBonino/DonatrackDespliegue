@@ -78,7 +78,7 @@ public class PersonaJuridica extends Donante {
         return this.getCuit();
     }
 
-    private String getCuit() {
+    public String getCuit() {
         return this.cuit;
     }
 
