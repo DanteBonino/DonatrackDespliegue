@@ -1,18 +1,50 @@
 {{#partial "contenido"}}
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-9 col-xl-8">
+    <style>
+        .sidebar-nav .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-radius: 0.375rem;
+        }
+        .sidebar-nav .nav-link:hover {
+            background-color: rgba(var(--bs-primary-rgb), 0.08);
+            color: var(--bs-primary) !important;
+            transform: translateX(3px);
+        }
+    </style>
 
-                <!-- Cabecera de la Guía -->
-                <div class="mb-4">
-                <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill mb-2">
-                    <i class="bi bi-book me-1"></i> Documentación y Ayuda
-                </span>
+    <div class="container py-5">
+        <div class="row">
+
+            <!-- Sidebar de Navegación Rápida (Sticky con efectos de hover) -->
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="position-sticky" style="top: 2rem;">
+                    <div class="mb-4">
+                        <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill mb-2">
+                            <i class="bi bi-book me-1"></i> Documentación
+                        </span>
+                        <h1 class="h4 fw-bold text-dark">Guía de Necesidades</h1>
+                    </div>
+                    <nav class="nav flex-column sidebar-nav gap-1 small">
+                        <a class="nav-link text-secondary fw-medium py-2 px-3" href="#que-es">¿Qué es una necesidad?</a>
+                        <a class="nav-link text-secondary fw-medium py-2 px-3" href="#tipos">Tipos de necesidades</a>
+                        <a class="nav-link text-secondary fw-medium py-2 px-3" href="#creacion">¿Cómo se crean?</a>
+                        <a class="nav-link text-secondary fw-medium py-2 px-3" href="#administracion">Administración y seguimiento</a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Contenido Principal -->
+            <div class="col-lg-9">
+
+                <!-- Cabecera para dispositivos móviles -->
+                <div class="d-lg-none mb-4">
+                    <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill mb-2">
+                        <i class="bi bi-book me-1"></i> Documentación y Ayuda
+                    </span>
                     <h1 class="h2 fw-bold text-dark mb-0">Guía completa sobre Necesidades</h1>
                 </div>
 
-                <!-- 1. ¿Qué es una necesidad? (Mantiene recuadro destacado) -->
-                <div class="card border-0 shadow-sm bg-primary bg-opacity-10 mb-5">
+                <!-- 1. ¿Qué es una necesidad? -->
+                <div id="que-es" class="card border-0 shadow-sm bg-primary bg-opacity-10 mb-5 rounded-4">
                     <div class="card-body p-4 p-md-5">
                         <div class="row align-items-center">
                             <div class="col-md-9">
@@ -28,8 +60,8 @@
                     </div>
                 </div>
 
-                <!-- 2. Tipos de Necesidades (Sin recuadros, con borde lateral limpio) -->
-                <section class="mb-5 pb-4 border-bottom">
+                <!-- 2. Tipos de Necesidades -->
+                <section id="tipos" class="mb-5 pb-4 border-bottom">
                     <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-diagram-3 me-2 text-primary"></i>Tipos de necesidades</h3>
                     <div class="row g-4">
                         <!-- Extraordinarias -->
@@ -59,8 +91,8 @@
                     </div>
                 </section>
 
-                <!-- 3. Paso a Paso para la Creación (Sin recuadros, flujo vertical limpio) -->
-                <section class="mb-5 pb-4 border-bottom">
+                <!-- 3. Paso a Paso para la Creación -->
+                <section id="creacion" class="mb-5 pb-4 border-bottom">
                     <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-list-check me-2 text-primary"></i>¿Cómo se crean? (Paso a paso)</h3>
 
                     <div class="d-flex flex-column gap-4">
@@ -106,6 +138,7 @@
                     </div>
                 </section>
 
+                <!-- Tarjeta de llamada a la acción -->
                 <div class="card border border-primary border-opacity-25 shadow-sm bg-light text-center p-4 p-md-5 mb-5 rounded-4">
                     <div class="card-body">
                         <h3 class="h4 fw-bold text-dark mb-2">¿Ya entendiste cómo funciona y te sentís listo?</h3>
@@ -116,8 +149,8 @@
                     </div>
                 </div>
 
-                <!-- 4. Administración y Seguimiento posterior (Sin recuadros) -->
-                <section class="mb-4">
+                <!-- 4. Administración y Seguimiento posterior -->
+                <section id="administracion" class="mb-4">
                     <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-gear-fill me-2 text-primary"></i>Administración y seguimiento</h3>
                     <div class="row g-4">
                         <div class="col-md-6">
