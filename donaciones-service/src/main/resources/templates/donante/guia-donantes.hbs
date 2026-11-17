@@ -9,6 +9,14 @@
             color: var(--bs-primary) !important;
             transform: translateX(3px);
         }
+        .linea-estados { list-style: none; margin: 0; padding: 0 0 0 1.75rem; border-left: 2px solid var(--bs-border-color); }
+        .linea-estados > li { position: relative; padding-bottom: 1.5rem; }
+        .linea-estados > li:last-child { padding-bottom: 0; }
+        .linea-estados > li::before {
+            content: ""; position: absolute; left: calc(-1.75rem - 6px); top: .4rem;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--bs-primary); box-shadow: 0 0 0 4px var(--bs-body-bg);
+        }
     </style>
 
     <div class="container py-5">
@@ -62,7 +70,7 @@
 
                 <!-- 2. Qué podés donar (Estilo limpio con borde lateral, sin tarjetas innecesarias) -->
                 <section id="que-donar" class="mb-5 pb-4 border-bottom">
-                    <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-basket me-2 text-primary"></i>¿Qué podés donar?</h3>
+                    <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-bag-heart me-2 text-primary"></i>¿Qué podés donar?</h3>
                     <p class="text-muted mb-4">Podés acercar cualquier elemento que esté dentro de las categorías aceptadas por el sistema.</p>
 
                     <div class="row g-4">
@@ -70,7 +78,7 @@
                         <div class="col-md-6">
                             <div class="border-start border-primary border-3 ps-3 h-100">
                                 <div class="d-flex align-items-center gap-2 mb-2">
-                                    <i class="bi bi-apple text-primary fs-5"></i>
+                                    <i class="bi bi-egg-fried text-primary fs-5"></i>
                                     <h4 class="h5 fw-bold mb-0">Bienes Perecederos</h4>
                                 </div>
                                 <p class="text-muted mb-0">
@@ -82,7 +90,7 @@
                         <div class="col-md-6">
                             <div class="border-start border-primary border-3 ps-3 h-100">
                                 <div class="d-flex align-items-center gap-2 mb-2">
-                                    <i class="bi bi-box-seam text-primary fs-5"></i>
+                                    <i class="bi bi-lamp text-primary fs-5"></i>
                                     <h4 class="h5 fw-bold mb-0">Bienes No Perecederos</h4>
                                 </div>
                                 <p class="text-muted mb-0">
@@ -136,17 +144,6 @@
                     </div>
                 </section>
 
-                <!-- Tarjeta de llamada a la acción -->
-                <div class="card border border-primary border-opacity-25 shadow-sm bg-light text-center p-4 p-md-5 mb-5 rounded-4">
-                    <div class="card-body">
-                        <h3 class="h4 fw-bold text-dark mb-2">¿Querés consultar el estado de tus aportes?</h3>
-                        <p class="text-muted mb-4">Ingresá a tu panel para ver el seguimiento en tiempo real.</p>
-                        <a href="/mis-donaciones" class="btn btn-primary px-4 py-3 shadow-sm">
-                            <i class="bi bi-box-seam me-2"></i> Ir a Mis Donaciones
-                        </a>
-                    </div>
-                </div>
-
                 <!-- 4. Seguimiento y Estados (Con badges oficiales y descripciones claras) -->
                 <section id="seguimiento" class="mb-4">
                     <h3 class="h5 fw-bold text-dark mb-4"><i class="bi bi-shield-check me-2 text-primary"></i>Seguimiento y Transparencia</h3>
@@ -155,57 +152,71 @@
                         <div class="col-md-6">
                             <h5 class="fw-bold text-dark mb-2"><i class="bi bi-table text-primary me-2"></i>Panel de Mis Donaciones</h5>
                             <p class="text-muted small mb-0">
-                                Desde <a href="/mis-donaciones" class="text-primary fw-semibold">/mis-donaciones</a> podés hacer un seguimiento completo de tus aportes, ver a qué entidad fueron asignados y la fecha de la operación.
+                                Desde <a href="/mis-donaciones" class="text-primary fw-semibold">Mis Donaciones</a> podés hacer un seguimiento completo de tus aportes, ver a qué entidad fueron asignados y la fecha de la operación.
                             </p>
                         </div>
                         <div class="col-md-6">
                             <h5 class="fw-bold text-dark mb-2"><i class="bi bi-check2-all text-primary me-2"></i>Donaciones Entregadas</h5>
                             <p class="text-muted small mb-0">
-                                También podés consultar el registro público de todas las donaciones que ya llegaron a destino ingresando en <a href="/donaciones/entregadas" class="text-primary fw-semibold">/donaciones/entregadas</a>.
+                                También podés consultar el registro público de todas las donaciones que ya llegaron a destino ingresando en <a href="/donaciones/entregadas" class="text-primary fw-semibold">Donaciones entregadas</a>.
                             </p>
                         </div>
                     </div>
 
-                    <!-- Explicación de Estados -->
-                    <h5 class="fw-bold text-dark mb-3">¿Qué significa cada estado de tu donación?</h5>
-                    <p class="text-muted small mb-3">Cada etapa del proceso cuenta con un identificador visual transparente:</p>
+                    <h3 class="h5 fw-bold text-dark mb-2">¿Qué significa cada estado de tu donación?</h3>
+                    <p class="text-muted small mb-4">
+                        Estas son las etapas, en orden. Vas a ver las mismas etiquetas en <a href="/mis-donaciones">Mis Donaciones</a>.
+                    </p>
 
-                    <div class="d-flex flex-column gap-3">
-                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
-                            <span class="badge text-bg-dark" title="La donación se encuentra almacenada, todavía no fue asignada" style="cursor: help;"><i class="bi bi-archive me-1" aria-hidden="true"></i>En depósito</span>
-                            <div class="small text-muted">La donación se encuentra almacenada en el depósito central y todavía no fue asignada.</div>
-                        </div>
-                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
-                            <span class="badge text-bg-secondary" title="Fue seleccionada para ser asignada, pero todavía no se eligió la entidad beneficiaria candidata" style="cursor: help;"><i class="bi bi-hourglass-split me-1" aria-hidden="true"></i>Pendiente de confirmación</span>
-                            <div class="small text-muted">Fue seleccionada para ser asignada, pero todavía no se eligió la entidad beneficiaria candidata.</div>
-                        </div>
-                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
-                            <span class="badge text-bg-primary" title="Una donación del depósito cumplió con las condiciones de aceptación alguna necesidad y se designó una entidad beneficiaria como su receptor." style="cursor: help;"><i class="bi bi-clipboard-check me-1" aria-hidden="true"></i>Asignada</span>
-                            <div class="small text-muted">Una donación del depósito cumplió con las condiciones de aceptación de una necesidad y se designó una entidad beneficiaria como su receptor.</div>
-                        </div>
-                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
-                            <span class="badge text-bg-warning" title="Hay una ruta planificada que incluye la donación." style="cursor: help;"><i class="bi bi-box-seam me-1" aria-hidden="true"></i>Lista para entregar</span>
-                            <div class="small text-muted">Hay una ruta logística planificada que incluye la donación para su próximo traslado.</div>
-                        </div>
-                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
-                            <span class="badge text-bg-info" title="El camión que tiene la ruta planificada que incluye la donación inicia el recorrido o está realizando el recorrido." style="cursor: help;"><i class="bi bi-truck me-1" aria-hidden="true"></i>En traslado</span>
-                            <div class="small text-muted">El vehículo asignado a la ruta planificada inició el recorrido o se encuentra realizándolo hacia la entidad.</div>
-                        </div>
-                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
-                            <span class="badge text-bg-success" title="La donación fue recibida por una entidad beneficiaria." style="cursor: help;"><i class="bi bi-check-circle me-1" aria-hidden="true"></i>Entregada</span>
-                            <div class="small text-muted">La donación fue recibida con éxito por la entidad beneficiaria correspondiente.</div>
-                        </div>
-                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
-                            <span class="badge text-bg-danger" title="No se pudo entregar la donación." style="cursor: help;"><i class="bi bi-x-circle me-1" aria-hidden="true"></i>Entrega fallida</span>
-                            <div class="small text-muted">No se pudo concretar la entrega de la donación debido a un inconveniente imprevisto.</div>
-                        </div>
-                        <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-3">
-                            <span class="badge text-bg-danger" title="Se quitó la donación del sistema porque se venció" style="cursor: help;"><i class="bi bi-calendar-x me-1" aria-hidden="true"></i>Vencida</span>
-                            <div class="small text-muted">Se dio de baja la donación del sistema debido a que superó su fecha de vencimiento.</div>
-                        </div>
-                    </div>
+                    <ol class="linea-estados mb-5">
+                        <li>
+                            {{badgeEstado "EN_DEPOSITO"}}
+                            <p class="small text-muted mb-0 mt-1">La donación está almacenada en el depósito central y todavía no fue asignada.</p>
+                        </li>
+                        <li>
+                            {{badgeEstado "PENDIENTE_DE_CONFIRMACION_DE_ASIGNACION"}}
+                            <p class="small text-muted mb-0 mt-1">Fue seleccionada para ser asignada, pero todavía no se eligió la entidad beneficiaria candidata.</p>
+                        </li>
+                        <li>
+                            {{badgeEstado "ASIGNACION_REALIZADA"}}
+                            <p class="small text-muted mb-0 mt-1">Cumplió con las condiciones de aceptación de una necesidad y se designó una entidad beneficiaria como receptora.</p>
+                        </li>
+                        <li>
+                            {{badgeEstado "LISTA_PARA_ENTREGAR"}}
+                            <p class="small text-muted mb-0 mt-1">Hay una ruta planificada que incluye la donación para su próximo traslado.</p>
+                        </li>
+                        <li>
+                            {{badgeEstado "EN_TRASLADO"}}
+                            <p class="small text-muted mb-0 mt-1">El vehículo de la ruta inició el recorrido y se dirige a la entidad.</p>
+                        </li>
+                        <li>
+                            {{badgeEstado "ENTREGADA"}}
+                            <p class="small text-muted mb-0 mt-1">La entidad beneficiaria recibió la donación con éxito.</p>
+                        </li>
+                    </ol>
+
+                    <h3 class="h6 fw-bold text-dark mb-3">Si algo no sale como se esperaba</h3>
+                    <ul class="list-unstyled d-flex flex-column gap-3 mb-0">
+                        <li>
+                            {{badgeEstado "ENTREGA_FALLIDA"}}
+                            <p class="small text-muted mb-0 mt-1">No se pudo concretar la entrega por un inconveniente imprevisto. La donación puede volver al depósito para intentar una nueva asignación.</p>
+                        </li>
+                        <li>
+                            {{badgeEstado "VENCIDA"}}
+                            <p class="small text-muted mb-0 mt-1">La donación superó su fecha de vencimiento y se dio de baja del sistema.</p>
+                        </li>
+                    </ul>
                 </section>
-
+                <!-- Tarjeta de llamada a la acción -->
+                <div class="card border border-primary border-opacity-25 shadow-sm bg-light text-center p-4 p-md-5 mb-5 rounded-4">
+                    <div class="card-body">
+                        <h3 class="h4 fw-bold text-dark mb-2">¿Querés consultar el estado de tus aportes?</h3>
+                        <p class="text-muted mb-4">Ingresá a tu panel para ver el seguimiento en tiempo real.</p>
+                        <a href="/mis-donaciones" class="btn btn-primary px-4 py-3 shadow-sm">
+                            <i class="bi bi-box-seam me-2"></i> Mis Donaciones
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
