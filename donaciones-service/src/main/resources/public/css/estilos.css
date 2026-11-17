@@ -24,3 +24,7 @@
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1.5rem;
 }
+
+.table .progress {
+    background-color: #e2e8f0 !important; /* Un gris sutil y sólido */
+}
