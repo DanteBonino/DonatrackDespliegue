@@ -88,7 +88,7 @@ public class AdminWebController implements ConPaginacion {
   }
 
   public void showCrearLote(Context ctx) {
-
+    ctx.render("/admin/nuevo-lote.hbs");
   }
 
   public void buscarDonanteFragmento(Context ctx) {
