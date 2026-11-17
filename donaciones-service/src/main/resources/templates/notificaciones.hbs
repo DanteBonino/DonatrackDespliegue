@@ -1,209 +1,114 @@
 {{#partial "contenido"}}
-
     <div class="container py-5">
-
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
-
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
             <h1 class="h2 mb-0"><i class="bi bi-bell me-2"></i>Notificaciones</h1>
-
             {{>partials/volverAlPanel}}
-
         </div>
 
-
-
         {{#if mensajeLeida}}
-
             <div class="alert alert-primary alert-dismissible fade show" role="status">
-
                 <i class="bi bi-check2-circle me-2"></i>
-
                 Se marcó como leída la notificación: <strong>{{mensajeLeida}}</strong>
-
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-
             </div>
-
         {{/if}}
 
-
-
         {{#if hayNotificaciones}}
-
-            <div class="d-flex align-items-center gap-2 mb-4">
-
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
                 <span class="text-muted small fw-bold">Saltar a:</span>
-
                 {{#if hayNoLeidas}}
-
                     <a href="#seccion-nuevas" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-
-                        <i class="bi bi-circle-fill fs-7 me-1"></i> Nuevas
-
+                        <i class="bi bi-circle-fill me-1" style="font-size: .5rem"></i> Nuevas
                     </a>
-
                 {{/if}}
-
                 {{#if hayLeidas}}
-
                     <a href="#seccion-anteriores" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
-
                         <i class="bi bi-check-all me-1"></i> Anteriores
-
                     </a>
-
                 {{/if}}
-
             </div>
 
-
-
             {{#if hayNoLeidas}}
-
                 <div id="seccion-nuevas" class="card border-0 shadow-sm mb-4">
-
-                    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center"
-
-                         data-bs-toggle="collapse" data-bs-target="#collapseNuevas" role="button" aria-expanded="true" aria-controls="collapseNuevas">
-
-                        <h6 class="text-uppercase text-primary fw-bold small mb-0">
-
-                            <i class="bi bi-circle-fill fs-7 me-1"></i> Nuevas
-
-                        </h6>
-
-                        <i class="bi bi-chevron-down text-muted small"></i>
-
+                    <div class="card-header bg-white border-bottom p-0">
+                        <h2 class="h6 mb-0">
+                            <button type="button" class="btn w-100 d-flex justify-content-between align-items-center rounded-0 py-3 px-3 text-start"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseNuevas" aria-expanded="true" aria-controls="collapseNuevas">
+                                <span class="text-uppercase text-primary fw-bold small">
+                                    <i class="bi bi-circle-fill me-1" style="font-size: .5rem"></i> Nuevas
+                                </span>
+                                <i class="bi bi-chevron-down text-muted small"></i>
+                            </button>
+                        </h2>
                     </div>
-
-
 
                     <div class="collapse show" id="collapseNuevas">
-
                         <div class="card-body bg-light bg-opacity-25 pt-3">
-
                             <div class="d-flex flex-column gap-2">
-
                                 {{#each noLeidas}}
-
                                     <div class="card border-0 shadow-sm bg-white border-start border-primary border-4">
-
                                         <div class="card-body d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between py-3 px-4 gap-3">
-
-                                            <div class="d-flex align-items-start gap-3">
-
-                                                <i class="bi bi-bell-fill text-primary fs-5 mt-1 flex-shrink-0"></i>
-
-                                                <div><p class="mb-0 fw-semibold text-dark">{{this.mensaje}}</p></div>
-
+                                            <div class="d-flex align-items-center gap-3">
+                                                <i class="bi bi-bell-fill text-primary fs-5 lh-1 flex-shrink-0"></i>
+                                                <p class="mb-0 fw-semibold text-dark">{{this.mensaje}}</p>
                                             </div>
-
                                             <div class="flex-shrink-0 align-self-end align-self-md-center">
-
                                                 <form method="post" action="{{this.hrefLeer}}" class="mb-0">
-
                                                     <button type="submit" class="btn btn-sm btn-outline-primary text-nowrap">
-
                                                         <i class="bi bi-check2 me-1"></i> Marcar como leída
-
                                                     </button>
-
                                                 </form>
-
                                             </div>
-
                                         </div>
-
                                     </div>
-
                                 {{/each}}
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
             {{/if}}
 
-
-
             {{#if hayLeidas}}
-
                 <div id="seccion-anteriores" class="card border-0 shadow-sm mb-4">
-
-                    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center"
-
-                         data-bs-toggle="collapse" data-bs-target="#collapseAnteriores" role="button" aria-expanded="true" aria-controls="collapseAnteriores">
-
-                        <h6 class="text-uppercase text-muted fw-bold small mb-0">
-
-                            <i class="bi bi-check-all text-muted fs-6 me-1"></i> Anteriores
-
-                        </h6>
-
-                        <i class="bi bi-chevron-down text-muted small"></i>
-
+                    <div class="card-header bg-white border-bottom p-0">
+                        <h2 class="h6 mb-0">
+                            <button type="button" class="btn w-100 d-flex justify-content-between align-items-center rounded-0 py-3 px-3 text-start"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseAnteriores" aria-expanded="true" aria-controls="collapseAnteriores">
+                                <span class="text-uppercase text-muted fw-bold small">
+                                    <i class="bi bi-check-all fs-6 me-1"></i> Anteriores
+                                </span>
+                                <i class="bi bi-chevron-down text-muted small"></i>
+                            </button>
+                        </h2>
                     </div>
 
                     <div class="collapse show" id="collapseAnteriores">
-
                         <div class="card-body bg-light bg-opacity-25 pt-3">
-
                             <div class="d-flex flex-column gap-2 mb-3">
-
                                 {{#each leidas}}
-
-                                    <div class="card border-0 shadow-sm bg-light opacity-75">
-
+                                    <div class="card border-0 shadow-sm bg-light">
                                         <div class="card-body d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between py-3 px-4 gap-3">
-
-                                            <div class="d-flex align-items-start gap-3">
-
-                                                <i class="bi bi-bell text-muted fs-5 mt-1 flex-shrink-0"></i>
-
-                                                <div><p class="mb-0 text-muted">{{this.mensaje}}</p></div>
-
+                                            <div class="d-flex align-items-center gap-3">
+                                                <i class="bi bi-bell text-muted fs-5 lh-1 flex-shrink-0"></i>
+                                                <p class="mb-0 text-muted">{{this.mensaje}}</p>
                                             </div>
-
                                             <div class="flex-shrink-0 align-self-end align-self-md-center">
-
                                                 <span class="badge bg-secondary bg-opacity-10 text-secondary fw-normal px-2 py-1">Leída</span>
-
                                             </div>
-
                                         </div>
-
                                     </div>
-
                                 {{/each}}
-
                             </div>
-
                             {{>partials/_contador-paginas nombre="notificación leída"}}
-
                             {{>partials/paginacion}}
-
                         </div>
-
                     </div>
-
                 </div>
-
             {{/if}}
 
-
-
         {{else}}
-
             {{>partials/_alerta-vacia mensaje="Todavía no recibiste notificaciones."}}
-
         {{/if}}
-
     </div>
-
 {{/partial}}
-
 {{>layout}}
