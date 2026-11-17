@@ -23,6 +23,7 @@ import io.javalin.validation.Validation;
 import io.javalin.validation.ValidationError;
 import io.javalin.validation.Validator;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -70,10 +71,16 @@ public class BeneficiariaWebController implements ConPaginacion, ConValidacionDe
     List<Map<String, Object>> filas = pagina.items().stream()
         .map(n -> {
           Map<String, Object> m = new HashMap<>();
+          BigDecimal recibida = n.cantidadRecibida();
+          BigDecimal requerida = n.cantidadRequerida();
+          double porcentajeCalc = requerida.signum() > 0 ? recibida.divide(requerida, 2, RoundingMode.HALF_UP).doubleValue() * 100 : 0.0;
+          double porcentaje = Math.min(porcentajeCalc, 100.0);
           m.put("id", n.getIdDominio());
           m.put("unidad", n.getSubCategoriaRequerida().getUnidad().getAbreviatura());
           m.put("subCategoria", n.getSubCategoriaRequerida() != null ? n.getSubCategoriaRequerida().getNombre() : "-");
-          m.put("cantidadRequerida", n.cantidadRequerida() != null ? n.cantidadRequerida().toString() : "-");
+          m.put("cantidadRecibida", recibida);
+          m.put("porcentaje", porcentaje);
+          m.put("faltante", requerida.subtract(recibida));
           m.put("tipo", n.getTipo() != null ? n.getTipo().name() : "-");
           m.put("satisfecha", n.estaSatisfecha());
           return m;
