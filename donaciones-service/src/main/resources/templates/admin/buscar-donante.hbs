@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-6">
 
-                <!-- Cabecera alineada al estilo de Registrar Necesidad -->
+                <!-- Cabecera -->
                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
                     <h1 class="h3 mb-0"><i class="bi bi-box-seam me-2"></i>Registrar Lote</h1>
                     <a href="/donaciones/en-deposito" class="btn btn-outline-primary btn-sm">
@@ -11,21 +11,21 @@
                     </a>
                 </div>
 
-                <!-- Guía rápida desplegable (Idéntica a la de tus otros formularios) -->
+                <!-- Guía rápida desplegable -->
                 <div class="card border-0 shadow-sm bg-light mb-4">
                     <details>
                         <summary class="py-3 px-3 fw-semibold text-primary small" style="cursor: pointer;">
                             <i class="bi bi-question-circle me-1"></i> ¿Cómo funciona el registro de lotes? (Guía rápida)
                         </summary>
                         <div class="px-3 pb-3 text-muted small">
-                            <p class="mb-2"><strong>1. Identificar al donante:</strong> Ingresá el DNI (persona humana) o CUIT (persona jurídica). El sistema normalizará el formato automáticamente.</p>
+                            <p class="mb-2"><strong>1. Identificar al donante:</strong> Ingresá el DNI (persona humana) o CUIT (persona jurídica).</p>
                             <p class="mb-2"><strong>2. Carga de ítems y fotos:</strong> En el siguiente paso podrás agregar uno o más bienes que componen el lote junto con sus respectivas fotos.</p>
                             <p class="mb-0"><strong>3. Depósito:</strong> Al finalizar, las donaciones quedarán registradas de forma centralizada en <a href="/donaciones/en-deposito">donaciones en depósito</a>.</p>
                         </div>
                     </details>
                 </div>
 
-                <!-- Stepper de Pasos en Flecha (Alineado al ancho exacto del formulario) -->
+                <!-- Stepper de Pasos en Flecha -->
                 {{> partials/breadcrumb pasoActual=1}}
 
                 <!-- Tarjeta Principal del Formulario -->
@@ -33,29 +33,29 @@
                     <div class="card-body p-4 p-md-5">
                         <form method="post" action="/lotes/buscar-donante" novalidate>
 
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label for="q" class="form-label fw-bold">DNI o CUIT del donante <span class="text-danger">*</span></label>
-                                <div class="input-group {{#if error}}has-validation{{/if}}">
-                                    <input type="text"
-                                           id="q"
-                                           name="q"
-                                           value="{{q}}"
-                                           class="form-control {{#if error}}is-invalid{{/if}}"
-                                           placeholder="Ej: 30123456 o 20301234567"
-                                           inputmode="numeric"
-                                           autocomplete="off"
-                                           autofocus
-                                           required>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="bi bi-search me-1"></i> Buscar donante
-                                    </button>
-                                    {{#if error}}
-                                        <div class="invalid-feedback">{{error}}</div>
-                                    {{/if}}
-                                </div>
-                                <div class="form-text mt-2">
-                                    Podés escribirlo con o sin guiones. Si el donante existe, el sistema te redirigirá automáticamente al siguiente paso.
-                                </div>
+                                <input type="text"
+                                       id="q"
+                                       name="q"
+                                       value="{{q}}"
+                                       class="form-control {{#if error}}is-invalid{{/if}}"
+                                       placeholder="Ej: 30123456 o 11223344551"
+                                       inputmode="numeric"
+                                       autocomplete="off"
+                                       autofocus
+                                       required>
+
+                                {{#if error}}
+                                    <div class="invalid-feedback d-block mt-1">{{error}}</div>
+                                {{/if}}
+                            </div>
+
+                            <!-- Botón principal abajo, idéntico a tus otros forms -->
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="p-3 btn btn-primary d-inline-flex justify-content-center align-items-center shadow-sm">
+                                    <i class="bi bi-search me-2"></i> Buscar donante
+                                </button>
                             </div>
 
                         </form>
