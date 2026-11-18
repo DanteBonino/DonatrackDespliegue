@@ -3,6 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-8">
 
+                <!-- Cabecera -->
                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
                     <h1 class="h3 mb-0"><i class="bi bi-box-seam me-2"></i>Registrar Lote</h1>
                     <a href="/lotes/nuevo" class="btn btn-outline-primary btn-sm">
@@ -10,6 +11,7 @@
                     </a>
                 </div>
 
+                <!-- Breadcrumb de Pasos -->
                 {{> partials/breadcrumb pasoActual=2}}
 
                 <div class="mb-4">
@@ -17,44 +19,44 @@
                 </div>
 
                 {{#if errores}}
-                    <div class="alert alert-danger" role="alert">
-                        <ul class="mb-0">
+                    <div class="alert alert-danger shadow-sm border-0" role="alert">
+                        <ul class="mb-0 small">
                             {{#each errores}}<li>{{this}}</li>{{/each}}
                         </ul>
                     </div>
                 {{/if}}
 
+                <!-- Formulario Principal -->
                 <form method="post" action="/lotes" enctype="multipart/form-data" id="form-lote" novalidate>
                     <input type="hidden" name="donante" value="{{donanteId}}">
 
+                    <!-- Contenedor dinámico de filas de ítems -->
                     <div id="items-container">
                         {{#each filas}}
                             {{> partials/_fila-item this}}
                         {{/each}}
                     </div>
 
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-body d-flex flex-column gap-2">
-                            <button type="button" id="btn-agregar-item"
-                                    class="btn btn-outline-primary align-self-start">
-                                <i class="bi bi-plus-circle me-1"></i> Agregar otro ítem
-                            </button>
-                            <div class="form-text">
-                                Si cargás dos ítems iguales (mismo bien y vencimiento), se registran como una sola donación.
-                            </div>
-                            <div class="form-text">
-                                Si hay errores, vas a tener que volver a adjuntar las fotos.
-                            </div>
+                    <!-- Botón para agregar más ítems (Estilo dashed profesional) -->
+                    <div class="mb-4">
+                        <button type="button" id="btn-agregar-item"
+                                class="btn btn-outline-secondary w-100 py-2" style="border-style: dashed;">
+                            <i class="bi bi-plus-circle me-2"></i> Agregar otro ítem al lote
+                        </button>
+                        <div class="form-text text-muted text-center mt-2 small">
+                            <i class="bi bi-info-circle me-1"></i> Si cargás dos ítems iguales (mismo bien y vencimiento), se agruparán automáticamente en una sola donación. Las fotos deberán re-adjuntarse si ocurriera un error de validación.
                         </div>
                     </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="p-3 btn btn-success d-inline-flex justify-content-center align-items-center shadow-sm">
-                            <i class="bi bi-check2-circle me-2"></i> Crear lote
+                    <!-- Botón Principal de Envío (Ahora en Azul Primario) -->
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="p-3 btn btn-primary d-inline-flex justify-content-center align-items-center shadow-sm">
+                            <i class="bi bi-check2-circle me-2"></i> Crear lote de donación
                         </button>
                     </div>
                 </form>
 
+                <!-- Template oculto para clonar filas limpias -->
                 <template id="plantilla-item">
                     {{> partials/_fila-item plantilla}}
                 </template>
@@ -86,7 +88,6 @@
             mostrar(fila.querySelector('.estado-uso-bloque'), hayBien && !perecedera);
         }
 
-        // Los campos ocultos se deshabilitan: no se envían y el servidor decide qué validar
         function mostrar(bloque, visible) {
             bloque.classList.toggle('d-none', !visible);
             bloque.querySelectorAll('input, select').forEach(c => c.disabled = !visible);
@@ -126,7 +127,7 @@
             }
         });
 
-        // Enter dentro de un campo no debe enviar el lote entero
+        // Prevenir Enter accidental en inputs
         $('form-lote').addEventListener('keydown', e => {
             if (e.key === 'Enter' && e.target.tagName === 'INPUT') e.preventDefault();
         });
