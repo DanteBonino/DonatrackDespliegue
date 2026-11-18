@@ -1,26 +1,39 @@
+<style>
+    .btn-outline-black-to-blue {
+        color: #212529;
+        border-color: #212529;
+        background-color: transparent;
+        transition: all 0.2s ease-in-out;
+    }
+    .btn-outline-black-to-blue:hover {
+        color: #ffffff;
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+</style>
 <div class="card border shadow-sm mb-4 bg-light">
-    <div class="card-body d-flex align-items-center justify-content-between gap-3 py-3">
+    <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 py-3">
         <div class="d-flex align-items-start">
             <i class="bi bi-check-circle-fill text-success me-3 fs-4 mt-1"></i>
             <div>
                 <div class="fw-bold text-dark mb-1">Donante verificado</div>
                 {{#if esHumano}}
-                    <div>
-                        <span class="badge bg-primary me-1">Persona Física</span>
+                    <div class="d-flex flex-wrap align-items-center gap-1">
+                        <span class="badge bg-primary">Persona Física</span>
                         <strong>{{nombre}} {{apellido}}</strong>
-                        <span class="text-muted ms-1">| DNI: {{documento}}</span>
+                        <span class="text-muted">| DNI: {{documento}}</span>
                     </div>
                 {{else}}
-                    <div>
-                        <span class="badge bg-dark me-1">{{tipo}}</span>
+                    <div class="d-flex flex-wrap align-items-center gap-1">
+                        <span class="badge bg-dark">{{tipo}}</span>
                         <strong>{{razonSocial}}</strong>
-                        <span class="text-muted ms-1">| CUIT: {{cuit}}</span>
+                        <span class="text-muted">| CUIT: {{cuit}}</span>
                     </div>
                     <div class="small text-muted mt-1"><strong>Rubro:</strong> {{rubro}}</div>
                 {{/if}}
             </div>
         </div>
-        <a href="/lotes/nuevo" class="btn btn-sm btn-outline-secondary text-nowrap">
+        <a href="/lotes/nuevo" class="btn btn-sm btn-outline-black-to-blue text-nowrap align-self-md-center align-self-start">
             <i class="bi bi-arrow-repeat me-1"></i> Cambiar
         </a>
     </div>

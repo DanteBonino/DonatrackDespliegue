@@ -66,8 +66,10 @@
                 <input id="fotos-{{indice}}" type="file" multiple
                        accept="image/jpeg,image/png,image/webp"
                        name="items[{{indice}}][fotos]"
-                       class="form-control {{#if errores.fotos}}is-invalid{{/if}}">
-                <div class="form-text">Hasta 5 fotos, JPG, PNG o WebP de hasta 5 MB.</div>
+                       class="form-control fotos-input {{#if errores.fotos}}is-invalid{{/if}}">
+                <div class="archivo-preview-list mt-2 d-flex flex-column gap-1"></div>
+
+                <div class="form-text">Hasta 5 fotos, JPG, PNG o WebP de hasta 5 MB. Podes agregarlas de a una o varias a la vez.</div>
                 <div class="invalid-feedback">{{errores.fotos}}</div>
             </div>
         </div>

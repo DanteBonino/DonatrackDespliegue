@@ -1,4 +1,17 @@
 {{#partial "contenido"}}
+    <style>
+        .btn-outline-black-to-blue {
+            color: #212529;
+            border-color: #212529;
+            background-color: transparent;
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-outline-black-to-blue:hover {
+            color: #ffffff;
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+    </style>
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-8">
@@ -18,6 +31,7 @@
                     {{> partials/donante-resumen donante}}
                 </div>
 
+                <!-- Alerta de Errores Globales -->
                 {{#if errores}}
                     <div class="alert alert-danger shadow-sm border-0" role="alert">
                         <ul class="mb-0 small">
@@ -37,18 +51,18 @@
                         {{/each}}
                     </div>
 
-                    <!-- Botón para agregar más ítems (Estilo dashed profesional) -->
+                    <!-- Botón para agregar más ítems (Usa la clase nueva de borde negro a azul en hover) -->
                     <div class="mb-4">
                         <button type="button" id="btn-agregar-item"
-                                class="btn btn-outline-secondary w-100 py-2" style="border-style: dashed;">
+                                class="btn btn-outline-black-to-blue w-100 py-2" style="border-style: dashed;">
                             <i class="bi bi-plus-circle me-2"></i> Agregar otro ítem al lote
                         </button>
                         <div class="form-text text-muted text-center mt-2 small">
-                            <i class="bi bi-info-circle me-1"></i> Si cargás dos ítems iguales (mismo bien y vencimiento), se agruparán automáticamente en una sola donación. Las fotos deberán re-adjuntarse si ocurriera un error de validación.
+                            <i class="bi bi-info-circle me-1"></i> Si cargás dos ítems iguales (mismo bien y vencimiento), se agruparán automáticamente en una sola donación. Las fotos podrán sumarse progresivamente.
                         </div>
                     </div>
 
-                    <!-- Botón Principal de Envío (Ahora en Azul Primario) -->
+                    <!-- Botón Principal de Envío -->
                     <div class="d-grid mt-4">
                         <button type="submit" class="p-3 btn btn-primary d-inline-flex justify-content-center align-items-center shadow-sm">
                             <i class="bi bi-check2-circle me-2"></i> Crear lote de donación
@@ -93,11 +107,62 @@
             bloque.querySelectorAll('input, select').forEach(c => c.disabled = !visible);
         }
 
+        // Lógica de acumulación de fotos con DataTransfer
+        function configurarInputFotos(fila) {
+            const input = fila.querySelector('.fotos-input');
+            const previewList = fila.querySelector('.archivo-preview-list');
+            let dataTransfer = new DataTransfer();
+
+            input.addEventListener('change', function() {
+                Array.from(input.files).forEach(file => {
+                    if (dataTransfer.files.length < 5) {
+                        dataTransfer.items.add(file);
+                    }
+                });
+                input.files = dataTransfer.files;
+                actualizarVistaPrevia();
+            });
+
+            function actualizarVistaPrevia() {
+                previewList.innerHTML = '';
+                Array.from(dataTransfer.files).forEach((file, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'd-flex align-items-center justify-content-between bg-white border rounded px-2 py-1 small mt-1';
+                    item.innerHTML = `
+                        <span class="text-truncate me-2 text-dark">
+                            <i class="bi bi-file-earmark-image me-1 text-primary"></i> ${file.name}
+                        </span>
+                        <button type="button" class="btn btn-link btn-sm text-danger p-0 text-decoration-none eliminar-foto" data-index="${index}" title="Quitar foto">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    `;
+                    previewList.appendChild(item);
+                });
+            }
+
+            previewList.addEventListener('click', function(e) {
+                const btnEliminar = e.target.closest('.eliminar-foto');
+                if (btnEliminar) {
+                    const indexToRemove = parseInt(btnEliminar.dataset.index);
+                    const nuevoDt = new DataTransfer();
+                    Array.from(dataTransfer.files).forEach((file, index) => {
+                        if (index !== indexToRemove) {
+                            nuevoDt.items.add(file);
+                        }
+                    });
+                    dataTransfer = nuevoDt;
+                    input.files = dataTransfer.files;
+                    actualizarVistaPrevia();
+                }
+            });
+        }
+
         function inicializarFila(fila) {
             fila.querySelectorAll('select[data-valor]').forEach(s => {
                 if (s.dataset.valor) s.value = s.dataset.valor;
             });
             sincronizarFilaItem(fila);
+            configurarInputFotos(fila);
         }
 
         function renumerar() {
