@@ -26,21 +26,7 @@
                 </div>
 
                 <!-- Stepper de Pasos en Flecha (Alineado al ancho exacto del formulario) -->
-                <div role="region" aria-label="Progreso del trámite" class="mb-4">
-                    <div class="arrow-steps shadow-sm">
-
-                        {{!-- Paso 1 --}}
-                        <div class="step {{#if (eq pasoActual 2)}}completed{{else}}active{{/if}}" {{#if (eq pasoActual 1)}}aria-current="step"{{/if}}>
-                            <span>1. Buscar donante</span>
-                        </div>
-
-                        {{!-- Paso 2 --}}
-                        <div class="step {{#if (eq pasoActual 2)}}active{{else}}pending{{/if}}" {{#if (eq pasoActual 2)}}aria-current="step"{{/if}}>
-                            <span>2. Cargar ítems y fotos</span>
-                        </div>
-
-                    </div>
-                </div>
+                {{> partials/breadcrumbs pasoActual=1}}
 
                 <!-- Tarjeta Principal del Formulario -->
                 <div class="card border-0 shadow-sm">

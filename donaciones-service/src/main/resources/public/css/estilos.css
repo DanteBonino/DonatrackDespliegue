@@ -28,3 +28,87 @@
 .table .progress {
     background-color: #e2e8f0 !important; /* Un gris sutil y sólido */
 }
+
+.arrow-steps {
+    display: flex;
+    border: 1.5px solid #212529; /* Negro carbón de los títulos */
+    border-radius: 8px;          /* Mismo redondeo que los inputs y botones */
+    overflow: hidden;
+    background-color: #ffffff;
+    user-select: none;
+}
+
+.arrow-steps .step {
+    position: relative;
+    flex: 1;
+    padding: 14px 24px 14px 40px;
+    text-align: center;
+    font-weight: 500;
+    color: #212529;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: default;
+}
+
+.arrow-steps .step:first-child {
+    padding-left: 24px;
+}
+
+/* Paso activo: Azul primario de DonaTrack con texto blanco */
+.arrow-steps .step.active {
+    background-color: #0d6efd;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Paso futuro (pendiente): Gris muy claro con texto apagado */
+.arrow-steps .step.pending {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+/* Paso completado: Blanco puro con texto negro */
+.arrow-steps .step.completed {
+    background-color: #ffffff;
+    color: #212529;
+}
+
+/* Borde divisor en flecha (Negro carbón) */
+.arrow-steps .step:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -20px;
+    width: 0;
+    height: 0;
+    border-top: 38px solid transparent;
+    border-bottom: 38px solid transparent;
+    border-left: 20px solid #212529;
+    z-index: 2;
+}
+
+/* Relleno interno de la flecha */
+.arrow-steps .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -18px;
+    width: 0;
+    height: 0;
+    border-top: 38px solid transparent;
+    border-bottom: 38px solid transparent;
+    border-left: 20px solid #ffffff;
+    z-index: 3;
+}
+
+/* Flecha pintada de azul cuando el paso 1 está activo */
+.arrow-steps .step.active:not(:last-child)::after {
+    border-left-color: #0d6efd;
+}
+
+/* Flecha pintada de blanco cuando el paso 1 ya fue completado */
+.arrow-steps .step.completed:not(:last-child)::after {
+    border-left-color: #ffffff;
+}

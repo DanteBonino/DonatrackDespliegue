@@ -1,0 +1,17 @@
+<div role="region" aria-label="Progreso del trámite" class="mb-4">
+    <div class="arrow-steps shadow-sm">
+        <div class="step {{#if (eq pasoActual 1)}}active{{else}}completed{{/if}}" {{#if (eq pasoActual 1)}}aria-current="step"{{/if}}>
+            <span>1. Buscar donante</span>
+            {{#if (eq pasoActual 1)}}
+                <small class="text-white-50">(Paso actual)</small>
+            {{/if}}
+        </div>
+        <div class="step {{#if (eq pasoActual 2)}}active{{else}}pending{{/if}}" {{#if (eq pasoActual 2)}}aria-current="step"{{/if}}>
+            <span>2. Cargar items o crear lote</span>
+            {{#if (eq pasoActual 2)}}
+                <small class="text-white-50">(Paso actual)</small>
+            {{/if}}
+        </div>
+
+    </div>
+</div>
