@@ -10,7 +10,15 @@
         background-color: #0d6efd;
         border-color: #0d6efd;
     }
+
+    /* Hace que en celulares ocupe todo el ancho y en pantallas medianas o más grandes vuelva a su tamaño normal */
+    @media (max-width: 767.98px) {
+        .btn-cambiar-donante {
+            width: 100% !important;
+        }
+    }
 </style>
+
 <div class="card border shadow-sm mb-4 bg-light">
     <div class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 py-3">
         <div class="d-flex align-items-start">
@@ -33,7 +41,7 @@
                 {{/if}}
             </div>
         </div>
-        <a href="/lotes/nuevo" class="btn btn-sm btn-outline-black-to-blue text-nowrap w-100 w-md-auto align-self-md-center">
+        <a href="/lotes/nuevo" class="btn btn-sm btn-outline-black-to-blue btn-cambiar-donante text-nowrap">
             <i class="bi bi-arrow-repeat me-1"></i> Cambiar
         </a>
     </div>
