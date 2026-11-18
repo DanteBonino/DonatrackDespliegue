@@ -1,31 +1,26 @@
 {{#partial "contenido"}}
     <div class="container py-4" style="max-width: 650px;">
 
-        <!-- Cabecera idéntica a tus otros forms con botón de acción arriba a la derecha -->
         <div class="d-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0">Registrar Lote</h1>
-            <a href="/donaciones/en-deposito" class="btn btn-outline-secondary btn-sm">
+            <h1 class="h3 mb-0"><i class="bi bi-box-seam me-2"></i>Registrar Lote</h1>
+            <a href="/donaciones/en-deposito" class="btn btn-outline-primary btn-sm">
                 <i class="bi bi-arrow-left me-1"></i> Ver donaciones en depósito
             </a>
         </div>
-
-        <!-- Stepper de pasos (Basado en tu croquis) -->
+        >
         <div class="row g-2 mb-4">
             <div class="col-6">
-                <!-- Paso actual (Pintado) -->
                 <div class="p-2 px-3 rounded bg-primary text-white fw-semibold small text-center shadow-sm">
                     <i class="bi bi-1-circle-fill me-1"></i> 1. Buscar donante
                 </div>
             </div>
             <div class="col-6">
-                <!-- Paso siguiente (Inactivo/Pendiente) -->
                 <div class="p-2 px-3 rounded bg-light text-muted small text-center border">
                     <i class="bi bi-2-circle me-1"></i> 2. Cargar ítems y fotos
                 </div>
             </div>
         </div>
 
-        <!-- Tarjeta del Formulario -->
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4 p-md-5">
                 <form method="post" action="/lotes/buscar-donante" novalidate>
