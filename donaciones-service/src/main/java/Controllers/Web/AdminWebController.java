@@ -162,7 +162,7 @@ public class AdminWebController implements ConPaginacion {
     modelo.put("subcategorias", subcategorias);
     modelo.put("estadosUso", estadosUso);
     modelo.put("errores", generales);
-    ctx.render("/admin/nuevo-items.hbs", modelo);
+    ctx.render("/admin/nuevo-lote-items.hbs", modelo);
   }
 
   private Optional<Administrador> getAdministrador(Context context) {
