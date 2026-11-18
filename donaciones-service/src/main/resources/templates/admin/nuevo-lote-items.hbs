@@ -1,0 +1,138 @@
+{{#partial "contenido"}}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                    <h1 class="h3 mb-0"><i class="bi bi-box-seam me-2"></i>Registrar Lote</h1>
+                    <a href="/donaciones/en-deposito" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i> Ver donaciones en depósito
+                    </a>
+                </div>
+
+                {{> partials/breadcrumb pasoActual=2}}
+
+                <div class="mb-4">
+                    {{> partials/donante-resumen donante}}
+                </div>
+
+                {{#if errores}}
+                    <div class="alert alert-danger" role="alert">
+                        <ul class="mb-0">
+                            {{#each errores}}<li>{{this}}</li>{{/each}}
+                        </ul>
+                    </div>
+                {{/if}}
+
+                <form method="post" action="/lotes" enctype="multipart/form-data" id="form-lote" novalidate>
+                    <input type="hidden" name="donante" value="{{donanteId}}">
+
+                    <div id="items-container">
+                        {{#each filas}}
+                            {{> partials/_fila-item this}}
+                        {{/each}}
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body d-flex flex-column gap-2">
+                            <button type="button" id="btn-agregar-item"
+                                    class="btn btn-outline-primary align-self-start">
+                                <i class="bi bi-plus-circle me-1"></i> Agregar otro ítem
+                            </button>
+                            <div class="form-text">
+                                Si cargás dos ítems iguales (mismo bien y vencimiento), se registran como una sola donación.
+                            </div>
+                            <div class="form-text">
+                                Si hay errores, vas a tener que volver a adjuntar las fotos.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="p-3 btn btn-success d-inline-flex justify-content-center align-items-center shadow-sm">
+                            <i class="bi bi-check2-circle me-2"></i> Crear lote
+                        </button>
+                    </div>
+                </form>
+
+                <template id="plantilla-item">
+                    {{> partials/_fila-item plantilla}}
+                </template>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        const container = $('items-container');
+        let siguienteIndice = {{siguienteIndice}};
+
+        function sincronizarFilaItem(fila) {
+            const select = fila.querySelector('.subcategoria-select');
+            const opcion = select.selectedOptions[0];
+            const hayBien = select.value !== '';
+            const perecedera = hayBien && opcion.dataset.perecedera === 'true';
+            const decimales = hayBien && opcion.dataset.decimales === 'true';
+
+            const contenido = fila.querySelector('.contenido-input');
+            contenido.min = decimales ? '0.01' : '1';
+            contenido.step = decimales ? 'any' : '1';
+            contenido.inputMode = decimales ? 'decimal' : 'numeric';
+            fila.querySelector('.ayuda-contenido').textContent = !hayBien ? ''
+                    : decimales ? 'Permite decimales (ej: 1.5).' : 'Solo números enteros.';
+
+            mostrar(fila.querySelector('.vencimiento-bloque'), hayBien && perecedera);
+            mostrar(fila.querySelector('.estado-uso-bloque'), hayBien && !perecedera);
+        }
+
+        // Los campos ocultos se deshabilitan: no se envían y el servidor decide qué validar
+        function mostrar(bloque, visible) {
+            bloque.classList.toggle('d-none', !visible);
+            bloque.querySelectorAll('input, select').forEach(c => c.disabled = !visible);
+        }
+
+        function inicializarFila(fila) {
+            fila.querySelectorAll('select[data-valor]').forEach(s => {
+                if (s.dataset.valor) s.value = s.dataset.valor;
+            });
+            sincronizarFilaItem(fila);
+        }
+
+        function renumerar() {
+            const filas = container.querySelectorAll('.item-row');
+            filas.forEach((f, i) => f.querySelector('.item-titulo').textContent = `Ítem #${i + 1}`);
+            filas.forEach(f => f.querySelector('.btn-eliminar-item').disabled = filas.length === 1);
+        }
+
+        container.addEventListener('change', e => {
+            if (e.target.classList.contains('subcategoria-select')) {
+                sincronizarFilaItem(e.target.closest('.item-row'));
+            }
+        });
+
+        $('btn-agregar-item').addEventListener('click', () => {
+            const html = $('plantilla-item').innerHTML.replaceAll('__INDICE__', siguienteIndice++);
+            container.insertAdjacentHTML('beforeend', html);
+            inicializarFila(container.lastElementChild);
+            renumerar();
+        });
+
+        container.addEventListener('click', e => {
+            const btn = e.target.closest('.btn-eliminar-item');
+            if (btn && container.querySelectorAll('.item-row').length > 1) {
+                btn.closest('.item-row').remove();
+                renumerar();
+            }
+        });
+
+        // Enter dentro de un campo no debe enviar el lote entero
+        $('form-lote').addEventListener('keydown', e => {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') e.preventDefault();
+        });
+
+        container.querySelectorAll('.item-row').forEach(inicializarFila);
+        renumerar();
+    </script>
+{{/partial}}
+{{>layout}}

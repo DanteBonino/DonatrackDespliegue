@@ -22,7 +22,9 @@ import io.javalin.http.Context;
 import io.javalin.http.UploadedFile;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -118,6 +120,51 @@ public class AdminWebController implements ConPaginacion {
     }
   }
 
+  public void showCrearLote(Context ctx) {
+    Optional<Donante> donante = donanteDe(ctx.queryParam("donante"));
+    if (donante.isEmpty()) { ctx.redirect("/lotes/nuevo"); return; }
+
+    renderPaso2(ctx, donante.get(), List.of(filaVacia("0")), List.of());
+  }
+
+  private Optional<Donante> donanteDe(String idDominio) {
+    return Optional.ofNullable(idDominio)
+        .flatMap(id -> donantesRepository().obtenerSiExistePorIdDominio(id));
+  }
+
+  private void renderPaso2(Context ctx, Donante donante,
+                           List<Map<String, Object>> filas, List<String> generales) {
+    int siguiente = filas.stream()
+        .mapToInt(f -> Integer.parseInt((String) f.get("indice")))
+        .max().orElse(-1) + 1;
+
+    List<Map<String, Object>> subcategorias = subCategoriasRepository().getInstancias().stream()
+        .map(sc -> {
+          Map<String, Object> m = new HashMap<>();
+          m.put("idDominio", sc.getIdDominio());
+          m.put("nombre", sc.getNombre());
+          m.put("perecedera", sc.esPerecedera());
+          m.put("admiteDecimales", sc.getUnidad().admiteDecimales());
+          return m;
+        }).toList();
+
+    LinkedHashMap<Object, Object> EstadoUso;
+    List<Map<String, String>> estadosUso = Arrays.stream(EstadoDeUso.values())
+        .map(e -> Map.of("valor", e.name(), "etiqueta", e.name()))
+        .toList();
+
+    Map<String, Object> modelo = new HashMap<>();
+    modelo.put("donante", modeloDonante(donante));
+    modelo.put("donanteId", donante.getIdDominio());
+    modelo.put("filas", filas);
+    modelo.put("plantilla", filaVacia("__INDICE__"));
+    modelo.put("siguienteIndice", siguiente);
+    modelo.put("subcategorias", subcategorias);
+    modelo.put("estadosUso", estadosUso);
+    modelo.put("errores", generales);
+    ctx.render("/lotes/nuevo-items.hbs", modelo);
+  }
+
   private Optional<Administrador> getAdministrador(Context context) {
     return administradoresRepository().obtenerSiExistePorIdDominio(ManejadorDeSesion.obtenerIdAsoaciado(context).get());
   }
@@ -143,6 +190,50 @@ public class AdminWebController implements ConPaginacion {
   private BeneficiariosRepository beneficiariosRepository() {
     return BeneficiariosRepository.getInstance();
   }
+
+  private SubCategoriasRepository subCategoriasRepository() {
+    return SubCategoriasRepository.getInstance();
+  }
+
+  private Map<String, Object> filaVacia(String indice) {
+    Map<String, String> valores = new HashMap<>();
+    valores.put("cantidad", "1");
+    Map<String, Object> fila = new HashMap<>();
+    fila.put("indice", indice);
+    fila.put("valores", valores);
+    fila.put("errores", new HashMap<String, String>());
+    return fila;
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<String, String> valoresDe(Map<String, Object> fila) {
+    return (Map<String, String>) fila.get("valores");
+  }
+
+  @SuppressWarnings("unchecked")
+  private Map<String, String> erroresDe(Map<String, Object> fila) {
+    return (Map<String, String>) fila.get("errores");
+  }
+
+  private Map<String, Object> modeloDonante(Donante donante) {
+      Map<String, Object> modeloDonante = new HashMap<>();
+      modeloDonante.put("id", donante.getIdDominio());
+      modeloDonante.put("esHumano", donante.esHumano());
+
+      if (donante.esHumano()) {
+        PersonaHumana humano = (PersonaHumana) donante;
+        modeloDonante.put("nombre", humano.getNombre());
+        modeloDonante.put("apellido", humano.getApellido());
+        modeloDonante.put("documento", humano.getDocumento());
+      } else {
+        PersonaJuridica juridica = (PersonaJuridica) donante;
+        modeloDonante.put("razonSocial", juridica.getRazonSocial());
+        modeloDonante.put("cuit", juridica.getCuit());
+        modeloDonante.put("rubro", juridica.getRubro());
+        modeloDonante.put("tipo", juridica.getTipo());
+      }
+     return modeloDonante;
+    }
 
 }
 
@@ -271,31 +362,5 @@ public class AdminWebController implements ConPaginacion {
 //  ctx.render("/admin/nuevo-lote.hbs");
 //}
 //
-//public void buscarDonanteFragmento(Context ctx) {
-//  String legajoODni = ctx.queryParam("q");
-//  Optional<Donante> donanteOpt = donantesRepository().buscarPorDocumentoOCuit(legajoODni);
-//
-//  if (donanteOpt.isPresent()) {
-//    Donante donante = donanteOpt.get();
-//
-//    Map<String, Object> modeloDonante = new HashMap<>();
-//    modeloDonante.put("id", donante.getIdDominio());
-//    modeloDonante.put("esHumano", donante.esHumano());
-//
-//    if (donante.esHumano()) {
-//      PersonaHumana humano = (PersonaHumana) donante;
-//      modeloDonante.put("nombre", humano.getNombre());
-//      modeloDonante.put("apellido", humano.getApellido());
-//      modeloDonante.put("documento", humano.getDocumento());
-//    } else {
-//      PersonaJuridica juridica = (PersonaJuridica) donante;
-//      modeloDonante.put("razonSocial", juridica.getRazonSocial());
-//      modeloDonante.put("cuit", juridica.getCuit());
-//      modeloDonante.put("rubro", juridica.getRubro());
-//      modeloDonante.put("tipo", juridica.getTipo());
-//    }
-//    ctx.render("/partials/donante-encontrado.hbs", modeloDonante);
-//  } else {
-//    ctx.render("/partials/donante-no-encontrado.hbs");
-//  }
+
 //}
