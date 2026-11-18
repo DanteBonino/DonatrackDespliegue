@@ -88,15 +88,28 @@
             const select = fila.querySelector('.subcategoria-select');
             const opcion = select.selectedOptions[0];
             const hayBien = select.value !== '';
+
+            // Obtenemos los data-attributes enviados desde el controlador
             const perecedera = hayBien && opcion.dataset.perecedera === 'true';
-            const decimales = hayBien && opcion.dataset.decimales === 'true';
+            const admiteDecimales = hayBien && opcion.dataset.decimales === 'true';
+            const unidad = hayBien ? (opcion.dataset.unidad || '') : '';
+
+            // Actualizamos el visor de la unidad al lado del input de contenido
+            const unidadBadge = fila.querySelector('.unidad-badge');
+            if (unidadBadge) {
+                unidadBadge.textContent = unidad || '-';
+            }
 
             const contenido = fila.querySelector('.contenido-input');
-            contenido.min = decimales ? '0.01' : '1';
-            contenido.step = decimales ? 'any' : '1';
-            contenido.inputMode = decimales ? 'decimal' : 'numeric';
-            fila.querySelector('.ayuda-contenido').textContent = !hayBien ? ''
-                    : decimales ? 'Permite decimales (ej: 1.5).' : 'Solo números enteros.';
+            contenido.min = admiteDecimales ? '0.01' : '1';
+            contenido.step = admiteDecimales ? '0.01' : '1';
+            contenido.inputMode = admiteDecimales ? 'decimal' : 'numeric';
+
+            const ayudaContenido = fila.querySelector('.ayuda-contenido');
+            if (ayudaContenido) {
+                ayudaContenido.textContent = !hayBien ? ''
+                        : admiteDecimales ? 'Permite decimales (ej: 1.5).' : 'Solo números enteros.';
+            }
 
             mostrar(fila.querySelector('.vencimiento-bloque'), hayBien && perecedera);
             mostrar(fila.querySelector('.estado-uso-bloque'), hayBien && !perecedera);
@@ -129,13 +142,13 @@
                     const item = document.createElement('div');
                     item.className = 'd-flex align-items-center justify-content-between bg-white border rounded px-2 py-1 small mt-1';
                     item.innerHTML = `
-                        <span class="text-truncate me-2 text-dark">
-                            <i class="bi bi-file-earmark-image me-1 text-primary"></i> ${file.name}
-                        </span>
-                        <button type="button" class="btn btn-link btn-sm text-danger p-0 text-decoration-none eliminar-foto" data-index="${index}" title="Quitar foto">
-                            <i class="bi bi-x-lg"></i>
-                        </button>
-                    `;
+                    <span class="text-truncate me-2 text-dark">
+                        <i class="bi bi-file-earmark-image me-1 text-primary"></i> ${file.name}
+                    </span>
+                    <button type="button" class="btn btn-link btn-sm text-danger p-0 text-decoration-none eliminar-foto" data-index="${index}" title="Quitar foto">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                `;
                     previewList.appendChild(item);
                 });
             }
@@ -192,7 +205,6 @@
             }
         });
 
-        // Prevenir Enter accidental en inputs
         $('form-lote').addEventListener('keydown', e => {
             if (e.key === 'Enter' && e.target.tagName === 'INPUT') e.preventDefault();
         });

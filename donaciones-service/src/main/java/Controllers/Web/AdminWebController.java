@@ -145,6 +145,7 @@ public class AdminWebController implements ConPaginacion {
           m.put("nombre", sc.getNombre());
           m.put("perecedera", sc.esPerecedera());
           m.put("admiteDecimales", sc.getUnidad().admiteDecimales());
+          m.put("unidad", sc.getUnidad().getAbreviatura());
           return m;
         }).toList();
 

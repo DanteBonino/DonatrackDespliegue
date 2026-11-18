@@ -17,17 +17,23 @@
                     {{#each @root.subcategorias}}
                         <option value="{{idDominio}}"
                                 data-perecedera="{{perecedera}}"
-                                data-decimales="{{admiteDecimales}}">{{nombre}}</option>
+                                data-decimales="{{admiteDecimales}}"
+                                data-unidad="{{unidad}}">{{nombre}}</option>
                     {{/each}}
                 </select>
                 <div class="invalid-feedback">{{errores.subcategoriaId}}</div>
             </div>
 
+            <!-- CONTENIDO CON INPUT-GROUP Y UNIDAD DINÁMICA -->
             <div class="col-md-6">
-                <label for="contenido-{{indice}}" class="form-label fw-bold">Contenido de cada bulto (ej: 750 g) <span class="text-danger">*</span></label>
-                <input id="contenido-{{indice}}" type="number" step="any"
-                       name="items[{{indice}}][contenido]" value="{{valores.contenido}}"
-                       class="form-control contenido-input {{#if errores.contenido}}is-invalid{{/if}}">
+                <label for="contenido-{{indice}}" class="form-label fw-bold">Contenido de cada bulto <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input id="contenido-{{indice}}" type="number" step="0.01" min="0.01"
+                           name="items[{{indice}}][contenido]" value="{{valores.contenido}}"
+                           class="form-control contenido-input {{#if errores.contenido}}is-invalid{{/if}}"
+                           placeholder="Ej: 750">
+                    <span class="input-group-text bg-light text-muted fw-semibold unidad-badge" style="min-width: 60px; justify-content: center;">-</span>
+                </div>
                 <div class="form-text ayuda-contenido"></div>
                 <div class="invalid-feedback">{{errores.contenido}}</div>
             </div>
@@ -40,18 +46,20 @@
                 <div class="invalid-feedback">{{errores.cantidad}}</div>
             </div>
 
-            <div class="col-md-6 vencimiento-bloque d-none">
+            <!-- FECHA DE VENCIMIENTO (Ocupa el 100% de su espacio disponible) -->
+            <div class="col-md-6 vencimiento-bloque d-none w-100">
                 <label for="vencimiento-{{indice}}" class="form-label fw-bold">Fecha de vencimiento <span class="text-danger">*</span></label>
                 <input id="vencimiento-{{indice}}" type="date"
                        name="items[{{indice}}][fechaVencimiento]" value="{{valores.fechaVencimiento}}"
-                       class="form-control {{#if errores.fechaVencimiento}}is-invalid{{/if}}">
+                       class="form-control w-100 {{#if errores.fechaVencimiento}}is-invalid{{/if}}">
                 <div class="invalid-feedback">{{errores.fechaVencimiento}}</div>
             </div>
 
-            <div class="col-md-6 estado-uso-bloque d-none">
+            <!-- ESTADO DE USO (Ocupa el 100% de su espacio disponible) -->
+            <div class="col-md-6 estado-uso-bloque d-none w-100">
                 <label for="estado-{{indice}}" class="form-label fw-bold">Estado de uso <span class="text-danger">*</span></label>
                 <select id="estado-{{indice}}" name="items[{{indice}}][estadoUso]"
-                        class="form-select {{#if errores.estadoUso}}is-invalid{{/if}}"
+                        class="form-select w-100 {{#if errores.estadoUso}}is-invalid{{/if}}"
                         data-valor="{{valores.estadoUso}}">
                     <option value="">Elegí un estado</option>
                     {{#each @root.estadosUso}}
@@ -68,7 +76,6 @@
                        name="items[{{indice}}][fotos]"
                        class="form-control fotos-input {{#if errores.fotos}}is-invalid{{/if}}">
                 <div class="archivo-preview-list mt-2 d-flex flex-column gap-1"></div>
-
                 <div class="form-text">Hasta 5 fotos, JPG, PNG o WebP de hasta 5 MB. Podes agregarlas de a una o varias a la vez.</div>
                 <div class="invalid-feedback">{{errores.fotos}}</div>
             </div>
