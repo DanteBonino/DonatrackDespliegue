@@ -118,7 +118,7 @@ public class WebRoutes implements EndpointGroup {
     post("/necesidades/{id}/eliminar", beneficiaria::eliminarNecesidad, Rol.ENTIDADBENEFICIARIA);
     get("/guia-de-uso", donanteWebController::showGuiaDeUso, DONANTE);
 
-    get("lotes/nuevo", ctx -> ctx.redirect("/nuevo/buscador-de-donantes"), ADMINISTRADOR);
+    get("lotes/nuevo", ctx -> ctx.redirect("/lotes/nuevo/buscador-de-donantes"), ADMINISTRADOR);
     get("lotes/nuevo/buscador-de-donantes", admin::showBuscarDonante, ADMINISTRADOR);
     post("lotes/buscar-donante", admin::buscarDonante, ADMINISTRADOR);
     get("lotes/nuevo/items", admin::showCrearLote, ADMINISTRADOR);
