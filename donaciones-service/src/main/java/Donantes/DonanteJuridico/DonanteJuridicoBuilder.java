@@ -2,6 +2,7 @@ package Donantes.DonanteJuridico;
 
 import Contacto.DatosDeContacto;
 import Validaciones.Validaciones;
+import utils.StringUtils;
 
 public class DonanteJuridicoBuilder {
   private String razonSocial;
@@ -44,7 +45,7 @@ public class DonanteJuridicoBuilder {
 
     return new PersonaJuridica(
         this.razonSocial,
-        this.cuit,
+        StringUtils.sacarGuionesPuntosYEspacios(this.cuit),
         this.contacto,
         this.tipoJuridica,
         this.rubro

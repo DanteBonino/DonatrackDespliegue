@@ -5,6 +5,7 @@ import Direccion.Calle;
 import Validaciones.Validaciones;
 import java.time.LocalDate;
 import java.util.Objects;
+import utils.StringUtils;
 
 
 public class DonanteHumanoBuilder {
@@ -62,7 +63,7 @@ public class DonanteHumanoBuilder {
     return new PersonaHumana(
         this.nombreCompleto.getNombre(),
         this.nombreCompleto.getApellido(),
-        this.documento,
+        StringUtils.sacarGuionesPuntosYEspacios(this.documento),
         this.contacto,
         this.fechaDeNacimiento,
         this.genero,

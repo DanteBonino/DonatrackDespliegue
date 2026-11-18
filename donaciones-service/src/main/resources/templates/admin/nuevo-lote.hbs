@@ -7,113 +7,58 @@
                     <h1 class="h3 mb-0"><i class="bi bi-box-seam me-2"></i>Registrar Lote de Donación</h1>
                 </div>
 
-
-                <!-- Formulario Principal -->
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4 p-md-5">
-                        <form action="/lotes/crear" method="POST" enctype="multipart/form-data" class="needs-validation">
-                            <!-- Tarjeta de búsqueda del donante -->
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <label class="form-label fw-bold">Donante (DNI o Cuit)</label>
+                        <!-- Formulario principal con ID para controlar el evento Enter -->
+                        <form action="/lotes/crear" method="POST" enctype="multipart/form-data" class="needs-validation" id="form-lote">
+
+                            <!-- Búsqueda de Donante con HTMX -->
+                            <div class="card mb-4 bg-light border-0">
+                                <div class="card-body p-4">
+                                    <label for="input-busqueda-donante" class="form-label fw-bold">Donante (DNI o CUIT) <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="input-busqueda-donante" name="q">
+                                        <input type="text" class="form-control" id="input-busqueda-donante" name="q" placeholder="Ej: 30111222">
                                         <button type="button" class="btn btn-outline-primary"
-                                                hx-get="/donantes/buscar-fragmento"
+                                                hx-get="/api/donantes/buscar-fragmento"
                                                 hx-include="#input-busqueda-donante"
                                                 hx-target="#resultado-donante"
                                                 hx-swap="innerHTML">
-                                            Buscar
+                                            <i class="bi bi-search me-1"></i> Buscar
                                         </button>
                                     </div>
+                                    <div class="form-text">El sistema normalizará automáticamente guiones y espacios.</div>
                                     <div id="resultado-donante" class="mt-3"></div>
                                 </div>
                             </div>
 
                             <h4 class="h5 fw-bold mb-3 text-secondary"><i class="bi bi-basket me-2"></i>Ítems del Lote</h4>
 
-                            <!-- Contenedor dinámico de ítems -->
-                            <div id="items-container">
-                                <!-- Fila Base (Ítem 0) -->
-                                <div class="item-row border rounded p-4 mb-4 bg-light position-relative">
-                                    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                                        <span class="fw-bold text-primary item-titulo">Ítem #1</span>
-                                        <button type="button" class="btn btn-outline-danger btn-sm btn-eliminar-item" title="Eliminar este ítem">
-                                            <i class="bi bi-trash"></i> Eliminar
-                                        </button>
-                                    </div>
-
-                                    <!-- Subcategoría -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-bold">Subcategoría del bien <span class="text-danger">*</span></label>
-                                        <select name="items[0][subcategoriaId]" class="form-select subcategoria-select" required>
-                                            <option value="" selected disabled>Seleccioná la subcategoría...</option>
-                                            {{#each subcategorias}}
-                                                <option value="{{this.id}}"
-                                                        data-perecedera="{{this.esPerecedera}}"
-                                                        data-unidad="{{this.unidad}}"
-                                                        data-admite-decimales="{{this.admiteDecimales}}">
-                                                    {{this.nombre}}
-                                                </option>
-                                            {{/each}}
-                                        </select>
-                                    </div>
-
-                                    <!-- Contenido (Ej: 600 gramos) con unidad dinámica -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-bold">Contenido <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <input type="number" step="0.01" min="0.01" name="items[0][contenido]"
-                                                   class="form-control contenido-input" placeholder="Ej: 600" required>
-                                            <span class="input-group-text bg-white text-muted fw-semibold unidad-badge"
-                                                  style="min-width: 70px; justify-content: center;">-</span>
-                                        </div>
-                                        <div class="form-text ayuda-contenido">La unidad de medida se ajusta según el material seleccionado.</div>
-                                    </div>
-
-                                    <!-- Cantidad de unidades/bultos -->
-                                    <div class="mb-4">
-                                        <label class="form-label fw-bold">Cantidad de bultos / unidades <span class="text-danger">*</span></label>
-                                        <input type="number" step="1" min="1" name="items[0][cantidad]" class="form-control" value="1" required>
-                                    </div>
-
-                                    <!-- CAMPO CONDICIONAL: Fecha de Vencimiento (Si es perecedero) -->
-                                    <div class="mb-4 vencimiento-bloque" style="display: none;">
-                                        <label class="form-label fw-bold text-danger">Fecha de Vencimiento <span class="text-danger">*</span></label>
-                                        <input type="date" name="items[0][fechaVencimiento]" class="form-control vencimiento-input">
-                                        <div class="form-text text-danger small mt-1">
-                                            <i class="bi bi-info-circle me-1"></i> Los productos perecederos requieren fecha de vencimiento obligatoria.
-                                        </div>
-                                    </div>
-
-                                    <!-- CAMPO CONDICIONAL: Estado de Uso (Si es no perecedero) -->
-                                    <div class="mb-4 estado-uso-bloque">
-                                        <label class="form-label fw-bold">Estado de Uso <span class="text-danger">*</span></label>
-                                        <select name="items[0][estadoUso]" class="form-select estado-uso-input">
-                                            <option value="NUEVO">Nuevo</option>
-                                            <option value="USADO" selected>Usado en buen estado</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Fotos (Archivos) -->
-                                    <div class="mb-0">
-                                        <label class="form-label fw-bold">Fotos del ítem (Opcional)</label>
-                                        <input type="file" name="items[0][fotos]" class="form-control" multiple accept="image/*">
-                                        <div class="form-text">Podés adjuntar una o varias imágenes del estado del producto.</div>
-                                    </div>
-                                </div>
+                            <!-- Nota aclaratoria sugerida por la devolución -->
+                            <div class="alert alert-info py-2 small mb-4" role="alert">
+                                <i class="bi bi-info-circle-fill me-1"></i>
+                                <strong>Nota para el administrador:</strong> El sistema agrupará automáticamente en una única donación aquellos ítems cargados que posean exactamente el mismo bien y la misma fecha de vencimiento.
                             </div>
 
-                            <!-- Botón Agregar Otro Ítem -->
+                            <!-- Contenedor de ítems -->
+                            <div id="items-container">
+                                <!-- Renderizamos la primera fila inicial con índice 0 usando el partial -->
+                                {{> partials/_fila-item indice=0}}
+                            </div>
+
+                            <!-- Template limpio para clonar filas sin arrastrar estado viejo -->
+                            <template id="plantilla-item">
+                                {{> partials/_fila-item indice="__INDICE__"}}
+                            </template>
+
+                            <!-- Botón Agregar Otro Ítem con estilo dashed correcto -->
                             <div class="mb-4">
-                                <button type="button" id="btn-agregar-item" class="btn btn-outline-secondary w-100 py-2 border-dashed">
+                                <button type="button" id="btn-agregar-item" class="btn btn-outline-secondary w-100 py-2" style="border-style: dashed;">
                                     <i class="bi bi-plus-circle me-2"></i> Agregar otro ítem al lote
                                 </button>
                             </div>
 
                             <hr class="my-4">
 
-                            <!-- Botón Guardar Lote -->
                             <div class="d-grid">
                                 <button type="submit" class="p-3 btn btn-primary d-inline-flex justify-content-center align-items-center shadow-sm">
                                     <i class="bi bi-check-circle me-2"></i> Registrar Lote de Donación
@@ -128,10 +73,10 @@
         </div>
     </div>
 
-    <!-- Script de lógica dinámica (Sincronización, decimales, condicionales y clonación de ítems) -->
+    <!-- Script de control y sincronización -->
     <script>
         const $ = id => document.getElementById(id);
-        let contadorItems = 1;
+        let siguienteIndice = 1;
 
         function sincronizarFilaItem(row) {
             const selectSubcat = row.querySelector('.subcategoria-select');
@@ -142,17 +87,15 @@
             const esPerecedera = hayMaterial && opcion.dataset.perecedera === 'true';
             const admiteDecimales = hayMaterial && opcion.dataset.admiteDecimales === 'true';
 
-            // Unidad y validación de enteros o decimales en contenido
             row.querySelector('.unidad-badge').textContent = unidad || '-';
             const inputContenido = row.querySelector('.contenido-input');
             inputContenido.step = admiteDecimales ? '0.01' : '1';
             inputContenido.min = admiteDecimales ? '0.01' : '1';
             inputContenido.inputMode = admiteDecimales ? 'decimal' : 'numeric';
             row.querySelector('.ayuda-contenido').textContent = admiteDecimales
-                    ? 'Permite números decimales (ej: 1.5).'
-                    : 'Solo permite números enteros.';
+                    ? 'Permite decimales (ej: 1.5).'
+                    : 'Solo números enteros.';
 
-            // Alternar Vencimiento vs Estado de Uso según si es perecedero
             const bloqueVencimiento = row.querySelector('.vencimiento-bloque');
             const inputVencimiento = row.querySelector('.vencimiento-input');
             const bloqueEstadoUso = row.querySelector('.estado-uso-bloque');
@@ -161,7 +104,6 @@
             if (esPerecedera) {
                 bloqueVencimiento.style.display = 'block';
                 inputVencimiento.setAttribute('required', 'required');
-
                 bloqueEstadoUso.style.display = 'none';
                 selectEstadoUso.removeAttribute('required');
                 selectEstadoUso.value = '';
@@ -169,59 +111,59 @@
                 bloqueVencimiento.style.display = 'none';
                 inputVencimiento.removeAttribute('required');
                 inputVencimiento.value = '';
-
                 bloqueEstadoUso.style.display = 'block';
                 selectEstadoUso.setAttribute('required', 'required');
                 if (!selectEstadoUso.value) selectEstadoUso.value = 'NUEVO';
             }
+
+            actualizarEstadoBotonesEliminar();
         }
 
-        // Delegación de eventos para los selects de subcategoría dentro del contenedor
+        function actualizarEstadoBotonesEliminar() {
+            const filas = document.querySelectorAll('.item-row');
+            filas.forEach((fila, idx) => {
+                fila.querySelector('.item-titulo').textContent = `Ítem #${idx + 1}`;
+                const btnEliminar = fila.querySelector('.btn-eliminar-item');
+                // Deshabilita el botón si solo queda una fila
+                btnEliminar.disabled = filas.length === 1;
+            });
+        }
+
+        // 1. PREVENCIÓN DE ENTER ACCIDENTAL EN INPUTS (Sugerencia clave)
+        $('form-lote').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                e.preventDefault();
+            }
+        });
+
         $('items-container').addEventListener('change', function(e) {
             if (e.target.classList.contains('subcategoria-select')) {
                 sincronizarFilaItem(e.target.closest('.item-row'));
             }
         });
 
-        // Agregar dinámicamente un nuevo ítem clonando el primero
+        // Agregar fila usando el template HTML limpio
         $('btn-agregar-item').addEventListener('click', function() {
-            const container = $('items-container');
-            const primeraFila = container.querySelector('.item-row');
-            const nuevaFila = primeraFila.cloneNode(true);
-
-            // Limpiar valores y actualizar índices (ej: items[0][...] -> items[1][...])
-            nuevaFila.querySelectorAll('input, select').forEach(input => {
-                if (input.type !== 'file') input.value = '';
-                const name = input.getAttribute('name');
-                if (name) {
-                    input.setAttribute('name', name.replace(/\[\d+\]/, `[${contadorItems}]`));
-                }
-            });
-
-            contadorItems++;
-            nuevaFila.querySelector('.item-titulo').textContent = `Ítem #${contadorItems}`;
-
-            container.appendChild(nuevaFila);
+            const templateHtml = $('plantilla-item').innerHTML;
+            const html = templateHtml.replaceAll('__INDICE__', siguienteIndice++);
+            $('items-container').insertAdjacentHTML('beforeend', html);
+            const nuevaFila = $('items-container').lastElementChild;
             sincronizarFilaItem(nuevaFila);
         });
 
-        // Eliminar fila de ítem (siempre que quede más de una)
+        // Eliminar fila
         $('items-container').addEventListener('click', function(e) {
             if (e.target.closest('.btn-eliminar-item')) {
-                const filas = document.querySelectorAll('.item-row');
-                if (filas.length > 1) {
-                    e.target.closest('.item-row').remove();
-                    // Reindexar títulos visuales opcionalmente
-                    document.querySelectorAll('.item-row').forEach((fila, idx) => {
-                        fila.querySelector('.item-titulo').textContent = `Ítem #${idx + 1}`;
-                    });
-                } else {
-                    alert('El lote debe contener al menos un ítem.');
+                const fila = e.target.closest('.item-row');
+                if (document.querySelectorAll('.item-row').length > 1) {
+                    fila.remove();
+                    actualizarEstadoBotonesEliminar();
                 }
             }
         });
 
-        sincronizarFilaItem(document.querySelector('.item-row'));
+        // Inicializar sincronización de la fila por defecto al cargar
+        document.querySelectorAll('.item-row').forEach(sincronizarFilaItem);
     </script>
 {{/partial}}
 {{>layout}}

@@ -7,6 +7,7 @@ import EstadoDonacion.EstadoDonacion;
 import ExceptionHandler.CantidadDeItemsInvalida;
 import ObserversCambioDeEstado.PublicadorDeCambiosEstados;
 import Validaciones.Validaciones;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LoteBuilder {
-  private List<Item> items;
+  private List<Item> items = new ArrayList<>();
   private Donante duenio;
   private PublicadorDeCambiosEstados publicadorDeCambiosEstados;
 
@@ -25,6 +26,11 @@ public class LoteBuilder {
 
   public LoteBuilder conItems(List<Item> items) {
     this.items = items;
+    return this;
+  }
+
+  public LoteBuilder conItem(Item item) {
+    this.items.add(item);
     return this;
   }
 

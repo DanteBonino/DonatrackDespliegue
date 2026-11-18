@@ -1,0 +1,67 @@
+<div class="item-row border rounded p-4 mb-4 bg-light position-relative" data-index="{{indice}}">
+    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <span class="fw-bold text-primary item-titulo">Ítem #1</span>
+        <button type="button" class="btn btn-outline-danger btn-sm btn-eliminar-item" title="Eliminar este ítem">
+            <i class="bi bi-trash"></i> Eliminar
+        </button>
+    </div>
+
+    <!-- Subcategoría -->
+    <div class="mb-4">
+        <label for="subcategoria-{{indice}}" class="form-label fw-bold">Subcategoría del bien <span class="text-danger">*</span></label>
+        <select id="subcategoria-{{indice}}" name="items[{{indice}}][subcategoriaId]" class="form-select subcategoria-select" required>
+            <option value="" selected disabled>Seleccioná la subcategoría...</option>
+            {{#each subcategorias}}
+                <option value="{{this.id}}"
+                        data-perecedera="{{this.esPerecedera}}"
+                        data-unidad="{{this.unidad}}"
+                        data-admite-decimales="{{this.admiteDecimales}}">
+                    {{this.nombre}}
+                </option>
+            {{/each}}
+        </select>
+    </div>
+
+    <!-- Contenido -->
+    <div class="mb-4">
+        <label for="contenido-{{indice}}" class="form-label fw-bold">Contenido de cada bulto <span class="text-danger">*</span></label>
+        <div class="input-group">
+            <input type="number" step="0.01" min="0.01" id="contenido-{{indice}}" name="items[{{indice}}][contenido]"
+                   class="form-control contenido-input" placeholder="Ej: 750" required>
+            <span class="input-group-text bg-white text-muted fw-semibold unidad-badge"
+                  style="min-width: 70px; justify-content: center;">-</span>
+        </div>
+        <div class="form-text ayuda-contenido">La unidad de medida se ajusta según el material.</div>
+    </div>
+
+    <!-- Cantidad de bultos -->
+    <div class="mb-4">
+        <label for="cantidad-{{indice}}" class="form-label fw-bold">Cantidad de bultos iguales <span class="text-danger">*</span></label>
+        <input type="number" step="1" min="1" id="cantidad-{{indice}}" name="items[{{indice}}][cantidad]" class="form-control" value="1" required>
+    </div>
+
+    <!-- Vencimiento (Perecederos) -->
+    <div class="mb-4 vencimiento-bloque" style="display: none;">
+        <label for="vencimiento-{{indice}}" class="form-label fw-bold text-danger">Fecha de Vencimiento <span class="text-danger">*</span></label>
+        <input type="date" id="vencimiento-{{indice}}" name="items[{{indice}}][fechaVencimiento]" class="form-control vencimiento-input">
+        <div class="form-text text-danger small mt-1">
+            <i class="bi bi-info-circle me-1"></i> Los productos perecederos requieren fecha de vencimiento obligatoria.
+        </div>
+    </div>
+
+    <!-- Estado de Uso (No Perecederos) -->
+    <div class="mb-4 estado-uso-bloque">
+        <label for="estado-{{indice}}" class="form-label fw-bold">Estado de Uso <span class="text-danger">*</span></label>
+        <select id="estado-{{indice}}" name="items[{{indice}}][estadoUso]" class="form-select estado-uso-input">
+            <option value="NUEVO">Nuevo</option>
+            <option value="USADO" selected>Usado en buen estado</option>
+        </select>
+    </div>
+
+    <!-- Fotos -->
+    <div class="mb-0">
+        <label for="fotos-{{indice}}" class="form-label fw-bold">Fotos del ítem (Opcional)</label>
+        <input type="file" id="fotos-{{indice}}" name="items[{{indice}}][fotos]" class="form-control" multiple accept="image/*">
+        <div class="form-text">Si ocurriera un error general de validación, las fotos deberán seleccionarse nuevamente.</div>
+    </div>
+</div>
