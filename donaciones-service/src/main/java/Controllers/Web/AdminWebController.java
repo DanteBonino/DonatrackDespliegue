@@ -101,7 +101,7 @@ public class AdminWebController implements ConPaginacion {
 
   public void showBuscarDonante(Context ctx) {
     validarAdministrador(ctx);
-    ctx.render("/admin/buscar-donante.hbs");
+    ctx.render("admin/buscar-donante.hbs");
   }
 
   public void buscarDonante(Context ctx) {
