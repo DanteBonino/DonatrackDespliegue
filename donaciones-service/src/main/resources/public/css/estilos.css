@@ -31,17 +31,17 @@
 
 .arrow-steps {
     display: flex;
-    border: 1.5px solid #212529; /* Negro carbón de los títulos */
-    border-radius: 8px;          /* Mismo redondeo que los inputs y botones */
+    border: 1.5px solid #212529;
+    border-radius: 8px;
     overflow: hidden;
-    background-color: #ffffff;
+    background-color: #f8f9fa; /* Fondo base del paso pendiente */
     user-select: none;
 }
 
 .arrow-steps .step {
     position: relative;
     flex: 1;
-    padding: 14px 24px 14px 40px;
+    padding: 12px 16px 12px 28px;
     text-align: center;
     font-weight: 500;
     color: #212529;
@@ -49,66 +49,65 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     cursor: default;
+    line-height: 1.25;
 }
 
 .arrow-steps .step:first-child {
-    padding-left: 24px;
+    padding-left: 16px;
+    padding-right: 26px; /* Espacio extra para la punta de la flecha */
+    z-index: 2;
+    /* Dibuja el borde negro derecho en ángulo usando un pseudo-elemento */
+    background-color: #212529;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%);
 }
 
-/* Paso activo: Azul primario de DonaTrack con texto blanco */
+/* Capa interna del primer paso (el relleno azul o blanco sobre el borde negro) */
+.arrow-steps .step:first-child::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    right: 2px; /* Grosor del borde negro de la flecha */
+    background-color: #ffffff;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%);
+    z-index: -1;
+}
+
+/* Relleno azul cuando el paso 1 está activo */
+.arrow-steps .step:first-child.active::before {
+    background-color: #0d6efd;
+}
+
+/* Ajuste del segundo paso para que encaje debajo de la punta */
+.arrow-steps .step:last-child {
+    margin-left: -16px;
+    padding-left: 28px;
+    z-index: 1;
+}
+
+/* Estados de color */
 .arrow-steps .step.active {
     background-color: #0d6efd;
     color: #ffffff;
     font-weight: 600;
 }
 
-/* Paso futuro (pendiente): Gris muy claro con texto apagado */
 .arrow-steps .step.pending {
     background-color: #f8f9fa;
     color: #6c757d;
 }
 
-/* Paso completado: Blanco puro con texto negro */
 .arrow-steps .step.completed {
     background-color: #ffffff;
     color: #212529;
 }
 
-/* Borde divisor en flecha (Negro carbón) */
-.arrow-steps .step:not(:last-child)::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: -20px;
-    width: 0;
-    height: 0;
-    border-top: 38px solid transparent;
-    border-bottom: 38px solid transparent;
-    border-left: 20px solid #212529;
-    z-index: 2;
-}
-
-/* Relleno interno de la flecha */
-.arrow-steps .step:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: -18px;
-    width: 0;
-    height: 0;
-    border-top: 38px solid transparent;
-    border-bottom: 38px solid transparent;
-    border-left: 20px solid #ffffff;
-    z-index: 3;
-}
-
-/* Flecha pintada de azul cuando el paso 1 está activo */
-.arrow-steps .step.active:not(:last-child)::after {
-    border-left-color: #0d6efd;
-}
-
-/* Flecha pintada de blanco cuando el paso 1 ya fue completado */
-.arrow-steps .step.completed:not(:last-child)::after {
-    border-left-color: #ffffff;
+/* Ajuste fino de fuente en pantallas muy chicas (<= 420px) */
+@media (max-width: 420px) {
+    .arrow-steps .step {
+        font-size: 0.875rem;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
 }
