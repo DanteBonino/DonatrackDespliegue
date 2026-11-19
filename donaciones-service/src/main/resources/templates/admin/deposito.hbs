@@ -50,7 +50,7 @@
                                         <form method="POST" action="/donaciones/{{this.id}}/vencer" class="m-0">
                                             <button type="submit" class="btn btn-outline-danger btn-sm text-nowrap"
                                                     onclick="return confirm('¿Marcar esta donación como vencida?');">
-                                                <i class="bi bi-calendar-x me-1"></i>Marcar vencida
+                                                <i class="bi bi-calendar-x me-1"></i><span class="visually-hidden"> Marcar como vencida </span>
                                             </button>
                                         </form>
                                     {{/if}}
