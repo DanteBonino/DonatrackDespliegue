@@ -81,7 +81,13 @@ public class DonacionesWebController {
     modelo.put("donante", donante);
 
     modelo.put("estaAsignada", asignada != null);
-    if (asignada != null) modelo.put("entidad", Map.of("nombre", asignada.getRazonSocial()));
+    if (asignada != null) {
+      modelo.put("entidad", Map.of(
+          "nombre", asignada.getRazonSocial(),
+          "direccion", asignada.getDireccion() != null ? asignada.getDireccion().getCalle().getFormatoLegible() : "—")
+      );
+    }
+
 
     if (donacion.getJustificacion() != null) modelo.put("justificacion", donacion.getJustificacion());
 
@@ -91,7 +97,6 @@ public class DonacionesWebController {
       Map<String, Object> m = new HashMap<>();
       m.put("estado", c.getEstadoDonacion().name());
       m.put("fecha", c.getFecha());
-      if (c.esDeAsignacion() && c.getAsignado() != null) m.put("entidad", c.getAsignado().getRazonSocial());
       return m;
     }).toList();
     modelo.put("historial", historial);
