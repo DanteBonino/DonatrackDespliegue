@@ -104,6 +104,7 @@ public class AdminWebController implements ConPaginacion, ConValidacionDeFormula
       fila.put("fecha", d.getFechaDeDonacion());
       fila.put("donante", d.getDonante().getCaracteristicaDeDiferenciacion());
       fila.put("bienVencido", !d.sigueEnVigencia());
+      fila.put("esPerecedero", d.getSubCategoria().esPerecedera());
       filas.add(fila);
     }
 

@@ -19,7 +19,6 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                     <tr>
-                        <th>ID</th>
                         <th>Bien</th>
                         <th>Cantidad / Detalle</th>
                         <th>Donante</th>
@@ -31,7 +30,6 @@
                     <tbody>
                     {{#each donaciones}}
                         <tr>
-                            <td><code class="text-primary">{{this.id}}</code></td>
                             <td class="text-capitalize">{{this.bien}}</td>
                             <td>{{this.cantidad}} {{this.unidad}}</td>
                             <td>{{this.donante}}</td>
@@ -40,16 +38,18 @@
                                 {{#if this.bienVencido}}
                                     <span class="badge bg-danger">Bien vencido</span>
                                 {{else}}
-                                    <span class="badge bg-success">Vigente</span>
+                                    <span class="badge bg-success" title="El bien no venció todavía">Vigente</span>
                                 {{/if}}
                             </td>
                             <td>
-                                <form method="POST" action="/donaciones/{{this.id}}/vencer">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm"
-                                            onclick="return confirm('¿Marcar esta donación como vencida?');">
-                                        <i class="bi bi-calendar-x me-1"></i>Marcar vencida
-                                    </button>
-                                </form>
+                                {{#if this.esPerecedero}}
+                                    <form method="POST" action="/donaciones/{{this.id}}/vencer">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('¿Marcar esta donación como vencida?');">
+                                            <i class="bi bi-calendar-x me-1"></i>Marcar vencida
+                                        </button>
+                                    </form>
+                                {{/if}}
                             </td>
                         </tr>
                     {{/each}}
