@@ -24,7 +24,7 @@
                         <th>Donante</th>
                         <th>Fecha de donación</th>
                         <th>Vigencia del bien</th>
-                        <th>Acción</th>
+                        <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -42,6 +42,9 @@
                                 {{/if}}
                             </td>
                             <td>
+                                <a href="/donaciones/{{this.id}}/detalle" class="btn btn-sm btn-outline-primary" title="Ver detalle">
+                                    <i class="bi bi-eye"></i><span class="visually-hidden">Ver detalle</span>
+                                </a>
                                 {{#if this.esPerecedero}}
                                     <form method="POST" action="/donaciones/{{this.id}}/vencer">
                                         <button type="submit" class="btn btn-outline-danger btn-sm"
