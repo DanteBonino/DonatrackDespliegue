@@ -122,7 +122,7 @@ public class WebRoutes implements EndpointGroup {
     get("lotes/nuevo/buscador-de-donantes", admin::showBuscarDonante, ADMINISTRADOR);
     post("lotes/buscar-donante", admin::buscarDonante, ADMINISTRADOR);
     get("lotes/nuevo/items", admin::showCrearLote, ADMINISTRADOR);
-
+    post("lotes/nuevo", admin::crearLote, ADMINISTRADOR);
   }
 
 }
