@@ -104,7 +104,7 @@ public class DonacionesWebController {
       modelo.put("historial", historial);
     }
 
-    ctx.render("/donaciones/detalle.hbs", modelo);
+    ctx.render("/donaciones_detalle.hbs", modelo);
   }
 
   private Map<String, Object> modeloDonante(Donante donante) {
