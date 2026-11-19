@@ -3,6 +3,7 @@
         .foto-ratio { background-color: #f8f9fa; }
         .foto-ratio .ratio { max-height: 24rem; }
         .foto-ratio img { object-fit: contain; }
+        .foto-vacia { min-height: 15rem; }
         .carousel-indicators.fuera { position: static; margin: 0; padding: .75rem 0; }
 
         /* Cuerpo: una columna en móvil, dos desde md */
@@ -84,7 +85,7 @@
                             </div>
                         </div>
                     {{else}}
-                        <div class="foto-ratio py-5 d-flex flex-column align-items-center text-muted">
+                        <div class="foto-ratio foto-vacia d-flex flex-column align-items-center justify-content-center text-muted">
                             <i class="bi bi-image fs-1 mb-2"></i>
                             <span class="small">Esta donación no tiene fotos</span>
                         </div>
@@ -118,11 +119,6 @@
                                             {{badgeEstado estado}}
                                             <span class="small text-muted">{{fechaRelativa fecha}}</span>
                                         </div>
-                                        {{#if entidad}}
-                                            <div class="small text-muted mt-1">
-                                                <i class="bi bi-building me-1"></i>{{entidad}}
-                                            </div>
-                                        {{/if}}
                                     </li>
                                 {{/each}}
                             </ul>
@@ -136,39 +132,37 @@
 
                         <!-- Quién -->
                         <section class="sec-quien">
-                            <h3 class="h6 text-uppercase text-muted fw-semibold mb-3">Quién lo donó</h3>
-                            <div class="p-3 bg-light rounded border">
-                                {{#if donante.esHumano}}
-                                    <div class="d-flex flex-wrap align-items-center gap-2">
-                                        <span class="badge bg-primary">Persona Física</span>
-                                        <strong class="text-dark">{{donante.nombre}} {{donante.apellido}}</strong>
-                                    </div>
-                                    {{#if verDocumento}}
-                                        <div class="small text-muted mt-2"><strong>DNI:</strong> {{donante.documento}}</div>
-                                    {{/if}}
-                                {{else}}
-                                    <div class="d-flex flex-wrap align-items-center gap-2">
-                                        <span class="badge bg-dark">{{donante.tipo}}</span>
-                                        <strong class="text-dark">{{donante.razonSocial}}</strong>
-                                    </div>
-                                    {{#if verDocumento}}
-                                        <div class="small text-muted mt-2"><strong>CUIT:</strong> {{donante.cuit}}</div>
-                                    {{/if}}
-                                    <div class="small text-muted mt-1"><strong>Rubro:</strong> {{donante.rubro}}</div>
+                            <h3 class="h6 text-uppercase text-muted fw-semibold mb-2">Quién lo donó</h3>
+                            {{#if donante.esHumano}}
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <span class="badge bg-primary">Persona Física</span>
+                                    <strong class="text-dark">{{donante.nombre}} {{donante.apellido}}</strong>
+                                </div>
+                                {{#if verDocumento}}
+                                    <div class="small text-muted mt-2"><strong>DNI:</strong> {{donante.documento}}</div>
                                 {{/if}}
-                            </div>
+                            {{else}}
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <span class="badge bg-dark">{{donante.tipo}}</span>
+                                    <strong class="text-dark">{{donante.razonSocial}}</strong>
+                                </div>
+                                {{#if verDocumento}}
+                                    <div class="small text-muted mt-2"><strong>CUIT:</strong> {{donante.cuit}}</div>
+                                {{/if}}
+                                <div class="small text-muted mt-1"><strong>Rubro:</strong> {{donante.rubro}}</div>
+                            {{/if}}
                         </section>
 
                         <!-- A quién -->
                         <section class="sec-aquien">
-                            <h3 class="h6 text-uppercase text-muted fw-semibold mb-3">Asignada a</h3>
+                            <h3 class="h6 text-uppercase text-muted fw-semibold mb-2">Asignada a</h3>
                             {{#if estaAsignada}}
-                                <div class="p-3 bg-light rounded border d-flex align-items-center gap-2">
+                                <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-building text-primary fs-5"></i>
                                     <strong class="text-dark">{{entidad.nombre}}</strong>
                                 </div>
                             {{else}}
-                                <div class="p-3 bg-light rounded border text-muted small">
+                                <div class="text-muted small">
                                     <i class="bi bi-hourglass-split me-1"></i>
                                     Todavía no fue asignada a ninguna entidad beneficiaria.
                                 </div>
