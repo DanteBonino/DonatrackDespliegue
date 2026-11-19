@@ -60,7 +60,7 @@ public class FotoStorage {
       escritos.forEach(this::borrar);
       throw new UncheckedIOException(e);
     } catch (RuntimeException e) {
-      escritos.forEach(this::borrar);   // si falla la tercera foto, se borran las dos primeras
+      escritos.forEach(this::borrar);
       throw e;
     }
   }
@@ -89,6 +89,6 @@ public class FotoStorage {
   }
 
   private void borrar(Path p) {
-    try { Files.deleteIfExists(p); } catch (IOException ignorada) { /* mejor esfuerzo */ }
+    try { Files.deleteIfExists(p); } catch (IOException ignorada) { }
   }
 }
