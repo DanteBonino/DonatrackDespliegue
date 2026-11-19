@@ -114,7 +114,7 @@
                             <h3 class="h6 text-uppercase text-muted fw-semibold mb-3">Historial de estados</h3>
                             <ul class="timeline">
                                 {{#each historial}}
-                                    <li class="timeline-item {{#if @first}}actual{{/if}}">
+                                    <li class="timeline-item {{#if @last}}actual{{/if}}">
                                         <div class="d-flex flex-wrap align-items-center gap-2">
                                             {{badgeEstado estado}}
                                             <span class="small text-muted">{{fechaRelativa fecha}}</span>
