@@ -200,12 +200,14 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
   @SuppressWarnings("unchecked")
   public List<Object[]> getMarcadoresDeEntregadas(int limite) {
     return entityManager().createNativeQuery("""
-        SELECT
+        
+            SELECT
             eb.razon_social,
             eb.posicion_latitud,
             eb.posicion_longitud,
             i.cantidad_de_unidades,
-            sc.nombre
+            sc.nombre,
+            d.id_dominio
         FROM DonacionesIndependientes d
         JOIN Historial_Cambios_de_Estado h
             ON h.id_donacion_independiente = d.id

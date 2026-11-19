@@ -59,7 +59,7 @@ public class HomeController {
         "lng", fila[2],
         "titulo", fila[0],
         "descripcion", fila[3] + " x " + fila[4],
-        "id", fila[5]          // nuevo
+        "id", fila[5]
     );
   }
 }
