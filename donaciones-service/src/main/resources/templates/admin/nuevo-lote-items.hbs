@@ -11,7 +11,9 @@
             background-color: #0d6efd;
             border-color: #0d6efd;
         }
+        .item-row { scroll-margin-top: 90px; }
     </style>
+
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-6">
@@ -24,14 +26,13 @@
                     </a>
                 </div>
 
-                <!-- Breadcrumb de Pasos -->
                 {{> partials/breadcrumb pasoActual=2}}
 
                 <div class="mb-4">
                     {{> partials/donante-resumen donante}}
                 </div>
 
-                <!-- Alerta de Errores Globales -->
+                <!-- Errores generales que vienen del servidor (ej: lote sin ítems) -->
                 {{#if errores}}
                     <div class="alert alert-danger shadow-sm border-0" role="alert">
                         <ul class="mb-0 small">
@@ -40,37 +41,54 @@
                     </div>
                 {{/if}}
 
-                <!-- Formulario Principal -->
+                <!-- Resumen de errores por ítem: lo completa el JS si hay filas con errores -->
+                <div id="resumen-errores" class="alert alert-danger shadow-sm border-0 d-none" role="alert">
+                    <div class="fw-semibold mb-1">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i> No se creó el lote: hay campos para corregir.
+                    </div>
+                    <div class="small">
+                        <span id="resumen-errores-texto"></span>
+                        Las fotos no se conservan: volvé a adjuntarlas en cada ítem antes de enviar.
+                    </div>
+                </div>
+
                 <form method="post" action="/lotes" enctype="multipart/form-data" id="form-lote" novalidate>
                     <input type="hidden" name="donante" value="{{donanteId}}">
 
-                    <!-- Contenedor dinámico de filas de ítems -->
                     <div id="items-container">
                         {{#each filas}}
                             {{> partials/_fila-item this}}
                         {{/each}}
                     </div>
 
-                    <!-- Botón para agregar más ítems (Usa la clase nueva de borde negro a azul en hover) -->
                     <div class="mb-4">
                         <button type="button" id="btn-agregar-item"
                                 class="btn btn-outline-black-to-blue w-100 py-2" style="border-style: dashed;">
                             <i class="bi bi-plus-circle me-2"></i> Agregar otro ítem al lote
                         </button>
                         <div class="form-text text-muted text-center mt-2 small">
-                            <i class="bi bi-info-circle me-1"></i> Si cargás dos ítems iguales (mismo bien y vencimiento), se agruparán automáticamente en una sola donación. Las fotos podrán sumarse progresivamente.
+                            <i class="bi bi-info-circle me-1"></i>
+                            Si cargás dos ítems del mismo bien con el mismo vencimiento (perecederos) o el mismo estado de uso (no perecederos),
+                            se registran como una sola donación y sus fotos se juntan.
                         </div>
                     </div>
 
-                    <!-- Botón Principal de Envío -->
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="p-3 btn btn-primary d-inline-flex justify-content-center align-items-center shadow-sm">
+                    <!-- Aviso permanente sobre las fotos -->
+                    <div class="alert alert-light border small mb-3">
+                        <i class="bi bi-camera me-1"></i>
+                        Revisá los datos antes de crear el lote. Si el sistema encuentra errores, vas a tener que
+                        <strong>volver a adjuntar las fotos</strong>: el navegador no permite conservarlas.
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" id="btn-crear-lote"
+                                class="p-3 btn btn-primary d-inline-flex justify-content-center align-items-center shadow-sm">
                             <i class="bi bi-check2-circle me-2"></i> Crear lote de donación
                         </button>
                     </div>
                 </form>
 
-                <!-- Template oculto para clonar filas limpias -->
+                <!-- Plantilla limpia para nuevas filas -->
                 <template id="plantilla-item">
                     {{> partials/_fila-item plantilla}}
                 </template>
@@ -84,92 +102,140 @@
         const container = $('items-container');
         let siguienteIndice = {{siguienteIndice}};
 
+        const MAX_FOTOS = 5;
+        const MAX_BYTES = 5 * 1024 * 1024;
+        const TIPOS_FOTO = ['image/jpeg', 'image/png', 'image/webp'];
+
+        // ---------- Sincronización de campos según el bien ----------
         function sincronizarFilaItem(fila) {
             const select = fila.querySelector('.subcategoria-select');
             const opcion = select.selectedOptions[0];
             const hayBien = select.value !== '';
 
-            // Obtenemos los data-attributes enviados desde el controlador
             const perecedera = hayBien && opcion.dataset.perecedera === 'true';
             const admiteDecimales = hayBien && opcion.dataset.decimales === 'true';
             const unidad = hayBien ? (opcion.dataset.unidad || '') : '';
 
-            // Actualizamos el visor de la unidad al lado del input de contenido
-            const unidadBadge = fila.querySelector('.unidad-badge');
-            if (unidadBadge) {
-                unidadBadge.textContent = unidad || '-';
-            }
+            fila.querySelector('.unidad-badge').textContent = unidad || '-';
 
             const contenido = fila.querySelector('.contenido-input');
             contenido.min = admiteDecimales ? '0.01' : '1';
             contenido.step = admiteDecimales ? '0.01' : '1';
             contenido.inputMode = admiteDecimales ? 'decimal' : 'numeric';
 
-            const ayudaContenido = fila.querySelector('.ayuda-contenido');
-            if (ayudaContenido) {
-                ayudaContenido.textContent = !hayBien ? ''
-                        : admiteDecimales ? 'Permite decimales (ej: 1.5).' : 'Solo números enteros.';
-            }
+            fila.querySelector('.ayuda-contenido').textContent = !hayBien ? ''
+                    : admiteDecimales ? 'Permite decimales (ej: 1.5).' : 'Solo números enteros.';
+
+            // El selector de fecha no deja elegir días pasados
+            fila.querySelector('.vencimiento-input').min = new Date().toLocaleDateString('en-CA');
 
             mostrar(fila.querySelector('.vencimiento-bloque'), hayBien && perecedera);
             mostrar(fila.querySelector('.estado-uso-bloque'), hayBien && !perecedera);
+            actualizarResumen(fila);
         }
 
+        // Los campos ocultos se deshabilitan: no se envían. El servidor decide qué validar.
         function mostrar(bloque, visible) {
             bloque.classList.toggle('d-none', !visible);
             bloque.querySelectorAll('input, select').forEach(c => c.disabled = !visible);
         }
 
-        // Lógica de acumulación de fotos con DataTransfer
+        // Línea resumen: "3 × 750 g de Arroz"
+        function actualizarResumen(fila) {
+            const select = fila.querySelector('.subcategoria-select');
+            const contenido = fila.querySelector('.contenido-input').value;
+            const cantidad = fila.querySelector('.cantidad-input').value;
+            const unidad = fila.querySelector('.unidad-badge').textContent;
+            const resumen = fila.querySelector('.resumen-item');
+            if (!select.value || !contenido || !cantidad) { resumen.textContent = ''; return; }
+            const nombre = select.selectedOptions[0].textContent.trim();
+            resumen.textContent = `${cantidad} × ${contenido} ${unidad === '-' ? '' : unidad} de ${nombre}`
+                    .replace(/\s+/g, ' ');
+        }
+
+        // ---------- Fotos: acumulables, con vista previa y validación en el cliente ----------
         function configurarInputFotos(fila) {
             const input = fila.querySelector('.fotos-input');
-            const previewList = fila.querySelector('.archivo-preview-list');
-            let dataTransfer = new DataTransfer();
+            const lista = fila.querySelector('.archivo-preview-list');
+            const aviso = fila.querySelector('.fotos-aviso');
+            let dt = new DataTransfer();
+            let urls = [];
 
-            input.addEventListener('change', function() {
-                Array.from(input.files).forEach(file => {
-                    if (dataTransfer.files.length < 5) {
-                        dataTransfer.items.add(file);
-                    }
-                });
-                input.files = dataTransfer.files;
-                actualizarVistaPrevia();
-            });
+            function avisar(mensajes) {
+                aviso.textContent = mensajes.join(' ');
+                aviso.classList.toggle('d-none', mensajes.length === 0);
+            }
 
-            function actualizarVistaPrevia() {
-                previewList.innerHTML = '';
-                Array.from(dataTransfer.files).forEach((file, index) => {
-                    const item = document.createElement('div');
-                    item.className = 'd-flex align-items-center justify-content-between bg-white border rounded px-2 py-1 small mt-1';
-                    item.innerHTML = `
-                    <span class="text-truncate me-2 text-dark">
-                        <i class="bi bi-file-earmark-image me-1 text-primary"></i> ${file.name}
-                    </span>
-                    <button type="button" class="btn btn-link btn-sm text-danger p-0 text-decoration-none eliminar-foto" data-index="${index}" title="Quitar foto">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
-                `;
-                    previewList.appendChild(item);
+            function pintar() {
+                urls.forEach(u => URL.revokeObjectURL(u));
+                urls = [];
+                lista.replaceChildren();
+                Array.from(dt.files).forEach((file, i) => {
+                    const url = URL.createObjectURL(file);
+                    urls.push(url);
+
+                    const entrada = document.createElement('div');
+                    entrada.className = 'd-flex align-items-center gap-2 bg-white border rounded px-2 py-1 small';
+
+                    const img = document.createElement('img');
+                    img.src = url; img.alt = ''; img.width = 36; img.height = 36;
+                    img.className = 'rounded flex-shrink-0';
+                    img.style.objectFit = 'cover';
+
+                    const nombre = document.createElement('span');
+                    nombre.className = 'text-truncate flex-grow-1';
+                    nombre.textContent = file.name;   // textContent: el nombre del archivo no se interpreta como HTML
+
+                    const quitar = document.createElement('button');
+                    quitar.type = 'button';
+                    quitar.className = 'btn btn-link btn-sm text-danger p-0 eliminar-foto';
+                    quitar.dataset.index = i;
+                    quitar.title = 'Quitar foto';
+                    quitar.innerHTML = '<i class="bi bi-x-lg"></i>';
+
+                    entrada.append(img, nombre, quitar);
+                    lista.appendChild(entrada);
                 });
             }
 
-            previewList.addEventListener('click', function(e) {
-                const btnEliminar = e.target.closest('.eliminar-foto');
-                if (btnEliminar) {
-                    const indexToRemove = parseInt(btnEliminar.dataset.index);
-                    const nuevoDt = new DataTransfer();
-                    Array.from(dataTransfer.files).forEach((file, index) => {
-                        if (index !== indexToRemove) {
-                            nuevoDt.items.add(file);
-                        }
-                    });
-                    dataTransfer = nuevoDt;
-                    input.files = dataTransfer.files;
-                    actualizarVistaPrevia();
-                }
+            input.addEventListener('change', () => {
+                const mensajes = [];
+                Array.from(input.files).forEach(file => {
+                    const repetida = Array.from(dt.files).some(f =>
+                            f.name === file.name && f.size === file.size && f.lastModified === file.lastModified);
+                    if (repetida) return;
+
+                    if (!TIPOS_FOTO.includes(file.type)) {
+                        mensajes.push(`"${file.name}" no es JPG, PNG ni WebP.`);
+                    } else if (file.size > MAX_BYTES) {
+                        mensajes.push(`"${file.name}" supera los 5 MB.`);
+                    } else if (dt.files.length >= MAX_FOTOS) {
+                        const m = `Máximo ${MAX_FOTOS} fotos por ítem: las demás se descartaron.`;
+                        if (!mensajes.includes(m)) mensajes.push(m);
+                    } else {
+                        dt.items.add(file);
+                    }
+                });
+                input.files = dt.files;
+                input.classList.remove('is-invalid');
+                avisar(mensajes);
+                pintar();
+            });
+
+            lista.addEventListener('click', e => {
+                const btn = e.target.closest('.eliminar-foto');
+                if (!btn) return;
+                const quitarIndice = parseInt(btn.dataset.index, 10);
+                const nuevo = new DataTransfer();
+                Array.from(dt.files).forEach((f, i) => { if (i !== quitarIndice) nuevo.items.add(f); });
+                dt = nuevo;
+                input.files = dt.files;
+                avisar([]);
+                pintar();
             });
         }
 
+        // ---------- Filas ----------
         function inicializarFila(fila) {
             fila.querySelectorAll('select[data-valor]').forEach(s => {
                 if (s.dataset.valor) s.value = s.dataset.valor;
@@ -190,11 +256,19 @@
             }
         });
 
+        container.addEventListener('input', e => {
+            const fila = e.target.closest('.item-row');
+            if (fila) actualizarResumen(fila);
+        });
+
         $('btn-agregar-item').addEventListener('click', () => {
             const html = $('plantilla-item').innerHTML.replaceAll('__INDICE__', siguienteIndice++);
             container.insertAdjacentHTML('beforeend', html);
-            inicializarFila(container.lastElementChild);
+            const nueva = container.lastElementChild;
+            inicializarFila(nueva);
             renumerar();
+            nueva.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            nueva.querySelector('.subcategoria-select').focus({ preventScroll: true });
         });
 
         container.addEventListener('click', e => {
@@ -205,12 +279,38 @@
             }
         });
 
+        // Enter dentro de un campo no envía el lote entero
         $('form-lote').addEventListener('keydown', e => {
             if (e.key === 'Enter' && e.target.tagName === 'INPUT') e.preventDefault();
         });
 
+        // Evita el doble envío (crearía el lote dos veces)
+        const btnEnviar = $('btn-crear-lote');
+        const htmlBtnEnviar = btnEnviar.innerHTML;
+        $('form-lote').addEventListener('submit', () => {
+            btnEnviar.disabled = true;
+            btnEnviar.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> Creando lote…';
+        });
+        // Si el usuario vuelve atrás con el botón del navegador, se restaura
+        window.addEventListener('pageshow', e => {
+            if (e.persisted) { btnEnviar.disabled = false; btnEnviar.innerHTML = htmlBtnEnviar; }
+        });
+
+        // ---------- Arranque ----------
         container.querySelectorAll('.item-row').forEach(inicializarFila);
         renumerar();
+
+        // Si volvió con errores: resumen arriba y scroll al primer ítem con problemas
+        (function mostrarResumenDeErrores() {
+            const todas = Array.from(container.querySelectorAll('.item-row'));
+            const conError = todas.filter(f => f.querySelector('.is-invalid'));
+            if (conError.length === 0) return;
+            const nums = conError.map(f => '#' + (todas.indexOf(f) + 1)).join(', ');
+            $('resumen-errores-texto').textContent =
+                    conError.length === 1 ? `Revisá el ítem ${nums}.` : `Revisá los ítems ${nums}.`;
+            $('resumen-errores').classList.remove('d-none');
+            conError[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        })();
     </script>
 {{/partial}}
 {{>layout}}

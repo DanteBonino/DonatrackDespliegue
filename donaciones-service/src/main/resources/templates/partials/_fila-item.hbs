@@ -1,13 +1,17 @@
-<div class="card border-0 shadow-sm mb-3 item-row" data-indice="{{indice}}">
+<div class="card border-0 shadow-sm mb-3 item-row" id="item-{{indice}}" data-indice="{{indice}}">
     <div class="card-body p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="h6 mb-0 item-titulo">Ítem</h2>
-            <button type="button" class="btn btn-sm btn-outline-danger btn-eliminar-item">
+        <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+            <div>
+                <h2 class="h6 mb-0 item-titulo">Ítem</h2>
+                <div class="small text-muted resumen-item"></div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-danger btn-eliminar-item flex-shrink-0">
                 <i class="bi bi-trash me-1"></i> Eliminar
             </button>
         </div>
 
         <div class="row g-3">
+            <!-- BIEN -->
             <div class="col-12">
                 <label for="subcategoria-{{indice}}" class="form-label fw-bold">Bien <span class="text-danger">*</span></label>
                 <select id="subcategoria-{{indice}}" name="items[{{indice}}][subcategoriaId]"
@@ -24,38 +28,41 @@
                 <div class="invalid-feedback">{{errores.subcategoriaId}}</div>
             </div>
 
-            <!-- CONTENIDO CON INPUT-GROUP Y UNIDAD DINÁMICA -->
+            <!-- CONTENIDO + UNIDAD -->
             <div class="col-md-6">
                 <label for="contenido-{{indice}}" class="form-label fw-bold">Contenido de cada bulto <span class="text-danger">*</span></label>
-                <div class="input-group">
+                <div class="input-group has-validation">
                     <input id="contenido-{{indice}}" type="number" step="0.01" min="0.01"
                            name="items[{{indice}}][contenido]" value="{{valores.contenido}}"
                            class="form-control contenido-input {{#if errores.contenido}}is-invalid{{/if}}"
                            placeholder="Ej: 750">
-                    <span class="input-group-text bg-light text-muted fw-semibold unidad-badge" style="min-width: 60px; justify-content: center;">-</span>
+                    <span class="input-group-text bg-light text-muted fw-semibold unidad-badge"
+                          style="min-width: 60px; justify-content: center;">-</span>
+                    <div class="invalid-feedback">{{errores.contenido}}</div>
                 </div>
                 <div class="form-text ayuda-contenido"></div>
-                <div class="invalid-feedback">{{errores.contenido}}</div>
             </div>
 
+            <!-- CANTIDAD -->
             <div class="col-md-6">
-                <label for="cantidad-{{indice}}" class="form-label fw-bold">Cantidad de bultos iguales (ej: 3) <span class="text-danger">*</span></label>
+                <label for="cantidad-{{indice}}" class="form-label fw-bold">Cantidad de bultos iguales <span class="text-danger">*</span></label>
                 <input id="cantidad-{{indice}}" type="number" min="1" step="1"
                        name="items[{{indice}}][cantidad]" value="{{valores.cantidad}}"
-                       class="form-control {{#if errores.cantidad}}is-invalid{{/if}}">
+                       class="form-control cantidad-input {{#if errores.cantidad}}is-invalid{{/if}}"
+                       placeholder="Ej: 3">
                 <div class="invalid-feedback">{{errores.cantidad}}</div>
             </div>
 
-            <!-- FECHA DE VENCIMIENTO (Ocupa el 100% de su espacio disponible) -->
+            <!-- VENCIMIENTO (solo perecederos) -->
             <div class="col-md-6 vencimiento-bloque d-none w-100">
                 <label for="vencimiento-{{indice}}" class="form-label fw-bold">Fecha de vencimiento <span class="text-danger">*</span></label>
                 <input id="vencimiento-{{indice}}" type="date"
                        name="items[{{indice}}][fechaVencimiento]" value="{{valores.fechaVencimiento}}"
-                       class="form-control w-100 {{#if errores.fechaVencimiento}}is-invalid{{/if}}">
+                       class="form-control w-100 vencimiento-input {{#if errores.fechaVencimiento}}is-invalid{{/if}}">
                 <div class="invalid-feedback">{{errores.fechaVencimiento}}</div>
             </div>
 
-            <!-- ESTADO DE USO (Ocupa el 100% de su espacio disponible) -->
+            <!-- ESTADO DE USO (solo no perecederos) -->
             <div class="col-md-6 estado-uso-bloque d-none w-100">
                 <label for="estado-{{indice}}" class="form-label fw-bold">Estado de uso <span class="text-danger">*</span></label>
                 <select id="estado-{{indice}}" name="items[{{indice}}][estadoUso]"
@@ -69,6 +76,7 @@
                 <div class="invalid-feedback">{{errores.estadoUso}}</div>
             </div>
 
+            <!-- FOTOS -->
             <div class="col-12">
                 <label for="fotos-{{indice}}" class="form-label fw-bold">Fotos</label>
                 <input id="fotos-{{indice}}" type="file" multiple
@@ -76,7 +84,8 @@
                        name="items[{{indice}}][fotos]"
                        class="form-control fotos-input {{#if errores.fotos}}is-invalid{{/if}}">
                 <div class="archivo-preview-list mt-2 d-flex flex-column gap-1"></div>
-                <div class="form-text">Hasta 5 fotos, JPG, PNG o WebP de hasta 5 MB. Podes agregarlas de a una o varias a la vez.</div>
+                <div class="form-text">Hasta 5 fotos, JPG, PNG o WebP de hasta 5 MB. Podés agregarlas de a una o varias a la vez.</div>
+                <div class="form-text text-danger fotos-aviso d-none"></div>
                 <div class="invalid-feedback">{{errores.fotos}}</div>
             </div>
         </div>

@@ -1,8 +1,13 @@
 package Controllers.Web;
 
+import Bienes.Bien;
 import Bienes.EstadoDeUso;
+import Bienes.NoPerecedero;
+import Bienes.Perecedero;
 import Bienes.SubCategoria.SubCategoria;
 import Donaciones.DonacionIndependiente;
+import Donaciones.Item;
+import Donaciones.Lote.Lote;
 import Donaciones.Lote.LoteBuilder;
 import Donantes.Donante;
 import Donantes.DonanteHumana.PersonaHumana;
@@ -13,6 +18,7 @@ import Repositories.Donaciones.DonacionesRepository;
 import Repositories.Donantes.DonantesRepository;
 import Repositories.Beneficiarios.BeneficiariosRepository;
 import Repositories.Generales.paginacion.Pagina;
+import Repositories.Lotes.LotesRepository;
 import Repositories.Notificaciones.NotificacionesRepository;
 import Repositories.SubCategorias.SubCategoriasRepository;
 import Servidor.ManejadorDeSesiones.ManejadorDeSesion;
@@ -20,20 +26,37 @@ import Usuario.Administrador;
 import io.javalin.http.Context;
 
 import io.javalin.http.UploadedFile;
+import io.javalin.validation.Validation;
+import io.javalin.validation.Validator;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import utils.FotoStorage;
 import utils.StringUtils;
 
-public class AdminWebController implements ConPaginacion {
+public class AdminWebController implements ConPaginacion, ConValidacionDeFormulario {
+  private static final int MAX_FOTOS_POR_ITEM = 5;
+  private static final long MAX_BYTES_FOTO = 5L * 1024 * 1024;
+  private static final Set<String> TIPOS_FOTO = Set.of("image/jpeg", "image/png", "image/webp");
+  private FotoStorage fotoStorage;
+
+  public AdminWebController(FotoStorage fotoStorage) {
+    this.fotoStorage = fotoStorage;
+  }
 
   public void dashboard(Context ctx) {
     validarAdministrador(ctx);
@@ -121,10 +144,42 @@ public class AdminWebController implements ConPaginacion {
   }
 
   public void showCrearLote(Context ctx) {
-    Optional<Donante> donante = donanteDe(ctx.queryParam("donante"));
-    if (donante.isEmpty()) { ctx.redirect("/lotes/nuevo"); return; }
+    Optional<Donante> donanteOpt = donanteDe(ctx.queryParam("donante"));
+    if (donanteOpt.isEmpty()) { ctx.redirect("/lotes/nuevo/buscador-de-donantes"); return; }
+    Donante donante = donanteOpt.get();
 
-    renderPaso2(ctx, donante.get(), List.of(filaVacia("0")), List.of());
+    Map<String, String> errores = getErrores(ctx);
+    Map<String, String> valores = getValores(ctx);
+
+    if (!donante.getIdDominio().equals(valores.get("donante"))) {
+      errores = Map.of();
+      valores = Map.of();
+    }
+
+    List<String> generales = Optional.ofNullable(errores.get("general")).map(List::of).orElse(List.of());
+    renderPaso2(ctx, donante, filasDe(valores, errores), generales);
+  }
+
+  private List<Map<String, Object>> filasDe(Map<String, String> valores, Map<String, String> errores) {
+    Pattern patron = Pattern.compile("^items\\[(\\d+)]\\[(\\w+)]$");
+    SortedSet<Integer> indices = new TreeSet<>();
+    Stream.concat(valores.keySet().stream(), errores.keySet().stream()).forEach(clave -> {
+      Matcher m = patron.matcher(clave);
+      if (m.matches()) indices.add(Integer.parseInt(m.group(1)));
+    });
+
+    if (indices.isEmpty()) return List.of(filaVacia("0"));
+
+    List<Map<String, Object>> filas = new ArrayList<>();
+    for (int i : indices) {
+      Map<String, Object> fila = filaVacia(String.valueOf(i));
+      valoresDe(fila).clear();
+      String prefijo = "items[" + i + "][";
+      valores.forEach((k, v) -> { if (k.startsWith(prefijo)) valoresDe(fila).put(campoDe(k), v); });
+      errores.forEach((k, v) -> { if (k.startsWith(prefijo)) erroresDe(fila).put(campoDe(k), v); });
+      filas.add(fila);
+    }
+    return filas;
   }
 
   private Optional<Donante> donanteDe(String idDominio) {
@@ -166,6 +221,109 @@ public class AdminWebController implements ConPaginacion {
     ctx.render("/admin/nuevo-lote-items.hbs", modelo);
   }
 
+  public void crearLote(Context ctx) {
+    Optional<Donante> donanteOpt = donanteDe(ctx.formParam("donante"));
+    if (donanteOpt.isEmpty()) { ctx.redirect("/lotes/nuevo/buscador-de-donantes"); return; }
+    Donante donante = donanteOpt.get();
+    String urlPaso2 = "/lotes/nuevo/items?donante=" + donante.getIdDominio();
+
+    Map<String, String> errores = new HashMap<>();
+    Map<String, Object> valores = new HashMap<>();
+    valores.put("donante", donante.getIdDominio());
+
+    List<Integer> indices = indicesDeItems(ctx);
+    if (indices.isEmpty()) errores.put("general", "El lote debe tener al menos un ítem");
+
+    List<ItemSolicitado> solicitados = new ArrayList<>();
+    for (int i : indices) {
+      leerItem(ctx, i, errores, valores).ifPresent(solicitados::add);
+    }
+
+    if (!errores.isEmpty()) {
+      volver(ctx, urlPaso2, errores, valores);   // redirect: F5 ya no reenvía el formulario
+      return;
+    }
+
+    List<String> fotosEscritas = new ArrayList<>();
+    try {
+      List<Item> items = new ArrayList<>();
+      for (ItemSolicitado s : solicitados) {
+        List<String> nombres = fotoStorage.guardar(s.fotos());
+        fotosEscritas.addAll(nombres);
+        items.add(s.aItem(nombres));
+      }
+      Lote lote = new LoteBuilder().conDonante(donante).conItems(items).build();
+      lotesRepository().registrar(lote);
+      ctx.redirect("/donaciones/en-deposito?loteCreado=" + lote.getIdDominio());
+    } catch (RuntimeException e) {
+      fotoStorage.eliminar(fotosEscritas);
+      throw e;
+    }
+  }
+
+  private Optional<ItemSolicitado> leerItem(Context ctx, int i,
+                                            Map<String, String> errores, Map<String, Object> valores) {
+    String p = "items[" + i + "]";
+    Set<String> erroresAntes = new HashSet<>(errores.keySet());
+
+    for (String campo : List.of("subcategoriaId", "contenido", "cantidad", "fechaVencimiento", "estadoUso")) {
+      String clave = p + "[" + campo + "]";
+      String v = ctx.formParam(clave);
+      if (v != null) valores.put(clave, v);
+    }
+
+    Optional<SubCategoria> subOpt = Optional.ofNullable(ctx.formParam(p + "[subcategoriaId]"))
+        .flatMap(id -> subCategoriasRepository().obtenerUnoSiExisteSegun("idDominio", id));
+
+    Validator<String> subcategoria = ctx.formParamAsClass(p + "[subcategoriaId]", String.class)
+        .required()
+        .check(id -> subOpt.isPresent(), "Elegí uno de los bienes de la lista");
+
+    Validator<BigDecimal> contenido = ctx.formParamAsClass(p + "[contenido]", BigDecimal.class)
+        .required()
+        .check(c -> c.signum() > 0, "El contenido tiene que ser mayor a 0")
+        .check(c -> subOpt.map(sc -> sc.getUnidad().admiteDecimales() || esEntera(c)).orElse(true),
+            "Para este bien el contenido tiene que ser un número entero");
+
+    Validator<Integer> cantidad = ctx.formParamAsClass(p + "[cantidad]", Integer.class)
+        .required()
+        .check(c -> c >= 1, "La cantidad tiene que ser 1 o más");
+
+    List<Validator<?>> validadores = new ArrayList<>(List.of(subcategoria, contenido, cantidad));
+    Validator<LocalDate> vencimiento = null;
+    Validator<EstadoDeUso> estadoDeUso = null;
+
+    if (subOpt.isPresent()) {   // el servidor decide qué se valida, no el formulario
+      if (subOpt.get().esPerecedera()) {
+        vencimiento = ctx.formParamAsClass(p + "[fechaVencimiento]", LocalDate.class)
+            .required()
+            .check(f -> !f.isBefore(LocalDate.now()), "El vencimiento no puede ser una fecha pasada");
+        validadores.add(vencimiento);
+      } else {
+        estadoDeUso = ctx.formParamAsClass(p + "[estadoUso]", EstadoDeUso.class).required();
+        validadores.add(estadoDeUso);
+      }
+    }
+
+    errores.putAll(obtenerErroresConDetalle(
+        Validation.collectErrors(validadores.toArray(new Validator[0]))));
+
+    List<UploadedFile> fotos = ctx.uploadedFiles(p + "[fotos]").stream()
+        .filter(f -> f.size() > 0).toList();
+    if (fotos.size() > MAX_FOTOS_POR_ITEM) {
+      errores.put(p + "[fotos]", "Máximo " + MAX_FOTOS_POR_ITEM + " fotos por ítem");
+    } else if (fotos.stream().anyMatch(f -> !TIPOS_FOTO.contains(f.contentType()) || f.size() > MAX_BYTES_FOTO)) {
+      errores.put(p + "[fotos]", "Solo JPG, PNG o WebP de hasta 5 MB");
+    }
+
+    boolean huboErroresNuevos = !erroresAntes.containsAll(errores.keySet());
+    if (huboErroresNuevos) return Optional.empty();
+
+    return Optional.of(new ItemSolicitado(subOpt.get(), contenido.get(), cantidad.get(),
+        vencimiento != null ? vencimiento.get() : null,
+        estadoDeUso != null ? estadoDeUso.get() : null, fotos));
+  }
+
   private Optional<Administrador> getAdministrador(Context context) {
     return administradoresRepository().obtenerSiExistePorIdDominio(ManejadorDeSesion.obtenerIdAsoaciado(context).get());
   }
@@ -196,6 +354,10 @@ public class AdminWebController implements ConPaginacion {
     return SubCategoriasRepository.getInstance();
   }
 
+  private LotesRepository lotesRepository() {
+    return LotesRepository.getInstance();
+  }
+
   private Map<String, Object> filaVacia(String indice) {
     Map<String, String> valores = new HashMap<>();
     valores.put("cantidad", "1");
@@ -204,6 +366,15 @@ public class AdminWebController implements ConPaginacion {
     fila.put("valores", valores);
     fila.put("errores", new HashMap<String, String>());
     return fila;
+  }
+
+  private List<Integer> indicesDeItems(Context ctx) {
+    Pattern patron = Pattern.compile("^items\\[(\\d+)]\\[");
+    return ctx.formParamMap().keySet().stream()
+        .map(patron::matcher)
+        .filter(Matcher::find)
+        .map(m -> Integer.parseInt(m.group(1)))
+        .distinct().sorted().toList();
   }
 
   @SuppressWarnings("unchecked")
@@ -236,132 +407,27 @@ public class AdminWebController implements ConPaginacion {
      return modeloDonante;
     }
 
+  public record ItemSolicitado(SubCategoria subcategoria, BigDecimal contenido, int cantidad,
+                               LocalDate vencimiento, EstadoDeUso estadoDeUso, List<UploadedFile> fotos) {
+
+    public Item aItem(List<String> nombresDeFotos) {
+      Bien bien = subcategoria.esPerecedera()
+          ? new Perecedero(subcategoria, contenido, vencimiento)
+          : new NoPerecedero(subcategoria, contenido, estadoDeUso);
+      return new Item(bien, cantidad, nombresDeFotos);
+    }
+  }
+
+  @Override
+  public String getFinalDeClave() { return "Lote"; }
+
+  private boolean esEntera(BigDecimal cantidad) {
+    return cantidad.stripTrailingZeros().scale() <= 0;
+  }
+
+  private String campoDe(String clave) {
+    int inicio = clave.lastIndexOf('[');
+    if (inicio < 0 || !clave.endsWith("]")) return clave;
+    return clave.substring(inicio + 1, clave.length() - 1);
+  }
 }
-
-//private List<Integer> indicesDeItems(Context ctx) {
-//  Pattern patron = Pattern.compile("^items\\[(\\d+)\\]\\[");
-//  return ctx.formParamMap().keySet().stream()
-//      .map(patron::matcher)
-//      .filter(Matcher::find)
-//      .map(m -> Integer.parseInt(m.group(1)))
-//      .distinct()
-//      .sorted()
-//      .toList();
-//}
-//
-//public void crearLote(Context ctx) {
-//  Map<String, Object> model = new HashMap<>();
-//  List<String> erroresGlobales = new ArrayList<>();
-//  Map<Integer, List<String>> erroresPorItem = new HashMap<>();
-//
-//  // Lista temporal para retener los datos que el usuario escribió (por si hay que re-renderizar)
-//  List<Map<String, Object>> itemsFormulario = new ArrayList<>();
-//
-//  // 1. Validar Donante
-//  String idDonanteStr = ctx.formParam("idDonante");
-//  Optional<Donante> potencialDonante = donantesRepository().obtenerSiExistePorIdDominio(idDonanteStr);
-//  if (potencialDonante.isEmpty()) {
-//    erroresGlobales.add("Debe seleccionar un donante válido.");
-//  }
-//
-//  // 2. Extraer índices
-//  List<Integer> indices = indicesDeItems(ctx);
-//  if (indices.isEmpty()) {
-//    erroresGlobales.add("El lote debe contener al menos un ítem.");
-//  }
-//
-//  // 3. Validar fila por fila en memoria (SIN tocar archivos todavía)
-//  for (int i : indices) {
-//    String subcatIdStr = ctx.formParam("items[" + i + "][subcategoriaId]");
-//    String contenidoStr = ctx.formParam("items[" + i + "][contenido]");
-//    String cantidadStr = ctx.formParam("items[" + i + "][cantidad]");
-//    String fechaVencimientoStr = ctx.formParam("items[" + i + "][fechaVencimiento]");
-//    String estadoUsoStr = ctx.formParam("items[" + i + "][estadoUso]");
-//
-//    // Guardamos los valores actuales para devolverlos a la vista si hay error
-//    Map<String, Object> datosItem = new HashMap<>();
-//    datosItem.put("indice", i);
-//    datosItem.put("subcategoriaId", subcatIdStr);
-//    datosItem.put("contenido", contenidoStr);
-//    datosItem.put("cantidad", cantidadStr);
-//    datosItem.put("fechaVencimiento", fechaVencimientoStr);
-//    datosItem.put("estadoUso", estadoUsoStr);
-//    itemsFormulario.add(datosItem);
-//
-//    List<String> erroresDeEstaFila = new ArrayList<>();
-//
-//    // Validaciones individuales de la fila
-//    if (subcatIdStr == null || subcatIdStr.isBlank()) {
-//      erroresDeEstaFila.add("Debe seleccionar una subcategoría.");
-//    }
-//    if (contenidoStr == null || contenidoStr.isBlank() || Double.parseDouble(contenidoStr) <= 0) {
-//      erroresDeEstaFila.add("El contenido debe ser mayor a 0.");
-//    }
-//    if (cantidadStr == null || cantidadStr.isBlank() || Integer.parseInt(cantidadStr) < 1) {
-//      erroresDeEstaFila.add("La cantidad de bultos debe ser al menos 1.");
-//    }
-//
-//    if (subcatIdStr != null && !subcatIdStr.isBlank()) {
-//      SubCategoria subcategoria = SubCategoriasRepository.getInstance().obtenerPorIdJPA(Long.parseLong(subcatIdStr));
-//      if (subcategoria.esPerecedera()) {
-//        if (fechaVencimientoStr == null || fechaVencimientoStr.isBlank()) {
-//          erroresDeEstaFila.add("Este producto es perecedero y requiere fecha de vencimiento.");
-//        } else {
-//          LocalDate fechaVenc = LocalDate.parse(fechaVencimientoStr);
-//          if (fechaVenc.isBefore(LocalDate.now())) {
-//            erroresDeEstaFila.add("La fecha de vencimiento no puede ser pasada.");
-//          }
-//        }
-//      }
-//    }
-//
-//    if (!erroresDeEstaFila.isEmpty()) {
-//      erroresPorItem.put(i, erroresDeEstaFila);
-//    }
-//  }
-//
-//  // ==========================================
-//  // 4. SI HUBO CUALQUIER ERROR: RE-RENDERIZAR (¡Cero archivos guardados en disco!)
-//  // ==========================================
-//  if (!erroresGlobales.isEmpty() || !erroresPorItem.isEmpty()) {
-//    model.put("erroresGlobales", erroresGlobales);
-//    model.put("erroresPorItem", erroresPorItem);
-//    model.put("itemsCargados", itemsFormulario); // Para rellenar los inputs
-//    model.put("subcategorias", SubCategoriasRepository.getInstance().getInstancias()); // Para los select
-//
-//    ctx.render("/lotes/nuevo.hbs", model);
-//    return; // Cortamos acá, el flujo muere y el disco queda limpio.
-//  }
-//
-//  // ==========================================
-//  // 5. SI PASÓ TODO OK: GUARDAR ARCHIVOS Y PERSISTIR
-//  // ==========================================
-//  LoteBuilder loteBuilder = new LoteBuilder();
-//  loteBuilder.conDonante(potencialDonante.get());
-//
-//  for (int i : indices) {
-//    // Acá recién procesamos los archivos con UUID y los guardamos en el volumen Docker
-//    List<UploadedFile> fotosValidas = ctx.uploadedFiles("items[" + i + "][fotos]")
-//        .stream().filter(f -> f.size() > 0).toList();
-//
-//    List<String> rutasFotos = new ArrayList<>();
-//    for (UploadedFile foto : fotosValidas) {
-//      String nombreUnico = UUID.randomUUID().toString() + "_" + foto.filename();
-//      // Guardar archivo físicamente en el filesystem...
-//      rutasFotos.add(nombreUnico);
-//    }
-//
-//    // Construir el ítem y agregarlo al lote con tu método builder
-//    // loteBuilder.agregarItem(...);
-//  }
-//
-//  // loteRepository.guardar(loteBuilder.build());
-//  ctx.redirect("/lotes?exito=true");
-//}
-//
-//public void showCrearLote(Context ctx) {
-//  ctx.render("/admin/nuevo-lote.hbs");
-//}
-//
-
-//}

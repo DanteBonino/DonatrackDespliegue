@@ -43,6 +43,7 @@ import Servidor.Router.WebRoutes;
 import Servidor.templates.JavalinRenderer;
 import Servidor.templates.JavalinHandlebars;
 import utils.BaseDeDatos;
+import utils.FotoStorage;
 
 public class ServidorDonaciones {
   private static final Logger logger = LoggerFactory.getLogger(ServidorDonaciones.class);
@@ -88,7 +89,7 @@ public class ServidorDonaciones {
             new AuthController(),
             new DonanteWebController(),
             new BeneficiariaWebController(),
-            new AdminWebController()
+            new AdminWebController(FotoStorage.desdeEntorno())
         ),
         new DonacionesRoutes(
             new DonacionesController()
