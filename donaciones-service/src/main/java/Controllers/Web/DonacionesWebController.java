@@ -85,7 +85,9 @@ public class DonacionesWebController {
 
     if (donacion.getJustificacion() != null) modelo.put("justificacion", donacion.getJustificacion());
 
-    List<Map<String, Object>> historial = donacion.getHistorialEstados().stream().map(c -> {
+    List<CambioDeEstado> cambios = new ArrayList<>(donacion.getHistorialEstados());
+    Collections.reverse(cambios);
+    List<Map<String, Object>> historial = cambios.stream().map(c -> {
       Map<String, Object> m = new HashMap<>();
       m.put("estado", c.getEstadoDonacion().name());
       m.put("fecha", c.getFecha());
