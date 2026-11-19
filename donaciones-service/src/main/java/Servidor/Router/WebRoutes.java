@@ -11,6 +11,7 @@ import static io.javalin.apibuilder.ApiBuilder.post;
 
 import Contacto.DatosDeContacto;
 import Controllers.Web.AuthController;
+import Controllers.Web.FotosWebController;
 import Controllers.Web.HomeController;
 import Controllers.Web.AdminWebController;
 import Controllers.Web.BeneficiariaWebController;
@@ -30,17 +31,20 @@ public class WebRoutes implements EndpointGroup {
   private final DonanteWebController donanteWebController;
   private final BeneficiariaWebController beneficiaria;
   private final AdminWebController admin;
+  private final FotosWebController fotosController;
 
   public WebRoutes(HomeController homeController,
                    AuthController authController,
                    DonanteWebController donanteWebController,
                    BeneficiariaWebController beneficiariaWebController,
-                   AdminWebController adminWebController) {
+                   AdminWebController adminWebController,
+                   FotosWebController fotosWebController) {
     this.homeController = homeController;
     this.authController = authController;
     this.donanteWebController = donanteWebController;
     this.beneficiaria = beneficiariaWebController;
     this.admin = adminWebController;
+    this.fotosController = fotosWebController;
   }
 
   @Override
@@ -123,6 +127,7 @@ public class WebRoutes implements EndpointGroup {
     post("lotes/buscar-donante", admin::buscarDonante, ADMINISTRADOR);
     get("lotes/nuevo/items", admin::showCrearLote, ADMINISTRADOR);
     post("lotes/nuevo", admin::crearLote, ADMINISTRADOR);
+    get("fotos/{nombre}", fotosController::verFoto, CUALQUIERA);
   }
 
 }

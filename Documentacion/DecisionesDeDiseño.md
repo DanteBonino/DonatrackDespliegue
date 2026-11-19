@@ -1532,7 +1532,7 @@ Convertimos `Repository` de clase abstracta a interfaz, y creamos dos implementa
 - La segunda no cuida el almacenamiento, pero insertar se vuelve mucho más fácil y eliminar también
 
 ### Lote: crearLote en el Controller
-- Se mantiene un DTO que espera recibir ItemDto (BienDto, contenido y Fotos) por YAGNI
+- Se mantiene un DTO que espera recibir ItemDto (BienDto, contenido y utils.Fotos) por YAGNI
 - Seguramente, en el futuro cuando haya un formulario, se tenga que repensar cómo resolver la cuestión de la lista de items y qué hacer con las fotos.
 - Una opción es manejar una noción de Borrador en sesión o en objetos
 

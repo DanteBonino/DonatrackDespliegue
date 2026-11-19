@@ -47,4 +47,8 @@ public class NoPerecedero extends Bien {
   public Bien crearUnoSemejante() {
     return new NoPerecedero(getSubCategoria(), getContenido(), estadoDeUso);
   }
+
+  public EstadoDeUso getEstadoDeUso() {
+    return  estadoDeUso;
+  }
 }

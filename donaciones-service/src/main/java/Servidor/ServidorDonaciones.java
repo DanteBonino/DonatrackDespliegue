@@ -91,7 +91,8 @@ public class ServidorDonaciones {
             new AuthController(),
             new DonanteWebController(),
             new BeneficiariaWebController(),
-            new AdminWebController(FotoStorage.desdeEntorno())
+            new AdminWebController(),
+            new FotosWebController()
         ),
         new DonacionesRoutes(
             new DonacionesController()

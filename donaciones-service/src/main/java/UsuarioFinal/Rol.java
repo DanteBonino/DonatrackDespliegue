@@ -23,7 +23,7 @@ public enum Rol implements RouteRole {
     }
   },
   ADMINISTRADOR {
-    @Override public void showDashBoard(Context context) { new AdminWebController(FotoStorage.desdeEntorno()).dashboard(context); }
+    @Override public void showDashBoard(Context context) { new AdminWebController().dashboard(context); }
     @Override public Optional<DatosDeContacto> obtenerDatosDeContacto(Context context) {
       return ManejadorDeSesion.obtenerIdAsoaciado(context)
           .flatMap(AdministradoresRepository.getInstance()::obtenerDatosDeContactoDe);

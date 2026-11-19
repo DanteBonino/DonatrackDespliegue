@@ -46,16 +46,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import utils.FotoStorage;
+import utils.Fotos;
 import utils.StringUtils;
 
 public class AdminWebController implements ConPaginacion, ConValidacionDeFormulario {
   private static final int MAX_FOTOS_POR_ITEM = 5;
   private static final long MAX_BYTES_FOTO = 5L * 1024 * 1024;
   private static final Set<String> TIPOS_FOTO = Set.of("image/jpeg", "image/png", "image/webp");
-  private FotoStorage fotoStorage;
 
-  public AdminWebController(FotoStorage fotoStorage) {
-    this.fotoStorage = fotoStorage;
+  public AdminWebController() {
   }
 
   public void dashboard(Context ctx) {
@@ -249,7 +248,7 @@ public class AdminWebController implements ConPaginacion, ConValidacionDeFormula
     try {
       List<Item> items = new ArrayList<>();
       for (ItemSolicitado s : solicitados) {
-        List<String> nombres = fotoStorage.guardar(s.fotos());
+        List<String> nombres = Fotos.storage().guardar(s.fotos());
         fotosEscritas.addAll(nombres);
         items.add(s.aItem(nombres));
       }
@@ -257,7 +256,7 @@ public class AdminWebController implements ConPaginacion, ConValidacionDeFormula
       lotesRepository().registrar(lote);
       ctx.redirect("/donaciones/en-deposito?loteCreado=" + lote.getIdDominio());
     } catch (RuntimeException e) {
-      fotoStorage.eliminar(fotosEscritas);
+      Fotos.storage().eliminar(fotosEscritas);
       throw e;
     }
   }

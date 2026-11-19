@@ -1,6 +1,5 @@
 package Servidor.ManejadorDeExcepciones;
 
-
 import ExceptionHandler.CantidadDeItemsInvalida;
 import ExceptionHandler.DatosInvalidosException;
 import ExceptionHandler.EntidadYaExisteException;
@@ -12,19 +11,25 @@ import ExceptionHandler.TransicionInvalidaDeEstado;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import io.javalin.config.JavalinConfig;
 import io.javalin.http.Context;
+import io.javalin.http.NotFoundResponse;                 // NUEVO
 import io.javalin.validation.ValidationError;
 import io.javalin.validation.ValidationException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;                               // NUEVO
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 
 public class ManejadorDeExcepciones {
   public static void registrarExcepciones(JavalinConfig config, Logger logger) {
 
-    config.routes.exception(RecursoNoEncontradoException.class, (e, ctx) -> {
-      setearStatus(ctx, 404, e);
-    });
+    // NUEVO: lo lanzan los controllers web (por ejemplo, donación o foto inexistente)
+    config.routes.exception(NotFoundResponse.class, (e, ctx) ->
+        responderError(ctx, 404, "No encontramos lo que buscabas", "/errores/404.hbs"));
+
+    // CAMBIADO: antes era setearStatus(ctx, 404, e); el JSON sale igual, pero el navegador recibe una página
+    config.routes.exception(RecursoNoEncontradoException.class, (e, ctx) ->
+        responderError(ctx, 404, e.getMessage(), "/errores/404.hbs"));
 
     // Este handler atrapa los casos donde el body se evalúa como nulo (ej: mandar la palabra "null")
     config.routes.exception(NullPointerException.class, (e, ctx) -> {
@@ -66,9 +71,10 @@ public class ManejadorDeExcepciones {
       ));
     });
 
+    // CAMBIADO: el navegador recibe una página; el JSON mantiene el formato de MensajeResponse
     config.routes.exception(Exception.class, (e, ctx) -> {
       logger.error("Error no manejado en {}: {}", ctx.path(), e.getClass().getSimpleName(), e);
-      setearStatus(ctx, 500, e);
+      responderError(ctx, 500, "Ocurrió un error inesperado. Probá de nuevo en unos minutos.", "/errores/500.hbs");
     });
 
     config.routes.exception(TransaccionException.class, (e, ctx) -> {
@@ -83,6 +89,7 @@ public class ManejadorDeExcepciones {
     config.routes.exception(SubCategoriaInvalidaParaTipoDeBien.class, (e, ctx) -> {
       setearStatus(ctx, 400, e);
     });
+
     config.routes.exception(ValidationException.class, (e, ctx) -> {
       String mensaje = e.getErrors().values().stream()
           .flatMap(List::stream)
@@ -94,5 +101,19 @@ public class ManejadorDeExcepciones {
 
   private static void setearStatus(Context ctx, Integer status, Exception e) {
     ctx.status(status).json(new MensajeResponse(e.getMessage()));
+  }
+
+  // NUEVO: ¿el que pide es un navegador?
+  private static boolean pideHtml(Context ctx) {
+    return Optional.ofNullable(ctx.header("Accept")).orElse("").contains("text/html");
+  }
+
+  // NUEVO: navegador -> página con el layout del sitio; resto (tests, otros servicios) -> JSON como siempre
+  private static void responderError(Context ctx, int status, String mensaje, String vista) {
+    if (pideHtml(ctx)) {
+      ctx.status(status).render(vista, Map.of("mensaje", mensaje));
+    } else {
+      ctx.status(status).json(new MensajeResponse(mensaje));
+    }
   }
 }
