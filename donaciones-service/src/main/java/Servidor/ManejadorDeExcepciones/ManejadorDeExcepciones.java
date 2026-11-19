@@ -25,11 +25,11 @@ public class ManejadorDeExcepciones {
 
     // NUEVO: lo lanzan los controllers web (por ejemplo, donación o foto inexistente)
     config.routes.exception(NotFoundResponse.class, (e, ctx) ->
-        responderError(ctx, 404, "No encontramos lo que buscabas", "/errores/404.hbs"));
+        responderError(ctx, 404, "No encontramos lo que buscabas", "/error_not_found.hbs"));
 
     // CAMBIADO: antes era setearStatus(ctx, 404, e); el JSON sale igual, pero el navegador recibe una página
     config.routes.exception(RecursoNoEncontradoException.class, (e, ctx) ->
-        responderError(ctx, 404, e.getMessage(), "/errores/404.hbs"));
+        responderError(ctx, 404, e.getMessage(), "/error_not_found.hbs"));
 
     // Este handler atrapa los casos donde el body se evalúa como nulo (ej: mandar la palabra "null")
     config.routes.exception(NullPointerException.class, (e, ctx) -> {
@@ -74,7 +74,7 @@ public class ManejadorDeExcepciones {
     // CAMBIADO: el navegador recibe una página; el JSON mantiene el formato de MensajeResponse
     config.routes.exception(Exception.class, (e, ctx) -> {
       logger.error("Error no manejado en {}: {}", ctx.path(), e.getClass().getSimpleName(), e);
-      responderError(ctx, 500, "Ocurrió un error inesperado. Probá de nuevo en unos minutos.", "/errores/500.hbs");
+      responderError(ctx, 500, "Ocurrió un error inesperado. Probá de nuevo en unos minutos.", "/error_server.hbs");
     });
 
     config.routes.exception(TransaccionException.class, (e, ctx) -> {

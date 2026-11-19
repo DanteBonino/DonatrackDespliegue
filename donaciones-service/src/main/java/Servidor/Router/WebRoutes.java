@@ -11,6 +11,7 @@ import static io.javalin.apibuilder.ApiBuilder.post;
 
 import Contacto.DatosDeContacto;
 import Controllers.Web.AuthController;
+import Controllers.Web.DonacionesWebController;
 import Controllers.Web.FotosWebController;
 import Controllers.Web.HomeController;
 import Controllers.Web.AdminWebController;
@@ -128,6 +129,7 @@ public class WebRoutes implements EndpointGroup {
     get("lotes/nuevo/items", admin::showCrearLote, ADMINISTRADOR);
     post("lotes/nuevo", admin::crearLote, ADMINISTRADOR);
     get("fotos/{nombre}", fotosController::verFoto, CUALQUIERA);
+    get("donaciones/{id}/detalle", new DonacionesWebController()::verDonacion, CUALQUIERA);
   }
 
 }
