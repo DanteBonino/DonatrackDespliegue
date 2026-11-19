@@ -5,12 +5,11 @@ COPY . .
 RUN --mount=type=cache,target=/root/.m2 mvn -B -q -DskipTests package
 
 # Etapa 2
-# Imagen liviana: solo JRE (para ejecutar), sin Maven ni compilador.
 FROM eclipse-temurin:17-jre AS donaciones
 WORKDIR /app
-# Te quedas con los jars de la etapa 1
 COPY --from=build /src/donaciones-service/target/*-jar-with-dependencies.jar ./
-# Documenta el puerto donde escucha la app. No publica nada: eso lo hace el compose.
+# Punto de montaje del volumen "fotos" (ver docker-compose)
+RUN mkdir -p /app/uploads/fotos
 EXPOSE 7070
 CMD ["java", "-jar", "servidor-jar-with-dependencies.jar"]
 
