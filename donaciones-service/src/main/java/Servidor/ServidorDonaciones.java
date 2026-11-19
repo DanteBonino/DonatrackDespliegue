@@ -1,4 +1,5 @@
 package Servidor;
+import Bienes.EstadoDeUso;
 import Controllers.Categorias.CategoriasController;
 import Controllers.DTOsSinController.CondicionDeAceptacion.TipoCondicion;
 import Controllers.Donanciones.DonacionesController;
@@ -59,6 +60,7 @@ public class ServidorDonaciones {
       config.validation.register(TipoNecesidad.class, TipoNecesidad::valueOf);
       config.validation.register(TipoCondicion.class, TipoCondicion::valueOf);
       config.validation.register(FrecuenciaPeriodo.class, FrecuenciaPeriodo::valueOf);
+      config.validation.register(EstadoDeUso.class, EstadoDeUso::valueOf);
       config.staticFiles.add("/public", Location.CLASSPATH);
 
       ManejadorDeExcepciones.registrarExcepciones(config, logger);
