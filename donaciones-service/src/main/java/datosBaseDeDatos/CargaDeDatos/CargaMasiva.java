@@ -11,6 +11,7 @@ import Direccion.builders.CalleBuilder;
 import Direccion.builders.DireccionBuilder;
 import Direccion.builders.PosicionBuilder;
 import Donaciones.DonacionIndependiente;
+import Donaciones.Lote.Lote;
 import Donantes.Donante;
 import Donantes.DonanteHumana.DonanteHumanoBuilder;
 import Donantes.DonanteHumana.Genero;
@@ -29,6 +30,7 @@ import Repositories.Beneficiarios.BeneficiariosRepository;
 import Repositories.Categorias.CategoriasRepository;
 import Repositories.Donaciones.DonacionesRepository;
 import Repositories.Donantes.DonantesRepository;
+import Repositories.Lotes.LotesRepository;
 import Repositories.Notificaciones.NotificacionesRepository;
 import Repositories.SubCategorias.SubCategoriasRepository;
 import Repositories.UsuariosRepository;
@@ -42,6 +44,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import utils.FabricaDeBienes;
 import utils.FabricaDeCondicionesDeAceptacion;
 import utils.FabricaDeDonacionesIndependientes;
@@ -120,11 +124,16 @@ public class CargaMasiva extends ModificadorBaseDeDatos {
         new DatosDeContactoBuilder()
             .conTelefono("1140811648")
             .conMail("dantebonino3@gmail.com")
-            .build());
+            .build()
+    );
+    List<Lote> lotes = donaciones.stream().map(donacion -> {
+      return new Lote(donacion.getDonante(), Set.of(donacion));
+    }).collect(Collectors.toList());
+
     withTransaction(() -> {
       BeneficiariosRepository.getInstance().registrarInstancias(entidades);
       DonantesRepository.getInstance().registrarInstancias(donantes);
-      DonacionesRepository.getInstance().registrarInstancias(donaciones);
+      LotesRepository.getInstance().registrarInstancias(lotes);
       notificaciones.forEach(n -> NotificacionesRepository.getInstance().registrar(n));
       for (int i = 0; i < donantes.size(); i++) {
         var unDonante = donantes.get(i);
