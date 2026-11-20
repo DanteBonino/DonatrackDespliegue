@@ -32,6 +32,12 @@
             background: #fff; border: 2px solid #adb5bd;
         }
         .timeline-item.actual::before { background: #0d6efd; border-color: #0d6efd; }
+
+        /* Legibilidad */
+        .detalle { font-size: 1.0625rem; color: #212529; }
+        .detalle .text-muted { color: #495057 !important; }
+        .detalle .badge { font-size: .85em; }
+        .timeline-item::before { border-color: #6c757d; }  /* el puntito gris, más visible */
     </style>
 
     <div class="container py-5">
@@ -46,7 +52,7 @@
                     </a>
                 </div>
 
-                <div class="card border-0 shadow-sm overflow-hidden">
+                <div class="card border-0 shadow-sm overflow-hidden detalle">
 
                     <!-- Fotos -->
                     {{#if tieneFotos}}
@@ -95,37 +101,37 @@
 
                         <!-- Qué se donó -->
                         <section class="sec-bien">
-                            <h3 class="h6 text-muted fw-semibold mb-2">Qué se donó</h3>
-                            <strong class="text-dark">{{bien}}</strong>
+                            <h3 class="fs-5 fw-semibold mb-2">Qué se donó</h3>
+                            <div class="fw-bold">{{bien}}</div>
                             <div class="text-muted">{{cantidad}} × {{contenido}} {{unidad}}</div>
                             {{#if vencimiento}}
-                                <div class="small text-muted mt-2">
+                                <div class="text-muted mt-2">
                                     <i class="bi bi-calendar-event me-1"></i>Vence el {{vencimiento}}
                                 </div>
                             {{/if}}
                             {{#if estadoDeUso}}
-                                <div class="small text-muted mt-2">
+                                <div class="text-muted mt-2">
                                     <i class="bi bi-tag me-1"></i>Estado de uso: {{estadoDeUso}}
                                 </div>
                             {{/if}}
                         </section>
 
-                        <!-- Historial (en móvil queda segundo; en md+ ocupa la columna derecha) -->
+                        <!-- Historial -->
                         <section class="sec-hist">
-                            <h3 class="h6 text-muted fw-semibold mb-3">Historial de estados</h3>
+                            <h3 class="fs-5 fw-semibold mb-3">Historial de estados</h3>
                             <ul class="timeline">
                                 {{#each historial}}
                                     <li class="timeline-item {{#if @last}}actual{{/if}}">
                                         <div class="d-flex flex-wrap align-items-center gap-2">
                                             {{badgeEstado estado}}
-                                            <span class="small text-muted">{{fechaRelativa fecha}}</span>
+                                            <span class="text-muted">{{fechaRelativa fecha}}</span>
                                         </div>
                                     </li>
                                 {{/each}}
                             </ul>
 
                             {{#if justificacion}}
-                                <div class="alert alert-secondary small mt-3 mb-0">
+                                <div class="alert alert-secondary mt-3 mb-0">
                                     <strong>Justificación:</strong> {{justificacion}}
                                 </div>
                             {{/if}}
@@ -133,41 +139,41 @@
 
                         <!-- Quién -->
                         <section class="sec-quien">
-                            <h3 class="h6 text-muted fw-semibold mb-2">Quién lo donó</h3>
+                            <h3 class="fs-5 fw-semibold mb-2">Quién lo donó</h3>
                             {{#if donante.esHumano}}
                                 <div class="d-flex flex-wrap align-items-center gap-2">
                                     <span class="badge bg-primary">Persona Física</span>
-                                    <strong class="text-dark">{{donante.nombre}} {{donante.apellido}}</strong>
+                                    <strong>{{donante.nombre}} {{donante.apellido}}</strong>
                                 </div>
                                 {{#if verDocumento}}
-                                    <div class="small text-muted mt-2"><strong>DNI:</strong> {{donante.documento}}</div>
+                                    <div class="text-muted mt-2"><strong>DNI:</strong> {{donante.documento}}</div>
                                 {{/if}}
                             {{else}}
                                 <div class="d-flex flex-wrap align-items-center gap-2">
                                     <span class="badge bg-dark">{{donante.tipo}}</span>
-                                    <strong class="text-dark">{{donante.razonSocial}}</strong>
+                                    <strong>{{donante.razonSocial}}</strong>
                                 </div>
                                 {{#if verDocumento}}
-                                    <div class="small text-muted mt-2"><strong>CUIT:</strong> {{donante.cuit}}</div>
+                                    <div class="text-muted mt-2"><strong>CUIT:</strong> {{donante.cuit}}</div>
                                 {{/if}}
-                                <div class="small text-muted mt-1"><strong>Rubro:</strong> {{donante.rubro}}</div>
+                                <div class="text-muted mt-1"><strong>Rubro:</strong> {{donante.rubro}}</div>
                             {{/if}}
                         </section>
 
                         <!-- A quién -->
                         <section class="sec-aquien">
-                            <h3 class="h6 text-muted fw-semibold mb-2">Asignada a</h3>
+                            <h3 class="fs-5 fw-semibold mb-2">Asignada a</h3>
                             {{#if estaAsignada}}
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-building text-primary fs-5"></i>
-                                    <strong class="text-dark">{{entidad.nombre}}</strong>
+                                    <strong>{{entidad.nombre}}</strong>
                                 </div>
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-geo-alt me-2 text-primary"></i>
+                                <div class="d-flex align-items-center gap-2 mt-1">
+                                    <i class="bi bi-geo-alt text-primary"></i>
                                     <span>{{entidad.direccion}}</span>
                                 </div>
                             {{else}}
-                                <div class="text-muted small">
+                                <div class="text-muted">
                                     <i class="bi bi-hourglass-split me-1"></i>
                                     Todavía no fue asignada a ninguna entidad beneficiaria.
                                 </div>
