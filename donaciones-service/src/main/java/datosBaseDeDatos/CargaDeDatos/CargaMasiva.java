@@ -554,10 +554,18 @@ public class CargaMasiva extends ModificadorBaseDeDatos {
         new Spec(9, "ARROZ_VIGENTE", 100,  ENT,    0, "JJJ-102",   null)  // E01 tiene arroz
     );
 
-    return specs.stream()
-        .map(spec -> construirDonacion(spec, donantes, entidades,
-            remera, pantalon, campera, arroz, fideosSecos, tomate, mesa, silla))
-        .toList();
+    List<DonacionIndependiente> resultado = new ArrayList<>();
+    for (int i = 0; i < specs.size(); i++) {
+      Spec spec = specs.get(i);
+      try {
+        resultado.add(construirDonacion(spec, donantes, entidades,
+            remera, pantalon, campera, arroz, fideosSecos, tomate, mesa, silla));
+      } catch (RuntimeException ex) {
+        System.err.println("Error en spec #" + i + ": " + spec);
+        throw ex;
+      }
+    }
+    return resultado;
   }
 
   private DonacionIndependiente construirDonacion(
