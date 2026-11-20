@@ -91,12 +91,14 @@ public class AdminWebController implements ConPaginacion, ConValidacionDeFormula
     validarAdministrador(ctx);
     Pagina<DonacionIndependiente> pagina = donacionesRepository()
         .getDonacionesEnDepositoConDetalles(numeroDePagina(ctx), CANTIDAD_DE_ELEMENTOS_POR_PAGINA);
+    Map<Long, Long> loteDe = donacionesRepository().getLotesDe(pagina.items());
     boolean mostrarAlerta = "true".equals(ctx.queryParam("vencida"));
 
     List<Map<String, Object>> filas = new ArrayList<>();
     for (DonacionIndependiente d : pagina.items()) {
       Map<String, Object> fila = new HashMap<>();
       fila.put("id", d.getIdDominio());
+      fila.put("lote", loteDe.get(d.getId()));
       fila.put("bien", d.getBienDonado().getSubCategoria().getNombre());
       fila.put("cantidad", d.getCantidadDeSatisfaccion());
       fila.put("unidad", d.getUnidad().getAbreviatura());

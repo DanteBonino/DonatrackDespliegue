@@ -287,4 +287,16 @@ public class DonacionesRepository implements IDonacionesRepository, RepositorioC
     return new Pagina<>(items, actual, totalPaginas, total, tamanio);
   }
 
+  public Map<Long, Long> getLotesDe(List<DonacionIndependiente> donaciones) {
+    if (donaciones.isEmpty()) return Map.of();
+
+    List<Object[]> pares = entityManager().createQuery(
+            "SELECT d.id, l.id FROM Lote l JOIN l.donaciones d WHERE d IN :items", Object[].class)
+        .setParameter("items", donaciones)
+        .getResultList();
+
+    Map<Long, Long> loteDe = new HashMap<>();
+    for (Object[] p : pares) loteDe.put((Long) p[0], (Long) p[1]);
+    return loteDe;
+  }
 }
