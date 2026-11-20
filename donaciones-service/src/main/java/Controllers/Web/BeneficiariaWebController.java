@@ -78,6 +78,7 @@ public class BeneficiariaWebController implements ConPaginacion, ConValidacionDe
           m.put("id", n.getIdDominio());
           m.put("unidad", n.getSubCategoriaRequerida().getUnidad().getAbreviatura());
           m.put("subCategoria", n.getSubCategoriaRequerida() != null ? n.getSubCategoriaRequerida().getNombre() : "-");
+          m.put("cantidadRequerida", requerida);
           m.put("cantidadRecibida", recibida);
           m.put("porcentaje", porcentaje);
           m.put("faltante", requerida.subtract(recibida));
