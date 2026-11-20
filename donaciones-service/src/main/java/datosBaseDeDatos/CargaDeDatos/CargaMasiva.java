@@ -56,7 +56,7 @@ import utils.FabricaDeSubCategorias;
 public class CargaMasiva extends ModificadorBaseDeDatos {
 
   private static final LocalDate VENC_FUTURO  = LocalDate.of(2027, 1, 31);
-  private static final LocalDate VENC_TOMATE  = LocalDate.of(2026, 11, 20);
+  private static final LocalDate VENC_TOMATE  = LocalDate.of(2026, 11, 27);
   private static final LocalDate VENC_PASADO  = LocalDate.of(2026, 10, 15);
 
   private static final EstadoDonacion DEP   = EstadoDonacion.EN_DEPOSITO;
