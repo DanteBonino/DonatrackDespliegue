@@ -19,6 +19,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                     <tr>
+                        <th>Lote</th>
                         <th>Bien</th>
                         <th>Cantidad / Detalle</th>
                         <th>Donante</th>
@@ -30,6 +31,7 @@
                     <tbody>
                     {{#each donaciones}}
                         <tr>
+                            <td>{{this.lote}}</td>
                             <td class="text-capitalize">{{this.bien}}</td>
                             <td>{{this.cantidad}} {{this.unidad}}</td>
                             <td>{{this.donante}}</td>
